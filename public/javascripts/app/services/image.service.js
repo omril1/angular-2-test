@@ -10,17 +10,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/map");
+require("rxjs/add/operator/catch");
 var ImageService = (function () {
     function ImageService(http) {
         this.http = http;
         this.baseUrl = '/imageapi';
-        this.todos = this._todos.asObservable();
     }
     ImageService.prototype.getImageNames = function () {
-        return this.http.get(this.baseUrl + "/allimages").map(function (response) { return response.json(); }).subscribe(function (data) {
-            return data;
-        }, function (error) { return console.log('Could not load todos.'); });
+        return this.http.get(this.baseUrl + "/allimages")
+            .map(function (response) { return response.json(); })
+            .catch(function (error) { return Observable_1.Observable.throw(error.json().error || 'Server error'); });
     };
     return ImageService;
 }());

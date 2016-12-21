@@ -10,13 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
+var http_1 = require("@angular/http");
 var app_components_1 = require("./app.components");
 var router_1 = require("@angular/router");
 var about_component_1 = require("./routes/about.component");
 var details_component_1 = require("./routes/details.component");
 var list_component_1 = require("./routes/list.component");
 var upload_image_component_1 = require("./routes/upload-image.component");
-var image_service_1 = require("./services/image.service");
 exports.appRoutes = [
     { path: '', redirectTo: 'about', pathMatch: 'full' },
     { path: 'about', component: about_component_1.AboutComponent },
@@ -33,15 +33,15 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
-            router_1.RouterModule.forRoot(exports.appRoutes)
+            router_1.RouterModule.forRoot(exports.appRoutes),
+            http_1.HttpModule
         ],
         declarations: [
             app_components_1.AppComponent,
             about_component_1.AboutComponent,
             list_component_1.ListComponent,
             details_component_1.DetailsComponent,
-            upload_image_component_1.UploadImageComponent,
-            image_service_1.ImageService
+            upload_image_component_1.UploadImageComponent
         ],
         bootstrap: [app_components_1.AppComponent]
     }),

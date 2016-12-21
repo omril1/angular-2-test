@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 export interface Image {
     name: String;
@@ -27,8 +28,8 @@ export class ImageService {
     }
 
     getImageNames() {
-        return this.http.get(`${this.baseUrl}/allimages`).map(response => response.json()).subscribe(data => {
-            return data;
-        }, error => console.log('Could not get all'));
+        return this.http.get(`${this.baseUrl}/allimages`)
+            .map(response => response.json())
+            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 }

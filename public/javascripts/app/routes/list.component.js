@@ -12,9 +12,10 @@ var core_1 = require("@angular/core");
 var image_service_1 = require("../services/image.service");
 var ListComponent = (function () {
     function ListComponent(imageService) {
+        var _this = this;
         this.imageService = imageService;
         this.name = 'About';
-        imageService.getImageNames().add(function (result) { this.imageList = result; });
+        this.imageService.getImageNames().forEach(function (value) { return _this.imageList = value; });
     }
     return ListComponent;
 }());

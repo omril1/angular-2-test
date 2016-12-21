@@ -1,5 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.components';
 import { RouterModule, Routes } from '@angular/router';
@@ -23,14 +24,15 @@ export const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        RouterModule.forRoot(appRoutes)],
+        RouterModule.forRoot(appRoutes),
+        HttpModule
+    ],
     declarations: [
         AppComponent,
         AboutComponent,
         ListComponent,
         DetailsComponent,
-        UploadImageComponent,
-        ImageService
+        UploadImageComponent
     ],
     bootstrap: [AppComponent]
 })

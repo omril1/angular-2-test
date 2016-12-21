@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core'
+﻿import { Component, OnInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { Observable } from 'rxjs/observable'
 
@@ -15,7 +15,7 @@ interface ItextField {
     moduleId: module.id,
     templateUrl: "/html-routes/details.html"
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit, OnDestroy {
     //private sub: Observable<string>;
     private sub: any;
 
