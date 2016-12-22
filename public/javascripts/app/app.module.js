@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var http_1 = require("@angular/http");
+var ng2_file_upload_1 = require("ng2-file-upload");
+var ng2_draggable_1 = require("ng2-draggable");
 var app_components_1 = require("./app.components");
 var router_1 = require("@angular/router");
 var about_component_1 = require("./routes/about.component");
@@ -20,9 +22,9 @@ var upload_image_component_1 = require("./routes/upload-image.component");
 exports.appRoutes = [
     { path: '', redirectTo: 'about', pathMatch: 'full' },
     { path: 'about', component: about_component_1.AboutComponent },
+    { path: 'upload-image', component: upload_image_component_1.UploadImageComponent },
     { path: 'list', component: list_component_1.ListComponent },
-    { path: 'details/:id', component: details_component_1.DetailsComponent },
-    { path: 'upload-image', component: upload_image_component_1.UploadImageComponent }
+    { path: 'details/:id', component: details_component_1.DetailsComponent }
 ];
 var AppModule = (function () {
     function AppModule() {
@@ -34,14 +36,17 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             router_1.RouterModule.forRoot(exports.appRoutes),
-            http_1.HttpModule
+            http_1.HttpModule,
+            ng2_draggable_1.DraggableModule
         ],
         declarations: [
             app_components_1.AppComponent,
             about_component_1.AboutComponent,
             list_component_1.ListComponent,
             details_component_1.DetailsComponent,
-            upload_image_component_1.UploadImageComponent
+            upload_image_component_1.UploadImageComponent,
+            ng2_file_upload_1.FileSelectDirective,
+            ng2_file_upload_1.FileDropDirective
         ],
         bootstrap: [app_components_1.AppComponent]
     }),

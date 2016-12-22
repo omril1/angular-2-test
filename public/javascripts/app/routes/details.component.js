@@ -16,6 +16,8 @@ var DetailsComponent = (function () {
         this.textFields = [];
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
+        this.imageX = 0;
+        this.imageY = 0;
         this.dragging = false;
         this.removeField = function () {
             if (this.selectedIndex != -1) {
@@ -25,14 +27,17 @@ var DetailsComponent = (function () {
         };
         this.addField = function () {
             var t = {
-                left: 0,
-                top: 0,
+                left: 20,
+                top: 30,
+                width: 400,
+                height: 40,
                 text: "some text goes here",
                 fontSize: "20.06pt",
                 color: "#337ab7",
                 index: this.fieldsCounter++
             };
             this.textFields.push(t);
+            //this.imageY = (this.selectedIndex == -1 ? 0 : -2) - (this.textFields.length * 40);
         };
         this.mouseDown = function (fieldIndex, event) {
             if (event.button == 0) {
@@ -66,19 +71,17 @@ var DetailsComponent = (function () {
     }
     DetailsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.route.params.subscribe(function (params) {
-            _this.imageID = params['id'];
-        });
+        this.route.params.subscribe(function (params) { return _this.imageID = params['id']; });
     };
     DetailsComponent.prototype.ngOnDestroy = function () {
-        this.sub.unsubscribe();
     };
     return DetailsComponent;
 }());
 DetailsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        templateUrl: "/html-routes/details.html"
+        templateUrl: "/html-routes/details.html",
+        styles: [":host { position: relative; }"],
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute])
 ], DetailsComponent);

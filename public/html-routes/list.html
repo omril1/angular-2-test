@@ -1,6 +1,6 @@
 ﻿<div class="row">
     <div class="col-xs-6 col-md-3" *ngFor='let value of imageList'>
-        <a class="thumbnail">
+        <a class="thumbnail" [routerLink]="['/details',value[1]]">
             <h3 class="">{{value[0]}}</h3>
             <img src="/imageapi/byid/{{value[1]}}">
         </a>

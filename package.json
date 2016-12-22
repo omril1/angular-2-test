@@ -22,6 +22,7 @@
     "express": "3.4.4",
     "gridfs-stream": "^1.1.1",
     "mongoose": "^4.7.3",
+    "ng2-draggable": "0.0.8",
     "ng2-file-upload": "^1.1.4-2",
     "primeng": "^1.1.0",
     "reflect-metadata": "^0.1.8",

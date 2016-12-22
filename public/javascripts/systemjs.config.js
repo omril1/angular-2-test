@@ -10,6 +10,7 @@
         //'angular2-in-memory-web-api': 'npm:/angular2-in-memory-web-api',
         'rxjs': 'npm:/rxjs',
         'ng2-file-upload': 'npm:ng2-file-upload/bundles/ng2-file-upload.umd.js',
+        'ng2-draggable': 'npm:ng2-draggable/index.js',
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {

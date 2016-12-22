@@ -3,8 +3,8 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <Name>NodejsConsoleApp1</Name>
-    <RootNamespace>NodejsConsoleApp1</RootNamespace>
+    <Name>angular 2 expirment</Name>
+    <RootNamespace>angular 2 expirment</RootNamespace>
     <NodejsPort>80</NodejsPort>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -89,10 +89,6 @@
     <Folder Include="Scripts\typings\node\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="public\javascripts\Polyfill\shim.min.js" />
-    <Compile Include="public\javascripts\Polyfill\system.src.js" />
-    <Compile Include="public\javascripts\Polyfill\zone.js" />
-    <Compile Include="public\javascripts\Polyfill\zone.min.js" />
     <Content Include="public\javascripts\systemjs.config.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
