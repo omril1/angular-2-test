@@ -20,7 +20,10 @@ app.use("/imageapi", imageApi);
 app.use(express.json());
 app.use(express.urlencoded());
 app.get("/*", (req: express.Request, res: express.Response) => {
-    res.sendfile(path.join(__dirname, "public", "index.html"));
+    if (req.path.endsWith('.js') == false)
+        res.sendfile(path.join(__dirname, "public", "index.html"));
+    else
+        res.send(404);
 });
 
 // development only

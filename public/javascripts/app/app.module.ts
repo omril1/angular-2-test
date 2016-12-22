@@ -1,34 +1,34 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload';
-import { DraggableModule } from 'ng2-draggable';
-
-import { AppComponent } from './app.components';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AboutComponent } from './routes/about.component';
-import { DetailsComponent } from './routes/details.component';
-import { ListComponent } from './routes/list.component';
-import { UploadImageComponent } from './routes/upload-image.component';
+import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload';
+import { DraggableModule } from 'ng2-draggable';
+import { ColorPickerModule } from 'angular2-color-picker';
+
+import { AppComponent } from './app.components';
+import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent } from './routes/index';
 
 
 import { ImageService } from './services/image.service'
 
-export const appRoutes: Routes = [
-    { path: '', redirectTo: 'about', pathMatch: 'full' },
+const appRoutes: Routes = [
+    { path: '', redirectTo: 'list', pathMatch: 'full' },
     { path: 'about', component: AboutComponent },
     { path: 'upload-image', component: UploadImageComponent },
     { path: 'list', component: ListComponent },
     { path: 'details/:id', component: DetailsComponent }
 ];
+export const AppRoutesModule = RouterModule.forRoot(appRoutes);
 
 @NgModule({
     imports: [
         BrowserModule,
-        RouterModule.forRoot(appRoutes),
+        AppRoutesModule,
         HttpModule,
-        DraggableModule
+        DraggableModule,
+        ColorPickerModule
     ],
     declarations: [
         AppComponent,

@@ -17,7 +17,10 @@ app.use("/imageapi", imageApi);
 app.use(express.json());
 app.use(express.urlencoded());
 app.get("/*", function (req, res) {
-    res.sendfile(path.join(__dirname, "public", "index.html"));
+    if (req.path.endsWith('.js') == false)
+        res.sendfile(path.join(__dirname, "public", "index.html"));
+    else
+        res.send(404);
 });
 // development only
 if ('development' == app.get('env')) {

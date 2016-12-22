@@ -11,21 +11,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var http_1 = require("@angular/http");
+var router_1 = require("@angular/router");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
+var angular2_color_picker_1 = require("angular2-color-picker");
 var app_components_1 = require("./app.components");
-var router_1 = require("@angular/router");
-var about_component_1 = require("./routes/about.component");
-var details_component_1 = require("./routes/details.component");
-var list_component_1 = require("./routes/list.component");
-var upload_image_component_1 = require("./routes/upload-image.component");
-exports.appRoutes = [
-    { path: '', redirectTo: 'about', pathMatch: 'full' },
-    { path: 'about', component: about_component_1.AboutComponent },
-    { path: 'upload-image', component: upload_image_component_1.UploadImageComponent },
-    { path: 'list', component: list_component_1.ListComponent },
-    { path: 'details/:id', component: details_component_1.DetailsComponent }
+var index_1 = require("./routes/index");
+var appRoutes = [
+    { path: '', redirectTo: 'list', pathMatch: 'full' },
+    { path: 'about', component: index_1.AboutComponent },
+    { path: 'upload-image', component: index_1.UploadImageComponent },
+    { path: 'list', component: index_1.ListComponent },
+    { path: 'details/:id', component: index_1.DetailsComponent }
 ];
+exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
 var AppModule = (function () {
     function AppModule() {
     }
@@ -35,16 +34,17 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
-            router_1.RouterModule.forRoot(exports.appRoutes),
+            exports.AppRoutesModule,
             http_1.HttpModule,
-            ng2_draggable_1.DraggableModule
+            ng2_draggable_1.DraggableModule,
+            angular2_color_picker_1.ColorPickerModule
         ],
         declarations: [
             app_components_1.AppComponent,
-            about_component_1.AboutComponent,
-            list_component_1.ListComponent,
-            details_component_1.DetailsComponent,
-            upload_image_component_1.UploadImageComponent,
+            index_1.AboutComponent,
+            index_1.ListComponent,
+            index_1.DetailsComponent,
+            index_1.UploadImageComponent,
             ng2_file_upload_1.FileSelectDirective,
             ng2_file_upload_1.FileDropDirective
         ],

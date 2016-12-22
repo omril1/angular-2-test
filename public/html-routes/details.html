@@ -1,20 +1,30 @@
 ﻿<div class="btn-group pull-right" role="group">
+    <input [colorPicker]="color" (colorPickerChange)="colorChanged($event)" [style.background-color]="color" readonly class="btn btn-default" style="width:30px;" />
     <button type="button" class="btn btn-default" (click)="addField()">addField</button>
     <button type="button" class="btn btn-default" (click)="removeField()">removeField</button>
 </div>
 <br />
 <br />
+<style>
+    .textField {
+        border-color: transparent;
+        border-width: 1px;
+        border-style: dashed;
+        cursor: pointer;
+    }
+        /*.textField:focus {
+            border-color: #000;
+        }*/
+</style>
 <div class="panel panel-default">
-    <div class="panel-body">
-        <div style="position: relative; width: 0; height: 0">
-            <div *ngFor="let field of textFields; let i=index" style="position:absolute;border:1px none rgb(0, 0, 0);cursor:pointer;"
-                 [style.top.px]="field.top" [style.left.px]="field.left" [style.color]="field.color" [style.font-size]="field.fontSize" [style.z-index]="100 + field.index" [style.border-style]="i==selectedIndex?'dotted':'none'"
-                 [style.width.px]="field.width" [style.height.px]="field.height"
-                 (click)="mouseDown(i, $event)">
-                {{field.text}}
-            </div>
-            <img src="imageapi/byid/{{imageID}}" id="myImage" style="position:absolute;/*width:100%;height:100%;*/" />
-            <!--[style.left.px]="imageX" [style.top.px]="imageY"-->
+    <div class="panel-body" style="position: relative;">
+        <div *ngFor="let field of textFields; let i=index" class="textField" style="position: absolute;" [style.border-color]="i==selectedIndex?'#000':'transparent'"
+             [style.top.px]="field.top" [style.left.px]="field.left" [style.color]="field.color" [style.font-size]="field.fontSize" [style.z-index]="100 + field.index"
+             [style.width.px]="field.width" [style.height.px]="field.height" [draggable]
+             (mousedown)="mouseDown(i, $event)">
+            {{field.text}}
         </div>
+        <img src="imageapi/byid/{{imageID}}" id="myImage" style="position:initial;width:100%;height:100%;"
+             (mousedown)="mouseDown(-1, $event)" />
     </div>
 </div>

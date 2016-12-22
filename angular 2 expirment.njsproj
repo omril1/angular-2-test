@@ -58,6 +58,7 @@
     <Content Include="public\index.html" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="connectMongoDB.ts" />
+    <TypeScriptCompile Include="public\javascripts\app\routes\index.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />
     <TypeScriptCompile Include="public\javascripts\app\app.components.ts" />
     <TypeScriptCompile Include="public\javascripts\app\app.module.ts" />

@@ -11,12 +11,14 @@
         'rxjs': 'npm:/rxjs',
         'ng2-file-upload': 'npm:ng2-file-upload/bundles/ng2-file-upload.umd.js',
         'ng2-draggable': 'npm:ng2-draggable/index.js',
+        'angular2-color-picker': 'npm:angular2-color-picker',
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {
         'app': { main: 'main.js', defaultExtension: 'js' },
         'rxjs': { defaultExtension: 'js' },
         'angular2-in-memory-web-api': { defaultExtension: 'js' },
+        'angular2-color-picker': { main: 'index.js', defaultExtension: 'js' },
     };
     var ngPackageNames = [
         'common',

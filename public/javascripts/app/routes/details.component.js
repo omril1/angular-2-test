@@ -16,13 +16,16 @@ var DetailsComponent = (function () {
         this.textFields = [];
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
-        this.imageX = 0;
-        this.imageY = 0;
-        this.dragging = false;
         this.removeField = function () {
             if (this.selectedIndex != -1) {
                 this.textFields.splice(this.selectedIndex, 1);
                 this.selectedIndex = -1;
+            }
+        };
+        this.colorChanged = function (color) {
+            this.color = color;
+            if (this.selectedIndex != -1) {
+                this.textFields[this.selectedIndex].color = color;
             }
         };
         this.addField = function () {
@@ -37,34 +40,12 @@ var DetailsComponent = (function () {
                 index: this.fieldsCounter++
             };
             this.textFields.push(t);
-            //this.imageY = (this.selectedIndex == -1 ? 0 : -2) - (this.textFields.length * 40);
         };
         this.mouseDown = function (fieldIndex, event) {
             if (event.button == 0) {
                 this.selectedIndex = fieldIndex;
-                this.dragging = true;
-                this.sx = event.clientX;
-                this.sy = event.clientY;
-                this.offestX = event.offsetX;
-                this.offestY = event.offsetY;
-            }
-        };
-        this.mouseMove = function (fieldIndex, event) {
-            console.log("client", event.clientX, event.clientY);
-            console.log("offest", event.offsetX, event.offsetY);
-            console.log("layer", event.layerX, event.layerY);
-            console.log("screen", event.screenX, event.screenY);
-            if (this.selectedIndex == fieldIndex && this.dragging) {
-                var cF = this.textFields[fieldIndex];
-                //let dx = event.x - this.xS;
-                //let dy = event.y - this.yS;
-                cF.left += event.clientX - this.sx;
-                cF.top += event.clientY - this.sy;
-            }
-        };
-        this.mouseUp = function (fieldIndex, event) {
-            if (event.button == 0) {
-                this.dragging = false;
+                if (fieldIndex != -1)
+                    this.color = this.textFields[this.selectedIndex].color;
             }
         };
         //this.imageID = route.params['value']['id']; //old way
@@ -81,7 +62,6 @@ DetailsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         templateUrl: "/html-routes/details.html",
-        styles: [":host { position: relative; }"],
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute])
 ], DetailsComponent);
