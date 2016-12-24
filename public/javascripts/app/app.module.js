@@ -10,10 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
+var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 var router_1 = require("@angular/router");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
+var ng2_bootstrap_1 = require("ng2-bootstrap");
 var angular2_color_picker_1 = require("angular2-color-picker");
 var app_components_1 = require("./app.components");
 var index_1 = require("./routes/index");
@@ -36,7 +38,9 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             exports.AppRoutesModule,
             http_1.HttpModule,
+            forms_1.FormsModule,
             ng2_draggable_1.DraggableModule,
+            ng2_bootstrap_1.DropdownModule.forRoot(),
             angular2_color_picker_1.ColorPickerModule
         ],
         declarations: [

@@ -2,17 +2,15 @@
 let Grid = require('gridfs-stream');
 let Busboy = require('busboy');
 
+//var sizeOf = require('image-size');
 import * as express from 'express';
 
 let api = express();
 
 // create or use an existing mongodb-native db instance
-Grid.mongo = mongoose.mongo;
-
-var conn = mongoose.createConnection('mongodb://localhost:27017/test');
-var gfs: any;
-conn.once('open', function () {
-    gfs = Grid(conn.db);
+//Grid.mongo = mongoose.mongo;
+mongoose.connection.once('open', function () {
+    var gfs = Grid(mongoose.connection.db);
     api.get("/byname/:filename", (req: express.Request, res: express.Response) => {
         gfs.exist({ filename: req.params.filename }, function (err: Error, result: any) {
             if (err)
@@ -35,29 +33,32 @@ conn.once('open', function () {
         });
     });
     api.get("/allimages", (req: express.Request, res: express.Response) => {
-        gfs.files.find({}).toArray(function (err: Error, files: any[]) {
+        gfs.files.find({ contentType: /^image[/]/ }, { _id: 1, filename: 1 }).toArray(function (err: Error, files: any[]) {
             if (err)
                 res.send(err);
             else
-                res.send(files.map(file => [file.filename, file._id]));
+                res.send(files);
         })
     });
-    //api.post("/upload/:filename", (req: any, res: express.Response) => {
-    //    req.pipe(gfs.createWriteStream({
-    //        filename: req.params.filename
-    //    }).on('close', function (savedFile: any) {
-    //        console.log('file saved', savedFile);
-    //        return res.json({ file: savedFile });
-    //    }));
-    //});
     api.post("/upload", function (req: any, res: express.Response) {
-        var busboy = new Busboy({ headers: req.headers });
-        busboy.on('file', function (fieldname: any, file: any, filename: any, encoding: any, mimetype: string) {
-            var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
-            file.pipe(ws);
+        var busboy = new Busboy({
+            headers: req.headers,
+            limits: { fileSize: 2 * 1024 * 1024, files: 1 }
+        });
+        busboy.on('file', function (fieldname: string, file: any, filename: string, encoding: string, mimetype: string) {
+            if (mimetype.startsWith('image/')) {
+                var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                file.pipe(ws);
+                res.statusCode = 200;
+            }
+            else {
+                file.resume();
+                res.statusCode = 415;
+            }
+
         });
         busboy.on('finish', function () {
-            res.send(200);
+            res.end();
         });
         req.pipe(busboy);
     });

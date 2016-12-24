@@ -12,7 +12,12 @@ var core_1 = require("@angular/core");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var UploadImageComponent = (function () {
     function UploadImageComponent() {
-        this.uploader = new ng2_file_upload_1.FileUploader({ url: "/imageapi/upload" });
+        this.uploader = new ng2_file_upload_1.FileUploader({
+            url: "/imageapi/upload",
+            allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
+            removeAfterUpload: false,
+            maxFileSize: 3 * 1024 * 1024
+        });
         this.hasBaseDropZoneOver = false;
     }
     UploadImageComponent.prototype.fileOverBase = function (e) {

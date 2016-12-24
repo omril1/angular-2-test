@@ -1,10 +1,12 @@
-﻿import express = require('express');
-import http = require('http');
-import path = require('path');
+﻿import * as express from 'express';
+import * as http from 'http';
+import * as path from 'path';
 
-let api: express.Application = require('./routers/api');
-let imageApi: express.Application = require('./routers/imageApi');
+require('./connectMongoDB')();
+import * as api from './routers/api';
+import * as imageApi from './routers/imageApi';
 var app = express();
+
 
 // all environments
 app.set('port', process.env.PORT || 80);

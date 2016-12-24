@@ -1,8 +1,15 @@
 ﻿<div class="row">
-    <div class="col-xs-6 col-md-3" *ngFor='let value of imageList'>
-        <a class="thumbnail" [routerLink]="['/details',value[1]]">
-            <h4>{{value[0]}}</h4>
-            <img src="/imageapi/byid/{{value[1]}}">
-        </a>
-    </div>
+    <a class="col-sm-12 col-xs-12 col-md-4 col-lg-3" *ngFor='let image of imageList' style="cursor:pointer;text-decoration:none">
+        <div class="thumbnail bootsnipp-thumb" [routerLink]="['/details',image._id]">
+            <div>
+                <p class="snipp-title ellipis" [title]="image.filename">{{image.filename}}</p>
+            </div>
+            <div style="height:180px;display:block;">
+                <img class="lazy" style="width:auto; max-height:100%" alt="" [src]="'imageapi/byid/' + image._id">
+            </div>
+
+            <div class="caption">
+            </div>
+        </div>
+    </a>
 </div>

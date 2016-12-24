@@ -2,17 +2,17 @@
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
-//import { ColorPickerService } from 'angular2-color-picker';
 
 interface ItextField {
     top?: number;
     left?: number;
     width?: number;
     height?: number;
-    text?: String;
+    text?: string;
+    font?: string;
     index?: number;
-    fontSize?: String;
-    color?: String;
+    fontSize?: string;
+    color?: string;
 }
 
 @Component({
@@ -26,6 +26,22 @@ export class DetailsComponent implements OnInit, OnDestroy {
     imageID: String;
     fieldsCounter: Number = 0;
     selectedIndex: Number = -1;
+    public items: string[] = ['The first choice!',
+        'And another choice for you.', 'but wait! A third!'];
+    fonts = ["Arial",
+        "David Transparent",
+        "Guttman Calligraphic",
+        "Guttman David",
+        "Guttman Stam",
+        "Guttman Yad",
+        "Guttman Yad-Brush",
+        "Guttman-Aram",
+        "Levenim MT",
+        "Lucida Sans Unicode",
+        "Microsoft Sans Serif",
+        "Miriam Transparent",
+        "Narkisim",
+        "Tahoma"];
 
     constructor(private route: ActivatedRoute) {
         //this.imageID = route.params['value']['id']; //old way
@@ -70,21 +86,4 @@ export class DetailsComponent implements OnInit, OnDestroy {
                 this.color = this.textFields[this.selectedIndex].color;
         }
     }
-    /*
-Arial
-David Transparent
-Guttman Calligraphic
-Guttman David
-Guttman Stam
-Guttman Yad
-Guttman Yad-Brush
-Guttman-Aram
-Levenim MT
-Lucida Sans Unicode
-Microsoft Sans Serif
-Miriam Transparent
-Monotype Hadassah
-Narkisim
-Tahoma
-*/
 }

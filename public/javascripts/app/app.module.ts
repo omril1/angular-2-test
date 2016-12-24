@@ -1,10 +1,12 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
+import { DropdownModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
 
 import { AppComponent } from './app.components';
@@ -27,7 +29,9 @@ export const AppRoutesModule = RouterModule.forRoot(appRoutes);
         BrowserModule,
         AppRoutesModule,
         HttpModule,
+        FormsModule,
         DraggableModule,
+        DropdownModule.forRoot(),
         ColorPickerModule
     ],
     declarations: [

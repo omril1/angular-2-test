@@ -16,6 +16,22 @@ var DetailsComponent = (function () {
         this.textFields = [];
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
+        this.items = ['The first choice!',
+            'And another choice for you.', 'but wait! A third!'];
+        this.fonts = ["Arial",
+            "David Transparent",
+            "Guttman Calligraphic",
+            "Guttman David",
+            "Guttman Stam",
+            "Guttman Yad",
+            "Guttman Yad-Brush",
+            "Guttman-Aram",
+            "Levenim MT",
+            "Lucida Sans Unicode",
+            "Microsoft Sans Serif",
+            "Miriam Transparent",
+            "Narkisim",
+            "Tahoma"];
         this.removeField = function () {
             if (this.selectedIndex != -1) {
                 this.textFields.splice(this.selectedIndex, 1);

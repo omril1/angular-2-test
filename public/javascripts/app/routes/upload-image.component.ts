@@ -6,7 +6,12 @@ import { FileUploader } from 'ng2-file-upload';
     templateUrl: "/html-routes/upload-image.html",
 })
 export class UploadImageComponent {
-    public uploader: FileUploader = new FileUploader({ url: "/imageapi/upload" });
+    public uploader: FileUploader = new FileUploader({
+        url: "/imageapi/upload",
+        allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
+        removeAfterUpload: false,
+        maxFileSize: 3 * 1024 * 1024
+    });
 
     public hasBaseDropZoneOver: boolean = false;
     public fileOverBase(e: any): void {

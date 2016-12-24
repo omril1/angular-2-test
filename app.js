@@ -2,8 +2,9 @@
 var express = require("express");
 var http = require("http");
 var path = require("path");
-var api = require('./routers/api');
-var imageApi = require('./routers/imageApi');
+require('./connectMongoDB')();
+var api = require("./routers/api");
+var imageApi = require("./routers/imageApi");
 var app = express();
 // all environments
 app.set('port', process.env.PORT || 80);
