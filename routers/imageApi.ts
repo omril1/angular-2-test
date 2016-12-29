@@ -1,18 +1,41 @@
-﻿let mongoose = require('mongoose');
+﻿//let mongoose = require('mongoose');
 let Grid = require('gridfs-stream');
 let Busboy = require('busboy');
+import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 const im = require('imagemagick-stream');
-//import { processImage } from "processImage";
+import processImage from "../processImage";
 
 //var sizeOf = require('image-size');
 import * as express from 'express';
 
-let api = express();
+export interface Image {
+    name?: String;
+    ID: String;
+    textFields: ItextField[];
+}
+export interface ItextField {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+    text: string;
+    font: string;
+    index: number;
+    fontSize: number;
+    color: string;
+    bold: boolean;
+    italic: boolean;
+    align: string;
+    underline: boolean;
+}
 
-// create or use an existing mongodb-native db instance
-//Grid.mongo = mongoose.mongo;
-mongoose.connection.once('open', function () {
-    var gfs = Grid(mongoose.connection.db);
+export function initializeImageAPI(mongoConnection): express.Application {
+    let api = express();
+
+    //mongoose.connection.db
+    var gfs = Grid(mongoConnection);
     api.get("/byname/:filename", (req: express.Request, res: express.Response) => {
         gfs.exist({ filename: req.params.filename }, function (err: Error, result: any) {
             if (err)
@@ -86,10 +109,16 @@ mongoose.connection.once('open', function () {
         });
         req.pipe(busboy);
     });
-    api.post("/proccessimage", (req, res) => {
-        
+    api.post("/proccessimage", (req: express.Request, res: express.Response) => {
+        processImage(<Image>req.body, res);
     });
-
-});
-
-export = api;
+    let tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
+    api.get('/tempFile/:filename', (req: express.Request, res: express.Response) => {
+        let filePath = path.join(tempPath, req.params.filename);
+        if (fs.existsSync(filePath))
+            res.sendfile(filePath);
+        else
+            res.send(404);
+    });
+    return api;
+}

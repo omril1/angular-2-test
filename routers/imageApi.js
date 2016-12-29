@@ -1,16 +1,18 @@
 "use strict";
-var mongoose = require('mongoose');
+//let mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
 var Busboy = require('busboy');
+var path = require("path");
+var fs = require("fs");
+var os = require("os");
 var im = require('imagemagick-stream');
-//import { processImage } from "processImage";
+var processImage_1 = require("../processImage");
 //var sizeOf = require('image-size');
 var express = require("express");
-var api = express();
-// create or use an existing mongodb-native db instance
-//Grid.mongo = mongoose.mongo;
-mongoose.connection.once('open', function () {
-    var gfs = Grid(mongoose.connection.db);
+function initializeImageAPI(mongoConnection) {
+    var api = express();
+    //mongoose.connection.db
+    var gfs = Grid(mongoConnection);
     api.get("/byname/:filename", function (req, res) {
         gfs.exist({ filename: req.params.filename }, function (err, result) {
             if (err)
@@ -82,7 +84,17 @@ mongoose.connection.once('open', function () {
         req.pipe(busboy);
     });
     api.post("/proccessimage", function (req, res) {
+        processImage_1.default(req.body, res);
     });
-});
-module.exports = api;
+    var tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
+    api.get('/tempFile/:filename', function (req, res) {
+        var filePath = path.join(tempPath, req.params.filename);
+        if (fs.existsSync(filePath))
+            res.sendfile(filePath);
+        else
+            res.send(404);
+    });
+    return api;
+}
+exports.initializeImageAPI = initializeImageAPI;
 //# sourceMappingURL=imageApi.js.map

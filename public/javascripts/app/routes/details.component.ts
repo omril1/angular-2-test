@@ -174,7 +174,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     private sendToProcessing() {
         this.imageService.sendToProcessing({ ID: this.imageID, textFields: this.textFields }).then(result => {
-            window.open(result.statusText);
+            window.open(result.text());
         });
     }
     private showContextMenu = (event) => {

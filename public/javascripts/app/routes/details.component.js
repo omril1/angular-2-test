@@ -148,7 +148,7 @@ var DetailsComponent = (function () {
     };
     DetailsComponent.prototype.sendToProcessing = function () {
         this.imageService.sendToProcessing({ ID: this.imageID, textFields: this.textFields }).then(function (result) {
-            window.open(result.statusText);
+            window.open(result.text());
         });
     };
     return DetailsComponent;

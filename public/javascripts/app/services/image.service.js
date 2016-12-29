@@ -24,10 +24,12 @@ var ImageService = (function () {
             .map(function (response) { return response.json(); })
             .catch(function (error) { return Observable_1.Observable.throw(error.json().error || 'Server error'); });
     };
-    ImageService.prototype.sendToProcessing = function (Image) {
-        return this.http.post(this.baseUrl + "/proccessimage", JSON.stringify(Image), { withCredentials: false }).toPromise();
-        //.map(response => response.json())
-        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    ImageService.prototype.sendToProcessing = function (image) {
+        var body = JSON.stringify(image);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ }); // ... Set content type to JSON
+        var options = new http_1.RequestOptions({ headers: headers, body: image }); // Create a request option
+        return this.http.post(this.baseUrl + "/proccessimage", body, options).toPromise()
+            .catch(function (error) { return Promise.reject(error.json().error || 'Server error'); });
     };
     return ImageService;
 }());

@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, RequestOptionsArgs } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
@@ -41,9 +41,12 @@ export class ImageService {
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    sendToProcessing(Image: Image) {
-        return this.http.post(`${this.baseUrl}/proccessimage`, JSON.stringify(Image), { withCredentials: false }).toPromise();
+    sendToProcessing(image: Image) {
+        let body = JSON.stringify(image);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */}); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers, body: image }); // Create a request option
+        return this.http.post(`${this.baseUrl}/proccessimage`, body, options).toPromise()
             //.map(response => response.json())
-            //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+            .catch((error: any) => Promise.reject(error.json().error || 'Server error'));
     }
 }
