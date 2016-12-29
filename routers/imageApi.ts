@@ -1,6 +1,8 @@
 ﻿let mongoose = require('mongoose');
 let Grid = require('gridfs-stream');
 let Busboy = require('busboy');
+const im = require('imagemagick-stream');
+//import { processImage } from "processImage";
 
 //var sizeOf = require('image-size');
 import * as express from 'express';
@@ -32,6 +34,25 @@ mongoose.connection.once('open', function () {
             gfs.createReadStream({ _id: file._id }).pipe(res);
         });
     });
+    api.get('/thumbnail/:id', (req: express.Request, res: express.Response) => {
+        gfs.findOne({ _id: req.params.id }, function (err: Error, file: any) {
+            if (err)
+                return res.status(400).send(err);
+            else
+                if (!file)
+                    return res.send(404);
+                else {
+                    let resize = im().resize('250x180').quality(90);
+                    res.set('Content-Type', file.contentType);
+                    resize.on('error', error => console.log(error));
+                    res.on('error', error => console.log(error));
+                    gfs.createReadStream({ _id: file._id })
+                        .pipe(resize)
+                        .pipe(res);
+
+                }
+        });
+    });
     api.get("/allimages", (req: express.Request, res: express.Response) => {
         gfs.files.find({ contentType: /^image[/]/ }, { _id: 1, filename: 1 }).toArray(function (err: Error, files: any[]) {
             if (err)
@@ -47,9 +68,12 @@ mongoose.connection.once('open', function () {
         });
         busboy.on('file', function (fieldname: string, file: any, filename: string, encoding: string, mimetype: string) {
             if (mimetype.startsWith('image/')) {
-                var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                var ws: NodeJS.WritableStream = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                ws.on('finish', function () {
+                    res.statusCode = 200;
+                    res.end();
+                })
                 file.pipe(ws);
-                res.statusCode = 200;
             }
             else {
                 file.resume();
@@ -61,6 +85,9 @@ mongoose.connection.once('open', function () {
             res.end();
         });
         req.pipe(busboy);
+    });
+    api.post("/proccessimage", (req, res) => {
+        
     });
 
 });

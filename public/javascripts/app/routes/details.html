@@ -1,0 +1,68 @@
+﻿<div class="btn-toolbar pull-right" role="group">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" />
+    <input *ngIf="textFields[selectedIndex]" type="text" [(ngModel)]="textFields[selectedIndex].text" style="height: 30px;float:left;margin-bottom:0;" />
+    <div class="btn-group">
+        <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
+        <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
+        <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
+        <a class="btn btn-default" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"></a>
+        <div class="btn-group" dropdown dropdown-append-to-body>
+            <button type="button" class="btn btn-default" dropdownToggle>
+                <i class="fa fa-text-height"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
+                <li role="menuitem" *ngFor="let fontSize of [25,30,35,40]" (click)="setProperty('fontSize', fontSize)">
+                    <a class="dropdown-item" [style.font-size.px]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}">{{fontSize}}. T</a>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-group" dropdown dropdown-append-to-body>
+            <button type="button" class="btn btn-default" dropdownToggle>
+                פונט <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
+                <li role="menuitem" *ngFor="let font of fonts" (click)="setProperty('font', font)">
+                    <a class="dropdown-item" [style.font-family]="font" [ngClass]="{'btn-info':hasProperty('font',font)}">{{font}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="btn-group">
+        <a class="btn" (click)="setProperty('align', 'left')" [ngClass]="{'btn-info':hasProperty('align','left'),'btn-default':!hasProperty('align','left')}"><i class="fa fa-align-left"></i></a>
+        <a class="btn" (click)="setProperty('align', 'center')" [ngClass]="{'btn-info':hasProperty('align','center'),'btn-default':!hasProperty('align','center')}"><i class="fa fa-align-center"></i></a>
+        <a class="btn" (click)="setProperty('align', 'right')" [ngClass]="{'btn-info':hasProperty('align','right'),'btn-default':!hasProperty('align','right')}"><i class="fa fa-align-right"></i></a>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
+    </div>
+</div>
+
+<div #container class="pull-left" (contextmenu)="showContextMenu($event)">template test div element</div>
+<p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
+<br />
+<br />
+<hr />
+<div class="panel panel-default">
+    <div class="panel-body print-area" #printArea style="visibility:visible">
+        <!--  [style.height.px]="imageHeight" [style.width.px]="imageWidth" -->
+        <div style="position: relative; width: 1000px; margin: auto;">
+            <div *ngFor="let field of textFields; let i=index" class="textField" style="position: absolute;color:gray!important"
+                 [style.border-color]="i==selectedIndex?'#000':'transparent'"
+                 [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="100 + field.index"
+                 [style.width.px]="field.width" [style.height.px]="field.height" [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
+                 [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
+                 [style.background-color]="i!=selectedIndex?'transparent':'rgba(255, 255, 255, 0.26)'"
+                 [draggable] (click)="dragstart(i, $event)" (dragstart)="dragstart(i, $event)" (drag)="onDrag(i,$event)">
+                {{field.text}}
+            </div>
+            <div style="position:absolute; z-index:400;" *ngIf="textFields[selectedIndex]"
+                 [style.top.px]="resizerCoordinates.y" [style.left.px]="resizerCoordinates.x"
+                 [draggable] (drag)="resize($event)">
+                <i class="square-tile"></i>
+            </div>
+            <img src="imageapi/byid/{{imageID}}" id="myImage" style="position:initial;width:100%;height:100%;z-index:90;"
+                 (mousedown)="selectedIndex=-1" />
+        </div>
+    </div>
+</div>

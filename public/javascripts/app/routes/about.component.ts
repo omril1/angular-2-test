@@ -2,7 +2,7 @@
 
 @Component({
     moduleId: module.id,
-    templateUrl: "/html-routes/about.html"
+    templateUrl: "./about.html"
 })
 export class AboutComponent {
     name = 'About';

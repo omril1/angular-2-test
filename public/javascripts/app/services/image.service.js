@@ -13,6 +13,7 @@ var http_1 = require("@angular/http");
 var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
+require("rxjs/add/operator/toPromise");
 var ImageService = (function () {
     function ImageService(http) {
         this.http = http;
@@ -22,6 +23,11 @@ var ImageService = (function () {
         return this.http.get(this.baseUrl + "/allimages")
             .map(function (response) { return response.json(); })
             .catch(function (error) { return Observable_1.Observable.throw(error.json().error || 'Server error'); });
+    };
+    ImageService.prototype.sendToProcessing = function (Image) {
+        return this.http.post(this.baseUrl + "/proccessimage", JSON.stringify(Image), { withCredentials: false }).toPromise();
+        //.map(response => response.json())
+        //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     };
     return ImageService;
 }());

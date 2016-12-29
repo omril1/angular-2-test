@@ -2,6 +2,8 @@
 var mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
 var Busboy = require('busboy');
+var im = require('imagemagick-stream');
+//import { processImage } from "processImage";
 //var sizeOf = require('image-size');
 var express = require("express");
 var api = express();
@@ -30,6 +32,23 @@ mongoose.connection.once('open', function () {
             gfs.createReadStream({ _id: file._id }).pipe(res);
         });
     });
+    api.get('/thumbnail/:id', function (req, res) {
+        gfs.findOne({ _id: req.params.id }, function (err, file) {
+            if (err)
+                return res.status(400).send(err);
+            else if (!file)
+                return res.send(404);
+            else {
+                var resize = im().resize('250x180').quality(90);
+                res.set('Content-Type', file.contentType);
+                resize.on('error', function (error) { return console.log(error); });
+                res.on('error', function (error) { return console.log(error); });
+                gfs.createReadStream({ _id: file._id })
+                    .pipe(resize)
+                    .pipe(res);
+            }
+        });
+    });
     api.get("/allimages", function (req, res) {
         gfs.files.find({ contentType: /^image[/]/ }, { _id: 1, filename: 1 }).toArray(function (err, files) {
             if (err)
@@ -46,8 +65,11 @@ mongoose.connection.once('open', function () {
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
             if (mimetype.startsWith('image/')) {
                 var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                ws.on('finish', function () {
+                    res.statusCode = 200;
+                    res.end();
+                });
                 file.pipe(ws);
-                res.statusCode = 200;
             }
             else {
                 file.resume();
@@ -58,6 +80,8 @@ mongoose.connection.once('open', function () {
             res.end();
         });
         req.pipe(busboy);
+    });
+    api.post("/proccessimage", function (req, res) {
     });
 });
 module.exports = api;

@@ -28,7 +28,7 @@ var UploadImageComponent = (function () {
 UploadImageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        templateUrl: "/html-routes/upload-image.html",
+        templateUrl: "./upload-image.html",
     }),
     __metadata("design:paramtypes", [])
 ], UploadImageComponent);

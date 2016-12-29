@@ -14,6 +14,7 @@
         'ng2-draggable': 'npm:ng2-draggable/index.js',
         'ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
         'angular2-color-picker': 'npm:angular2-color-picker',
+        'primeng': 'npm:primeng',
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {
@@ -21,6 +22,7 @@
         'rxjs': { defaultExtension: 'js' },
         'angular2-in-memory-web-api': { defaultExtension: 'js' },
         'angular2-color-picker': { main: 'index.js', defaultExtension: 'js' },
+        'primeng': { main: 'index.js', defaultExtension: 'js' },
         //'ng2-bootstrap': { main: 'index.js', defaultExtension: 'js' },
     };
     var ngPackageNames = [

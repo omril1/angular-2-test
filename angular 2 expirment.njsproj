@@ -46,10 +46,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="public\html-routes\about.html" />
-    <Content Include="public\html-routes\details.html" />
-    <Content Include="public\html-routes\list.html" />
-    <Content Include="public\html-routes\upload-image.html" />
+    <Content Include="public\javascripts\app\routes\about.html" />
+    <Content Include="public\javascripts\app\routes\details.html" />
+    <Content Include="public\javascripts\app\routes\list.html" />
+    <Content Include="public\javascripts\app\routes\upload-image.html" />
     <Content Include="public\javascripts\app\routes\list.component.ts" />
     <Content Include="public\stylesheets\siteTheme.css" />
     <Content Include="tsconfig.json" />
@@ -58,12 +58,12 @@
     <Content Include="public\index.html" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="connectMongoDB.ts" />
+    <TypeScriptCompile Include="processImage\processImage.ts" />
     <TypeScriptCompile Include="public\javascripts\app\routes\index.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />
     <TypeScriptCompile Include="public\javascripts\app\app.components.ts" />
     <TypeScriptCompile Include="public\javascripts\app\app.module.ts" />
     <TypeScriptCompile Include="public\javascripts\app\main.ts" />
-    <TypeScriptCompile Include="public\javascripts\app\pipes\capitalize.pipe.ts" />
     <TypeScriptCompile Include="public\javascripts\app\routes\about.component.ts" />
     <TypeScriptCompile Include="public\javascripts\app\routes\details.component.ts" />
     <TypeScriptCompile Include="public\javascripts\app\routes\upload-image.component.ts" />
@@ -71,22 +71,24 @@
     <TypeScriptCompile Include="public\javascripts\app\services\image.service.ts" />
     <TypeScriptCompile Include="routers\api.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\mongodb\mongodb.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="processImage\" />
     <Folder Include="public\javascripts\app\services\" />
     <Folder Include="routers\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\javascripts\app\" />
-    <Folder Include="public\javascripts\app\pipes\" />
     <Folder Include="public\javascripts\app\routes\" />
     <Folder Include="public\html-routes\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\typings\" />
     <Folder Include="Scripts\typings\express\" />
+    <Folder Include="Scripts\typings\mongodb\" />
     <Folder Include="Scripts\typings\node\" />
   </ItemGroup>
   <ItemGroup>

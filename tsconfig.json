@@ -7,7 +7,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [ "es2015", "dom" ],
-    "noImplicitAny": true,
+    //"noImplicitAny": true,
+    "typeRoots": [ "./typings" ],
     "suppressImplicitAnyIndexErrors": true
   },
   "compileOnSave": true,

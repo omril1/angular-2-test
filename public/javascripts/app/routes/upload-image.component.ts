@@ -3,7 +3,7 @@ import { FileUploader } from 'ng2-file-upload';
 
 @Component({
     moduleId: module.id,
-    templateUrl: "/html-routes/upload-image.html",
+    templateUrl: "./upload-image.html",
 })
 export class UploadImageComponent {
     public uploader: FileUploader = new FileUploader({
