@@ -38,15 +38,19 @@ export class ImageService {
     getImageNames() {
         return this.http.get(`${this.baseUrl}/allimages`)
             .map(response => response.json())
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
     }
 
     sendToProcessing(image: Image) {
         let body = JSON.stringify(image);
-        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */}); // ... Set content type to JSON
+        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers, body: image }); // Create a request option
         return this.http.post(`${this.baseUrl}/proccessimage`, body, options).toPromise()
             //.map(response => response.json())
-            .catch((error: any) => Promise.reject(error.json().error || 'Server error'));
+            .catch((error: any) =>
+                Promise.reject(error || 'Server error'));
     }
 }

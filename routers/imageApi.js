@@ -5,14 +5,15 @@ var Busboy = require('busboy');
 var path = require("path");
 var fs = require("fs");
 var os = require("os");
+var connectionManager = require("../connectionManager");
 var im = require('imagemagick-stream');
 var processImage_1 = require("../processImage");
 //var sizeOf = require('image-size');
 var express = require("express");
-function initializeImageAPI(mongoConnection) {
+//mongoose.connection.db
+function api() {
     var api = express();
-    //mongoose.connection.db
-    var gfs = Grid(mongoConnection);
+    var gfs = connectionManager.gfs;
     api.get("/byname/:filename", function (req, res) {
         gfs.exist({ filename: req.params.filename }, function (err, result) {
             if (err)
@@ -71,6 +72,18 @@ function initializeImageAPI(mongoConnection) {
                     res.statusCode = 200;
                     res.end();
                 });
+                ws.on('error', function (err) {
+                    console.log(err);
+                    res.statusCode = 415;
+                    res.end();
+                });
+                file.on('error', function (err) {
+                    console.log(err);
+                    res.statusCode = 415;
+                    res.end();
+                });
+                file.on('end', function () { return console.log('file end'); });
+                file.on('finish', function () { return console.log('file finish'); });
                 file.pipe(ws);
             }
             else {
@@ -79,7 +92,7 @@ function initializeImageAPI(mongoConnection) {
             }
         });
         busboy.on('finish', function () {
-            res.end();
+            console.log('busboy finish');
         });
         req.pipe(busboy);
     });
@@ -96,5 +109,7 @@ function initializeImageAPI(mongoConnection) {
     });
     return api;
 }
-exports.initializeImageAPI = initializeImageAPI;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = api;
+;
 //# sourceMappingURL=imageApi.js.map

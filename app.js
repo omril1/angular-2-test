@@ -2,14 +2,11 @@
 var express = require("express");
 var http = require("http");
 var path = require("path");
-var connectMongoDB_1 = require("./connectMongoDB");
-var connectionPromise = connectMongoDB_1.default();
+var connectionManager = require("./connectionManager");
 var api = require("./routers/api");
 var imageApi_1 = require("./routers/imageApi");
 var app = express();
-// all environments
-connectionPromise.then(function (mongooseConnection) {
-    var imageApi = imageApi_1.initializeImageAPI(mongooseConnection);
+connectionManager.connect().then(function () {
     app.set('port', process.env.PORT || 80);
     app.use(express.favicon());
     app.use(express.logger('dev'));
@@ -20,7 +17,7 @@ connectionPromise.then(function (mongooseConnection) {
     //app.use(express.bodyParser());
     app.use(express.urlencoded());
     app.use("/api", api);
-    app.use("/imageapi", imageApi);
+    app.use("/imageapi", imageApi_1.default());
     app.get("/*", function (req, res) {
         if (req.path.endsWith('.js') == false)
             res.sendfile(path.join(__dirname, "public", "index.html"));

@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
-var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/toPromise");
@@ -22,14 +21,19 @@ var ImageService = (function () {
     ImageService.prototype.getImageNames = function () {
         return this.http.get(this.baseUrl + "/allimages")
             .map(function (response) { return response.json(); })
-            .catch(function (error) { return Observable_1.Observable.throw(error.json().error || 'Server error'); });
+            .toPromise()
+            .catch(function (error) {
+            throw (error || 'Server error');
+        });
     };
     ImageService.prototype.sendToProcessing = function (image) {
         var body = JSON.stringify(image);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers, body: image }); // Create a request option
         return this.http.post(this.baseUrl + "/proccessimage", body, options).toPromise()
-            .catch(function (error) { return Promise.reject(error.json().error || 'Server error'); });
+            .catch(function (error) {
+            return Promise.reject(error || 'Server error');
+        });
     };
     return ImageService;
 }());

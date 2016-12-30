@@ -57,7 +57,7 @@
     <Content Include="package.json" />
     <Content Include="public\index.html" />
     <Content Include="README.md" />
-    <TypeScriptCompile Include="connectMongoDB.ts" />
+    <TypeScriptCompile Include="connectionManager.ts" />
     <TypeScriptCompile Include="processImage.ts" />
     <TypeScriptCompile Include="public\javascripts\app\routes\index.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />

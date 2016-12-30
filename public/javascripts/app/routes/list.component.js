@@ -20,7 +20,7 @@ var ListComponent = (function () {
     }
     ListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.imageService.getImageNames().forEach(function (value) { return _this.imageList = value; });
+        this.imageService.getImageNames().then(function (value) { return _this.imageList = value; });
     };
     ListComponent.prototype.openModal = function (image) {
         this.selectedImage = image;

@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.imageService.getImageNames().forEach(
+        this.imageService.getImageNames().then(
             value => this.imageList = value
         );
     }

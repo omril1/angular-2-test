@@ -4,6 +4,7 @@ let Busboy = require('busboy');
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
+import * as connectionManager from '../connectionManager';
 const im = require('imagemagick-stream');
 import processImage from "../processImage";
 
@@ -31,11 +32,11 @@ export interface ItextField {
     underline: boolean;
 }
 
-export function initializeImageAPI(mongoConnection): express.Application {
+//mongoose.connection.db
+export default function api() {
     let api = express();
+    let gfs = connectionManager.gfs;
 
-    //mongoose.connection.db
-    var gfs = Grid(mongoConnection);
     api.get("/byname/:filename", (req: express.Request, res: express.Response) => {
         gfs.exist({ filename: req.params.filename }, function (err: Error, result: any) {
             if (err)
@@ -96,6 +97,18 @@ export function initializeImageAPI(mongoConnection): express.Application {
                     res.statusCode = 200;
                     res.end();
                 })
+                ws.on('error', (err) => {
+                    console.log(err);
+                    res.statusCode = 415;
+                    res.end();
+                });
+                file.on('error', (err) => {
+                    console.log(err);
+                    res.statusCode = 415;
+                    res.end();
+                });
+                file.on('end', () => console.log('file end'));
+                file.on('finish', () => console.log('file finish'));
                 file.pipe(ws);
             }
             else {
@@ -105,7 +118,7 @@ export function initializeImageAPI(mongoConnection): express.Application {
 
         });
         busboy.on('finish', function () {
-            res.end();
+            console.log('busboy finish');
         });
         req.pipe(busboy);
     });
@@ -121,4 +134,4 @@ export function initializeImageAPI(mongoConnection): express.Application {
             res.send(404);
     });
     return api;
-}
+};
