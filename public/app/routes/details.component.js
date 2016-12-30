@@ -12,6 +12,7 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var primeng_1 = require("primeng/primeng");
 var image_service_1 = require("../services/image.service");
+var domtoimage = require('dom-to-image');
 var parseElementRectangle = function (target) {
     return {
         left: Number(target.style.left.replace('px', '')),
@@ -30,8 +31,10 @@ var DetailsComponent = (function () {
         this.selectedIndex = -1;
         this.resizerCoordinates = { x: 0, y: 0 };
         this.fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
-        this.removeField = function () {
-            if (this.selectedIndex != -1) {
+        this.removeField = function (index) {
+            if (index != undefined)
+                this.textFields.splice(index, 1);
+            else if (this.selectedIndex != -1) {
                 this.textFields.splice(this.selectedIndex, 1);
                 this.selectedIndex = -1;
             }
@@ -148,6 +151,20 @@ var DetailsComponent = (function () {
     };
     DetailsComponent.prototype.sendToProcessing = function () {
         this.imageService.sendToProcessing({ ID: this.imageID, textFields: this.textFields }).then(function (result) {
+            window.open(result.text());
+        });
+    };
+    DetailsComponent.prototype.domtoimage = function () {
+        domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
+            .then(function (dataUrl) {
+            var link = document.createElement('a');
+            link.download = 'my-image-name.jpeg';
+            link.href = dataUrl;
+            link.click();
+        });
+    };
+    DetailsComponent.prototype.saveInServer = function () {
+        this.imageService.saveInServer({ ID: this.imageID, textFields: this.textFields }).then(function (result) {
             window.open(result.text());
         });
     };

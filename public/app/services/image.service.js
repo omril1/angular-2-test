@@ -28,9 +28,18 @@ var ImageService = (function () {
     };
     ImageService.prototype.sendToProcessing = function (image) {
         var body = JSON.stringify(image);
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ }); // ... Set content type to JSON
-        var options = new http_1.RequestOptions({ headers: headers, body: image }); // Create a request option
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
+        var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.baseUrl + "/proccessimage", body, options).toPromise()
+            .catch(function (error) {
+            return Promise.reject(error || 'Server error');
+        });
+    };
+    ImageService.prototype.saveInServer = function (image) {
+        var body = JSON.stringify(image);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.baseUrl + "/save", body, options).toPromise()
             .catch(function (error) {
             return Promise.reject(error || 'Server error');
         });

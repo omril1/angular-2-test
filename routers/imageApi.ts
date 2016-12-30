@@ -31,8 +31,8 @@ export interface ItextField {
     align: string;
     underline: boolean;
 }
+let tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
 
-//mongoose.connection.db
 export default function api() {
     let api = express();
     let gfs = connectionManager.gfs;
@@ -125,7 +125,9 @@ export default function api() {
     api.post("/proccessimage", (req: express.Request, res: express.Response) => {
         processImage(<Image>req.body, res);
     });
-    let tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
+    api.post("/save", (req: express.Request, res: express.Response) => {
+        
+    });
     api.get('/tempFile/:filename', (req: express.Request, res: express.Response) => {
         let filePath = path.join(tempPath, req.params.filename);
         if (fs.existsSync(filePath))

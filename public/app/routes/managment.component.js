@@ -9,17 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var AppComponent = (function () {
-    function AppComponent() {
+var AboutComponent = (function () {
+    function AboutComponent() {
+        this.name = 'managment';
     }
-    return AppComponent;
+    return AboutComponent;
 }());
-AppComponent = __decorate([
+AboutComponent = __decorate([
     core_1.Component({
-        selector: 'my-app',
-        template: "\n    <nav>\n        <ul class=\"nav nav-justified\">\n            <li><a [routerLink]=\"['/about']\">about</a></li>\n            <li><a [routerLink]=\"['/list']\">list</a></li>\n            <li><a [routerLink]=\"['/upload-image']\">upload image</a></li>\n        </ul>\n    </nav>\n    <br>\n    <router-outlet></router-outlet>\n",
+        moduleId: module.id,
+        templateUrl: "./managment.html"
     }),
     __metadata("design:paramtypes", [])
-], AppComponent);
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.components.js.map
+], AboutComponent);
+exports.AboutComponent = AboutComponent;
+//# sourceMappingURL=managment.component.js.map

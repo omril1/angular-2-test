@@ -12,7 +12,7 @@ import { ColorPickerModule } from 'angular2-color-picker';
 import { ContextMenuModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
-import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent } from './routes/index';
+import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, ManagmentComponent } from './routes/index';
 
 
 import { ImageService } from './services/image.service'
@@ -22,6 +22,7 @@ const appRoutes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'upload-image', component: UploadImageComponent },
     { path: 'list', component: ListComponent },
+    { path: 'managment', component: ManagmentComponent },
     { path: 'details/:id/:height/:width', component: DetailsComponent }
 ];
 export const AppRoutesModule = RouterModule.forRoot(appRoutes);

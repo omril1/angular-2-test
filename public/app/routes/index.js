@@ -6,4 +6,5 @@ __export(require("./about.component"));
 __export(require("./details.component"));
 __export(require("./list.component"));
 __export(require("./upload-image.component"));
+__export(require("./managment.component"));
 //# sourceMappingURL=index.js.map

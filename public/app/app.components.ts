@@ -8,6 +8,7 @@
             <li><a [routerLink]="['/about']">about</a></li>
             <li><a [routerLink]="['/list']">list</a></li>
             <li><a [routerLink]="['/upload-image']">upload image</a></li>
+            <li><a [routerLink]="['/managment']">managment</a></li>
         </ul>
     </nav>
     <br>

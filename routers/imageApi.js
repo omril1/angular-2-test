@@ -10,7 +10,7 @@ var im = require('imagemagick-stream');
 var processImage_1 = require("../processImage");
 //var sizeOf = require('image-size');
 var express = require("express");
-//mongoose.connection.db
+var tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
 function api() {
     var api = express();
     var gfs = connectionManager.gfs;
@@ -99,7 +99,8 @@ function api() {
     api.post("/proccessimage", function (req, res) {
         processImage_1.default(req.body, res);
     });
-    var tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
+    api.post("/save", function (req, res) {
+    });
     api.get('/tempFile/:filename', function (req, res) {
         var filePath = path.join(tempPath, req.params.filename);
         if (fs.existsSync(filePath))

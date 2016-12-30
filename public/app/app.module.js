@@ -26,6 +26,7 @@ var appRoutes = [
     { path: 'about', component: index_1.AboutComponent },
     { path: 'upload-image', component: index_1.UploadImageComponent },
     { path: 'list', component: index_1.ListComponent },
+    { path: 'managment', component: index_1.ManagmentComponent },
     { path: 'details/:id/:height/:width', component: index_1.DetailsComponent }
 ];
 exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);

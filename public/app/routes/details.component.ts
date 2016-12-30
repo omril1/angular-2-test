@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
 import { MenuItem, ContextMenu } from 'primeng/primeng';
 import { ImageService, ItextField, Image } from '../services/image.service';
+let domtoimage = require('dom-to-image');
 
 interface coordinates {
     x: number;
@@ -95,8 +96,10 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy() {
     }
 
-    removeField = function () {
-        if (this.selectedIndex != -1) {
+    removeField = function (index?: number) {
+        if (index != undefined)
+            this.textFields.splice(index, 1);
+        else if (this.selectedIndex != -1) {
             this.textFields.splice(this.selectedIndex, 1);
             this.selectedIndex = -1;
         }
@@ -174,6 +177,20 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     private sendToProcessing() {
         this.imageService.sendToProcessing({ ID: this.imageID, textFields: this.textFields }).then(result => {
+            window.open(result.text());
+        });
+    }
+    private domtoimage() {
+        domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'my-image-name.jpeg';
+                link.href = dataUrl;
+                link.click();
+            });
+    }
+    private saveInServer() {
+        this.imageService.saveInServer({ ID: this.imageID, textFields: this.textFields }).then(result => {
             window.open(result.text());
         });
     }

@@ -46,11 +46,21 @@ export class ImageService {
 
     sendToProcessing(image: Image) {
         let body = JSON.stringify(image);
-        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers, body: image }); // Create a request option
+        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
+        let options = new RequestOptions({ headers: headers });
         return this.http.post(`${this.baseUrl}/proccessimage`, body, options).toPromise()
             //.map(response => response.json())
             .catch((error: any) =>
                 Promise.reject(error || 'Server error'));
+    }
+
+    saveInServer(image: Image) {
+        let body = JSON.stringify(image);
+        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(`${this.baseUrl}/save`, body, options).toPromise()
+            .catch((error: any) =>
+                Promise.reject(error || 'Server error'));
+
     }
 }

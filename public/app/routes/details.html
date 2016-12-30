@@ -5,13 +5,14 @@
         <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
         <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
         <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
-        <a class="btn btn-default" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"></a>
+        <a class="btn btn-default" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
         <div class="btn-group" dropdown dropdown-append-to-body>
             <button type="button" class="btn btn-default" dropdownToggle>
                 <i class="fa fa-text-height"></i>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
-                <li role="menuitem" *ngFor="let fontSize of [25,30,35,40]" (click)="setProperty('fontSize', fontSize)">
+                <li *ngFor="let fontSize of [textFields[selectedIndex]?.fontSize-5,textFields[selectedIndex]?.fontSize-1,textFields[selectedIndex]?.fontSize,textFields[selectedIndex]?.fontSize+1,textFields[selectedIndex]?.fontSize+5]"
+                    role="menuitem" (click)="setProperty('fontSize', fontSize)">
                     <a class="dropdown-item" [style.font-size.px]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}">{{fontSize}}. T</a>
                 </li>
             </ul>
@@ -38,12 +39,24 @@
     </div>
 </div>
 
-<div #container class="pull-left" (contextmenu)="showContextMenu($event)"><button (click)="sendToProcessing()">proccessimage</button></div>
+<div #container class="pull-left" (contextmenu)="showContextMenu($event)">
+    <button (click)="sendToProcessing()">Process in server</button>
+    <button (click)="domtoimage()">Download as image</button>
+    <button (click)="saveInServer()">Save in server</button>
+</div>
 <p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
 <br />
 <br />
 <hr />
 <div class="panel panel-default">
+    <div style="position: absolute; left:0;">
+        <ol class="list-unstyled">
+            <li *ngFor="let field of textFields; let i=$index" style="margin-bottom:5px;">
+                <input type="text" [(ngModel)]="field.text" style="height: 30px;margin-bottom:0;" />
+                <button type="button" class="btn btn-default" (click)="removeField(i)"><i class="fa fa-remove red" style="color:#dc0000;"></i></button>
+            </li>
+        </ol>
+    </div>
     <div class="panel-body print-area" #printArea style="visibility:visible">
         <!--  [style.height.px]="imageHeight" [style.width.px]="imageWidth" -->
         <div style="position: relative; width: 1000px; margin: auto;">
