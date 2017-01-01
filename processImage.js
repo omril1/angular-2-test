@@ -9,8 +9,8 @@ var connectionManager = require("./connectionManager");
 var fnt = PImage.registerFont('D:\\Coding\\angular 2 reconstructed project\\node_modules\\pureimage\\tests\\fonts\\SourceSansPro-Regular.ttf', 'Source Sans Pro');
 function processImage(image, res) {
     var gfs = connectionManager.gfs;
-    gfs.findOne({ _id: image.ID }, function (err, result) {
-        var rs = gfs.createReadStream({ _id: image.ID });
+    gfs.findOne({ _id: image.imageId }, function (err, result) {
+        var rs = gfs.createReadStream({ _id: image.imageId });
         if (result.contentType == "image/png") {
             PImage.decodePNG(rs, function (img1, err) {
                 try {

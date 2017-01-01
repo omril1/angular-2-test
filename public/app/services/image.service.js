@@ -26,8 +26,24 @@ var ImageService = (function () {
             throw (error || 'Server error');
         });
     };
-    ImageService.prototype.sendToProcessing = function (image) {
-        var body = JSON.stringify(image);
+    ImageService.prototype.getTemplates = function () {
+        return this.http.get(this.baseUrl + "/templates")
+            .map(function (response) { return response.json(); })
+            .toPromise()
+            .catch(function (error) {
+            throw (error || 'Server error');
+        });
+    };
+    ImageService.prototype.getTemplate = function (templateId) {
+        return this.http.get(this.baseUrl + "/template/" + templateId)
+            .map(function (response) { return response.json(); })
+            .toPromise()
+            .catch(function (error) {
+            throw (error || 'Server error');
+        });
+    };
+    ImageService.prototype.sendToProcessing = function (template) {
+        var body = JSON.stringify(template);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.baseUrl + "/proccessimage", body, options).toPromise()
@@ -35,8 +51,8 @@ var ImageService = (function () {
             return Promise.reject(error || 'Server error');
         });
     };
-    ImageService.prototype.saveInServer = function (image) {
-        var body = JSON.stringify(image);
+    ImageService.prototype.saveInServer = function (template) {
+        var body = JSON.stringify(template);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(this.baseUrl + "/save", body, options).toPromise()

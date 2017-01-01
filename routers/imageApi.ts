@@ -7,13 +7,14 @@ import * as os from 'os';
 import * as connectionManager from '../connectionManager';
 const im = require('imagemagick-stream');
 import processImage from "../processImage";
-
-//var sizeOf = require('image-size');
 import * as express from 'express';
 
-export interface Image {
-    name?: String;
-    ID: String;
+var TemplateModel = require('../models/templateModel');
+
+export interface Template {
+    name?: string;
+    _id: string;
+    imageId: string;
     textFields: ItextField[];
 }
 export interface ItextField {
@@ -31,6 +32,7 @@ export interface ItextField {
     align: string;
     underline: boolean;
 }
+
 let tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
 
 export default function api() {
@@ -85,48 +87,64 @@ export default function api() {
                 res.send(files);
         })
     });
+    api.get("/templates", (req: express.Request, res: express.Response) => {
+        TemplateModel.find({}).exec(function (err: Error, templates: Template[]) {
+            if (err)
+                res.send(err);
+            else
+                res.send(templates);
+        });
+    });
+    api.get("/template/:tempname", (req: express.Request, res: express.Response) => {
+        TemplateModel.findById(req.params.tempname).exec(function (err: Error, template: Template) {
+            if (err)
+                res.send(err);
+            else
+                res.send(template);
+        });
+    });
     api.post("/upload", function (req: any, res: express.Response) {
         var busboy = new Busboy({
             headers: req.headers,
             limits: { fileSize: 2 * 1024 * 1024, files: 1 }
         });
+        var logError = (err) => {
+            console.log(err);
+            res.send(415);
+        };
+        busboy.on('error', logError);
         busboy.on('file', function (fieldname: string, file: any, filename: string, encoding: string, mimetype: string) {
             if (mimetype.startsWith('image/')) {
-                var ws: NodeJS.WritableStream = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
                 ws.on('finish', function () {
-                    res.statusCode = 200;
-                    res.end();
-                })
-                ws.on('error', (err) => {
-                    console.log(err);
-                    res.statusCode = 415;
-                    res.end();
+                    let template = new TemplateModel({ imageId: ws.id, name: filename });
+                    template.save((err, result) => {
+                        if (err)
+                            console.log(err);
+                        else
+                            res.send(200);
+                    });
                 });
-                file.on('error', (err) => {
-                    console.log(err);
-                    res.statusCode = 415;
-                    res.end();
-                });
-                file.on('end', () => console.log('file end'));
-                file.on('finish', () => console.log('file finish'));
+                ws.on('error', logError);
+                file.on('error', logError);
                 file.pipe(ws);
             }
             else {
                 file.resume();
-                res.statusCode = 415;
+                res.send(415);
             }
-
-        });
-        busboy.on('finish', function () {
-            console.log('busboy finish');
         });
         req.pipe(busboy);
     });
     api.post("/proccessimage", (req: express.Request, res: express.Response) => {
-        processImage(<Image>req.body, res);
+        processImage(<Template>req.body, res);
     });
     api.post("/save", (req: express.Request, res: express.Response) => {
-        
+        TemplateModel.findByIdAndUpdate(req.body._id, { $set: { textFields: req.body.textFields, name: req.body.name } }, { new: true }, function (err, template) {
+            if (err)
+                console.log(err);
+            res.send(template);
+        });
     });
     api.get('/tempFile/:filename', (req: express.Request, res: express.Response) => {
         let filePath = path.join(tempPath, req.params.filename);

@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+//import * as routes from './routes/index';
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -17,7 +18,7 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: "\n    <nav>\n        <ul class=\"nav nav-justified\">\n            <li><a [routerLink]=\"['/about']\">about</a></li>\n            <li><a [routerLink]=\"['/list']\">list</a></li>\n            <li><a [routerLink]=\"['/upload-image']\">upload image</a></li>\n            <li><a [routerLink]=\"['/managment']\">managment</a></li>\n        </ul>\n    </nav>\n    <br>\n    <router-outlet></router-outlet>\n",
+        template: "\n    <nav>\n        <ul class=\"nav nav-justified\">\n            <li [routerLinkActive]=\"['active']\"><a [routerLink]=\"['about']\"       >about</a></li>\n            <li [routerLinkActive]=\"['active']\"><a [routerLink]=\"['list']\"        >\u05EA\u05DE\u05D5\u05E0\u05D5\u05EA \u05D1\u05D0\u05EA\u05E8</a></li>\n            <li [routerLinkActive]=\"['active']\"><a [routerLink]=\"['upload-image']\">\u05D4\u05E2\u05DC\u05D0\u05EA \u05EA\u05DE\u05D5\u05E0\u05D5\u05EA</a></li>\n            <li [routerLinkActive]=\"['active']\"><a [routerLink]=\"['templates']\"   >\u05EA\u05D1\u05E0\u05D9\u05D5\u05EA</a></li>\n        </ul>\n    </nav>\n    <br>\n    <router-outlet></router-outlet>\n",
     }),
     __metadata("design:paramtypes", [])
 ], AppComponent);

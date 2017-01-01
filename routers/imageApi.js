@@ -8,8 +8,8 @@ var os = require("os");
 var connectionManager = require("../connectionManager");
 var im = require('imagemagick-stream');
 var processImage_1 = require("../processImage");
-//var sizeOf = require('image-size');
 var express = require("express");
+var TemplateModel = require('../models/templateModel');
 var tempPath = path.join(os.tmpdir(), 'imageProcessingApp');
 function api() {
     var api = express();
@@ -60,39 +60,52 @@ function api() {
                 res.send(files);
         });
     });
+    api.get("/templates", function (req, res) {
+        TemplateModel.find({}).exec(function (err, templates) {
+            if (err)
+                res.send(err);
+            else
+                res.send(templates);
+        });
+    });
+    api.get("/template/:tempname", function (req, res) {
+        TemplateModel.findById(req.params.tempname).exec(function (err, template) {
+            if (err)
+                res.send(err);
+            else
+                res.send(template);
+        });
+    });
     api.post("/upload", function (req, res) {
         var busboy = new Busboy({
             headers: req.headers,
             limits: { fileSize: 2 * 1024 * 1024, files: 1 }
         });
+        var logError = function (err) {
+            console.log(err);
+            res.send(415);
+        };
+        busboy.on('error', logError);
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
             if (mimetype.startsWith('image/')) {
                 var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
                 ws.on('finish', function () {
-                    res.statusCode = 200;
-                    res.end();
+                    var template = new TemplateModel({ imageId: ws.id, name: filename });
+                    template.save(function (err, result) {
+                        if (err)
+                            console.log(err);
+                        else
+                            res.send(200);
+                    });
                 });
-                ws.on('error', function (err) {
-                    console.log(err);
-                    res.statusCode = 415;
-                    res.end();
-                });
-                file.on('error', function (err) {
-                    console.log(err);
-                    res.statusCode = 415;
-                    res.end();
-                });
-                file.on('end', function () { return console.log('file end'); });
-                file.on('finish', function () { return console.log('file finish'); });
+                ws.on('error', logError);
+                file.on('error', logError);
                 file.pipe(ws);
             }
             else {
                 file.resume();
-                res.statusCode = 415;
+                res.send(415);
             }
-        });
-        busboy.on('finish', function () {
-            console.log('busboy finish');
         });
         req.pipe(busboy);
     });
@@ -100,6 +113,11 @@ function api() {
         processImage_1.default(req.body, res);
     });
     api.post("/save", function (req, res) {
+        TemplateModel.findByIdAndUpdate(req.body._id, { $set: { textFields: req.body.textFields, name: req.body.name } }, { new: true }, function (err, template) {
+            if (err)
+                console.log(err);
+            res.send(template);
+        });
     });
     api.get('/tempFile/:filename', function (req, res) {
         var filePath = path.join(tempPath, req.params.filename);

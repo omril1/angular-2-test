@@ -13,10 +13,9 @@ var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 var router_1 = require("@angular/router");
-var ng2_bootstrap_1 = require("ng2-bootstrap");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
-var ng2_bootstrap_2 = require("ng2-bootstrap");
+var ng2_bootstrap_1 = require("ng2-bootstrap");
 var angular2_color_picker_1 = require("angular2-color-picker");
 var primeng_1 = require("primeng/primeng");
 var app_components_1 = require("./app.components");
@@ -26,7 +25,7 @@ var appRoutes = [
     { path: 'about', component: index_1.AboutComponent },
     { path: 'upload-image', component: index_1.UploadImageComponent },
     { path: 'list', component: index_1.ListComponent },
-    { path: 'managment', component: index_1.ManagmentComponent },
+    { path: 'templates', component: index_1.TemplatesComponent },
     { path: 'details/:id/:height/:width', component: index_1.DetailsComponent }
 ];
 exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
@@ -43,14 +42,16 @@ AppModule = __decorate([
             http_1.HttpModule,
             forms_1.FormsModule,
             ng2_draggable_1.DraggableModule,
-            ng2_bootstrap_2.DropdownModule.forRoot(),
+            ng2_bootstrap_1.DropdownModule.forRoot(),
             angular2_color_picker_1.ColorPickerModule,
             ng2_bootstrap_1.ModalModule.forRoot(),
-            primeng_1.ContextMenuModule
+            primeng_1.ContextMenuModule,
+            primeng_1.GrowlModule
         ],
         declarations: [
             app_components_1.AppComponent,
             index_1.AboutComponent,
+            index_1.TemplatesComponent,
             index_1.ListComponent,
             index_1.DetailsComponent,
             index_1.UploadImageComponent,

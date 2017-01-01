@@ -2,4 +2,4 @@
 export * from './details.component';
 export * from './list.component';
 export * from './upload-image.component';
-export * from './managment.component';
+export * from './templates.component';

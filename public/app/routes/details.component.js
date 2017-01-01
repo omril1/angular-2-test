@@ -26,27 +26,27 @@ var DetailsComponent = (function () {
         var _this = this;
         this.route = route;
         this.imageService = imageService;
-        this.textFields = Array();
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
         this.resizerCoordinates = { x: 0, y: 0 };
+        this.msgs = [];
         this.fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
         this.removeField = function (index) {
             if (index != undefined)
-                this.textFields.splice(index, 1);
+                this.template.textFields.splice(index, 1);
             else if (this.selectedIndex != -1) {
-                this.textFields.splice(this.selectedIndex, 1);
+                this.template.textFields.splice(this.selectedIndex, 1);
                 this.selectedIndex = -1;
             }
         };
         this.colorChanged = function (color) {
             this.color = color;
             if (this.selectedIndex != -1) {
-                this.textFields[this.selectedIndex].color = color;
+                this.template.textFields[this.selectedIndex].color = color;
             }
         };
         this.addField = function () {
-            this.textFields.push({
+            this.template.textFields.push({
                 left: 1000 / 3,
                 top: 30,
                 width: 1000 / 3,
@@ -63,37 +63,37 @@ var DetailsComponent = (function () {
             });
         };
         this.setProperty = function (propName, prop) {
-            if (this.textFields[this.selectedIndex]) {
-                this.textFields[this.selectedIndex][propName] = prop;
+            if (this.template && this.template.textFields[this.selectedIndex]) {
+                this.template.textFields[this.selectedIndex][propName] = prop;
             }
         };
         this.hasProperty = function (propName, prop) {
-            if (this.textFields[this.selectedIndex]) {
-                return this.textFields[this.selectedIndex][propName] == prop;
+            if (this.template && this.template.textFields[this.selectedIndex]) {
+                return this.template.textFields[this.selectedIndex][propName] == prop;
             }
             else
                 return false;
         };
         this.toggleProperty = function (propName) {
-            if (this.textFields[this.selectedIndex]) {
-                this.textFields[this.selectedIndex][propName] = !this.textFields[this.selectedIndex][propName];
+            if (this.template.textFields[this.selectedIndex]) {
+                this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
             }
         };
         this.dragstart = function (fieldIndex, event) {
             this.selectedIndex = fieldIndex;
-            this.color = this.textFields[this.selectedIndex].color;
+            this.color = this.template.textFields[this.selectedIndex].color;
             this.setResizer(event.target);
         };
         this.onDrag = function (fieldIndex, event) {
             var targetRectangle = parseElementRectangle(event.target);
-            this.textFields[this.selectedIndex].left = targetRectangle.left;
-            this.textFields[this.selectedIndex].top = targetRectangle.top;
+            this.template.textFields[this.selectedIndex].left = targetRectangle.left;
+            this.template.textFields[this.selectedIndex].top = targetRectangle.top;
             this.setResizer(event.target);
         };
         this.resize = function (event) {
             var targetRectangle = parseElementRectangle(event.srcElement);
-            var parseX = Number(targetRectangle.left) - this.textFields[this.selectedIndex].left;
-            var parseY = Number(targetRectangle.top) - this.textFields[this.selectedIndex].top;
+            var parseX = Number(targetRectangle.left) - this.template.textFields[this.selectedIndex].left;
+            var parseY = Number(targetRectangle.top) - this.template.textFields[this.selectedIndex].top;
             if (parseX < 0 || parseY < 0) {
                 if (parseX < 0)
                     this.resizerCoordinates.x = targetRectangle.left;
@@ -101,8 +101,8 @@ var DetailsComponent = (function () {
                     this.resizerCoordinates.y = targetRectangle.top;
             }
             else {
-                this.textFields[this.selectedIndex].width = parseX;
-                this.textFields[this.selectedIndex].height = parseY;
+                this.template.textFields[this.selectedIndex].width = parseX;
+                this.template.textFields[this.selectedIndex].height = parseY;
             }
         };
         this.setResizer = function (target) {
@@ -117,11 +117,14 @@ var DetailsComponent = (function () {
     DetailsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
-            _this.imageID = params['id'];
+            //this.imageID = params['id'];
+            _this.imageService.getTemplate(params['id'])
+                .then(function (template) {
+                return _this.template = template;
+            });
             _this.imageHeight = parseInt(params['height']);
             _this.imageWidth = parseInt(params['width']);
         });
-        this.addField();
         this.items = [
             {
                 label: 'File',
@@ -150,7 +153,7 @@ var DetailsComponent = (function () {
     DetailsComponent.prototype.ngOnDestroy = function () {
     };
     DetailsComponent.prototype.sendToProcessing = function () {
-        this.imageService.sendToProcessing({ ID: this.imageID, textFields: this.textFields }).then(function (result) {
+        this.imageService.sendToProcessing(this.template).then(function (result) {
             window.open(result.text());
         });
     };
@@ -164,8 +167,9 @@ var DetailsComponent = (function () {
         });
     };
     DetailsComponent.prototype.saveInServer = function () {
-        this.imageService.saveInServer({ ID: this.imageID, textFields: this.textFields }).then(function (result) {
-            window.open(result.text());
+        var _this = this;
+        this.imageService.saveInServer(this.template).then(function (result) {
+            _this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
         });
     };
     return DetailsComponent;
@@ -187,7 +191,7 @@ DetailsComponent = __decorate([
         moduleId: module.id,
         templateUrl: "./details.html",
         providers: [image_service_1.ImageService],
-        styles: ["\n    .textField {\n        border-width: 1px;\n        border-style: dashed;\n        cursor: pointer;\n        line-height: normal;\n        overflow: hidden;\n    }\n\n    i.square-tile {\n        position: inherit;\n        width: 5px;\n        height: 5px;\n        border: solid 1px black;\n        background: white;\n        cursor: nw-resize;\n    }"],
+        styles: ["\n    .textField {\n        border-width: 1px;\n        border-style: dashed;\n        cursor: pointer;\n        line-height: normal;\n        overflow: hidden;\n    }\n\n    .square-tile i {\n        position: inherit;\n        width: 5px;\n        height: 5px;\n        border: solid 1px black;\n        background: white;\n        cursor: nw-resize;\n    }"],
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService])
 ], DetailsComponent);

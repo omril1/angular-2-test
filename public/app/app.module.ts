@@ -3,16 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
-import { ModalModule } from 'ng2-bootstrap';
 
 import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
-import { DropdownModule } from 'ng2-bootstrap';
+import { DropdownModule, ModalModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
-import { ContextMenuModule } from 'primeng/primeng';
+import { ContextMenuModule, GrowlModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
-import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, ManagmentComponent } from './routes/index';
+import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
 
 
 import { ImageService } from './services/image.service'
@@ -22,7 +21,7 @@ const appRoutes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'upload-image', component: UploadImageComponent },
     { path: 'list', component: ListComponent },
-    { path: 'managment', component: ManagmentComponent },
+    { path: 'templates', component: TemplatesComponent },
     { path: 'details/:id/:height/:width', component: DetailsComponent }
 ];
 export const AppRoutesModule = RouterModule.forRoot(appRoutes);
@@ -37,11 +36,13 @@ export const AppRoutesModule = RouterModule.forRoot(appRoutes);
         DropdownModule.forRoot(),
         ColorPickerModule,
         ModalModule.forRoot(),
-        ContextMenuModule
+        ContextMenuModule,
+        GrowlModule
     ],
     declarations: [
         AppComponent,
         AboutComponent,
+        TemplatesComponent,
         ListComponent,
         DetailsComponent,
         UploadImageComponent,

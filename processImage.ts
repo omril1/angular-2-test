@@ -1,4 +1,4 @@
-﻿import { Image } from './routers/imageApi';
+﻿import { Template } from './routers/imageApi';
 import { Response } from 'express';
 import * as fs from 'fs';
 import * as os from 'os';
@@ -11,10 +11,10 @@ import * as connectionManager from './connectionManager';
 
 var fnt = PImage.registerFont('D:\\Coding\\angular 2 reconstructed project\\node_modules\\pureimage\\tests\\fonts\\SourceSansPro-Regular.ttf', 'Source Sans Pro')
 
-export default function processImage(image: Image, res: Response): void {
+export default function processImage(image: Template, res: Response): void {
     let gfs = connectionManager.gfs;
-    gfs.findOne({ _id: image.ID }, (err, result) => {
-        let rs = gfs.createReadStream({ _id: image.ID });
+    gfs.findOne({ _id: image.imageId }, (err, result) => {
+        let rs = gfs.createReadStream({ _id: image.imageId });
         if (result.contentType == "image/png") {
             PImage.decodePNG(rs, function (img1, err?) {
                 try {

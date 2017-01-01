@@ -9,19 +9,19 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-9" style="margin-bottom: 40px">
+        <div class="col-md-9" style="margin-bottom: 40px;direction:rtl;">
 
-            <h3>Upload queue</h3>
-            <p>Queue length: {{ uploader?.queue?.length }}</p>
+            <h3>תור האלעות</h3>
+            <p>תור העלאות: {{ uploader?.queue?.length }}</p>
 
             <table class="table">
                 <thead>
                     <tr>
-                        <th width="40%">Name</th>
-                        <th width="10%">Size</th>
-                        <th width="30%">Progress</th>
-                        <th width="10%">Status</th>
-                        <th width="40%">Actions</th>
+                        <th width="40%">שם קובץ</th>
+                        <th width="10%">גודל</th>
+                        <th width="30%">התקדמות</th>
+                        <th width="10%">סטאטוס</th>
+                        <th width="40%">פעולות</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,15 +41,15 @@
                         <td>
                             <button type="button" class="btn btn-success btn-mini" style="width:100%;"
                                     (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                                <span class="glyphicon glyphicon-upload"></span> Upload
+                                <span class="glyphicon glyphicon-upload"></span> להעלות
                             </button>
                             <button type="button" class="btn btn-warning btn-mini" style="width:100%;"
                                     (click)="item.cancel()" [disabled]="!item.isUploading">
-                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                <span class="glyphicon glyphicon-ban-circle"></span> לבטל
                             </button>
                             <button type="button" class="btn btn-danger btn-mini" style="width:100%;"
                                     (click)="item.remove()">
-                                <span class="glyphicon glyphicon-trash"></span> Remove
+                                <span class="glyphicon glyphicon-trash"></span> למחוק
                             </button>
                         </td>
                     </tr>
@@ -58,34 +58,33 @@
 
             <div>
                 <div>
-                    Queue progress:
+                    התקדמות תור העלאות:
                     <div class="progress" style="">
                         <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
                     </div>
                 </div>
                 <button type="button" class="btn btn-success btn-small"
                         (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                    <span class="glyphicon glyphicon-upload"></span> Upload all
+                    <span class="glyphicon glyphicon-upload"></span> להעלות הכל
                 </button>
                 <button type="button" class="btn btn-warning btn-small"
                         (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                    <span class="glyphicon glyphicon-ban-circle"></span> לבטל הכל
                 </button>
                 <button type="button" class="btn btn-danger btn-small"
                         (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-                    <span class="glyphicon glyphicon-trash"></span> Remove all
+                    <span class="glyphicon glyphicon-trash"></span> למחוק הכל
                 </button>
             </div>
         </div>
 
         <div class="col-md-3">
-            <h3>זרוק כאן קבצים</h3>
             <div ng2FileDrop
                  [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
                  (fileOver)="fileOverBase($event)"
                  [uploader]="uploader"
                  class="well my-drop-zone">
-                Base drop zone
+                <h3>זרוק כאן קבצים</h3>
             </div>
 
             <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;"/>

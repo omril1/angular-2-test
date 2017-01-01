@@ -1,0 +1,35 @@
+﻿<div class="row">
+    <a class="col-md-4 col-lg-3" *ngFor='let template of templateList' style="cursor:pointer;text-decoration:none">
+        <div class="thumbnail bootsnipp-thumb" (click)="openModal(template)">
+
+            <div>
+                <p class="snipp-title ellipis" [title]="template.filename">{{template.name}}&nbsp;</p>
+            </div>
+            <div style="height:180px;width:250px;text-align:center;">
+                <img class="lazy" style="max-height: 180px;max-width: 250px;object-fit:contain" [src]="'imageapi/thumbnail/' + template.imageId">
+            </div>
+
+            <div class="caption">
+            </div>
+        </div>
+    </a>
+</div>
+
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Modal Example</h4>
+            </div>
+            <div class="modal-body">
+                select Size:
+                <br />
+                <button class="btn btn-primary" (click)="baseImageSelect(100,100)">100x100</button>
+                <button class="btn btn-primary" (click)="baseImageSelect(3508,2480)">3508x2480</button>
+            </div>
+        </div>
+    </div>
+</div>

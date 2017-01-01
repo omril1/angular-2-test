@@ -6,9 +6,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
 
-export interface Image {
-    name?: String;
-    ID: String;
+export interface Template {
+    name?: string;
+    _id: string;
+    imageId: string;
     textFields: ItextField[];
 }
 export interface ItextField {
@@ -43,24 +44,38 @@ export class ImageService {
                 throw (error || 'Server error')
             });
     }
+    getTemplates() {
+        return this.http.get(`${this.baseUrl}/templates`)
+            .map(response => <Template[]>response.json())
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
+    }
+    getTemplate(templateId: string) {
+        return this.http.get(`${this.baseUrl}/template/${templateId}`)
+            .map(response => <Template>response.json())
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
+    }
 
-    sendToProcessing(image: Image) {
-        let body = JSON.stringify(image);
+    sendToProcessing(template: Template) {
+        let body = JSON.stringify(template);
         let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
         let options = new RequestOptions({ headers: headers });
         return this.http.post(`${this.baseUrl}/proccessimage`, body, options).toPromise()
-            //.map(response => response.json())
             .catch((error: any) =>
                 Promise.reject(error || 'Server error'));
     }
 
-    saveInServer(image: Image) {
-        let body = JSON.stringify(image);
+    saveInServer(template: Template) {
+        let body = JSON.stringify(template);
         let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
         let options = new RequestOptions({ headers: headers });
         return this.http.post(`${this.baseUrl}/save`, body, options).toPromise()
             .catch((error: any) =>
                 Promise.reject(error || 'Server error'));
-
     }
 }
