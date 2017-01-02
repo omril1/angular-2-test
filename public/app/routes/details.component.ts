@@ -33,13 +33,23 @@ let parseElementRectangle = function (target: any) {
         overflow: hidden;
     }
 
-    .square-tile i {
-        position: inherit;
+    .square-tile i.bottom {
+        position: absolute;
         width: 5px;
         height: 5px;
-        border: solid 1px black;
-        background: white;
-        cursor: nw-resize;
+        left: -16px;
+        border-top: 8px dashed;
+        border-right: 8px solid transparent;
+        border-left: 8px solid transparent;
+    }
+    .square-tile i.right {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        top: -16px;
+        border-left: 8px dashed;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
     }`],
 })
 export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {

@@ -1,51 +1,53 @@
-﻿<div class="btn-toolbar pull-right" role="group">
-    <input *ngIf="template && selectedIndex > -1" type="text" [(ngModel)]="template?.textFields[selectedIndex].text" style="height: 30px;float:left;margin-bottom:0;" />
-    <div class="btn-group">
-        <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
-        <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
-        <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
-        <a class="btn btn-default" *ngIf="template" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="template.textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
-        <div class="btn-group" dropdown dropdown-append-to-body>
-            <button type="button" class="btn btn-default" dropdownToggle>
-                <i class="fa fa-text-height"></i>
-            </button>
-            <ul *ngIf="template" class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
-                <li *ngFor="let fontSize of [template.textFields[selectedIndex]?.fontSize-5,template.textFields[selectedIndex]?.fontSize-1,template.textFields[selectedIndex]?.fontSize,template.textFields[selectedIndex]?.fontSize+1,template.textFields[selectedIndex]?.fontSize+5]"
-                    role="menuitem" (click)="setProperty('fontSize', fontSize)">
-                    <a class="dropdown-item" [style.font-size.px]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}">{{fontSize}}. T</a>
-                </li>
-            </ul>
+﻿<div class="row" style="direction:rtl;">
+    <label>שם התבנית</label>
+    <input *ngIf="template" [(ngModel)]="template.name" style="width: 390px;padding: 0 5px;">
+</div>
+<div>
+    <div class="btn-toolbar pull-right" role="group">
+        <textarea *ngIf="template && selectedIndex > -1" type="text" [(ngModel)]="template?.textFields[selectedIndex].text" style="height: 30px;float:left;margin-bottom:0;"></textarea>
+        <div class="btn-group">
+            <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
+            <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
+            <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
+            <a class="btn btn-default" *ngIf="template" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="template.textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
+            <div class="btn-group" dropdown dropdown-append-to-body>
+                <button type="button" class="btn btn-default" dropdownToggle>
+                    <i class="fa fa-text-height"></i>
+                </button>
+                <ul *ngIf="template" class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
+                    <li *ngFor="let fontSize of [template.textFields[selectedIndex]?.fontSize-5,template.textFields[selectedIndex]?.fontSize-1,template.textFields[selectedIndex]?.fontSize,template.textFields[selectedIndex]?.fontSize+1,template.textFields[selectedIndex]?.fontSize+5]"
+                        role="menuitem" (click)="setProperty('fontSize', fontSize)">
+                        <a class="dropdown-item" [style.font-size.px]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}">{{fontSize}}. T</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group" dropdown dropdown-append-to-body>
+                <button type="button" class="btn btn-default" dropdownToggle>
+                    פונט <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
+                    <li role="menuitem" *ngFor="let font of fonts" (click)="setProperty('font', font)">
+                        <a class="dropdown-item" [style.font-family]="font" [ngClass]="{'btn-info':hasProperty('font',font)}">{{font}}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="btn-group" dropdown dropdown-append-to-body>
-            <button type="button" class="btn btn-default" dropdownToggle>
-                פונט <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
-                <li role="menuitem" *ngFor="let font of fonts" (click)="setProperty('font', font)">
-                    <a class="dropdown-item" [style.font-family]="font" [ngClass]="{'btn-info':hasProperty('font',font)}">{{font}}</a>
-                </li>
-            </ul>
+        <div class="btn-group">
+            <a class="btn" (click)="setProperty('align', 'left')" [ngClass]="{'btn-info':hasProperty('align','left'),'btn-default':!hasProperty('align','left')}"><i class="fa fa-align-left"></i></a>
+            <a class="btn" (click)="setProperty('align', 'center')" [ngClass]="{'btn-info':hasProperty('align','center'),'btn-default':!hasProperty('align','center')}"><i class="fa fa-align-center"></i></a>
+            <a class="btn" (click)="setProperty('align', 'right')" [ngClass]="{'btn-info':hasProperty('align','right'),'btn-default':!hasProperty('align','right')}"><i class="fa fa-align-right"></i></a>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
+            <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
         </div>
     </div>
-    <div class="btn-group">
-        <a class="btn" (click)="setProperty('align', 'left')" [ngClass]="{'btn-info':hasProperty('align','left'),'btn-default':!hasProperty('align','left')}"><i class="fa fa-align-left"></i></a>
-        <a class="btn" (click)="setProperty('align', 'center')" [ngClass]="{'btn-info':hasProperty('align','center'),'btn-default':!hasProperty('align','center')}"><i class="fa fa-align-center"></i></a>
-        <a class="btn" (click)="setProperty('align', 'right')" [ngClass]="{'btn-info':hasProperty('align','right'),'btn-default':!hasProperty('align','right')}"><i class="fa fa-align-right"></i></a>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
-        <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
+    <div #container (contextmenu)="showContextMenu($event)">
+        <button (click)="sendToProcessing()">Process in server</button>
+        <button (click)="domtoimage()">הורד כתמונה</button>
+        <button (click)="saveInServer()">שמור</button>
     </div>
 </div>
-
-<div #container class="pull-left" (contextmenu)="showContextMenu($event)">
-    <button (click)="sendToProcessing()">Process in server</button>
-    <button (click)="domtoimage()">הורד כתמונה</button>
-    <button (click)="saveInServer()">שמור</button>
-</div>
-<p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
-<p-growl [value]="msgs"></p-growl>
-<br />
 <br />
 <div class="panel panel-default row" *ngIf="template">
     <div class="col-md-3" style="margin-top:10px;">
@@ -64,22 +66,26 @@
     </div>
     <div class="panel-body col-md-9 print-area" #printArea style="visibility:visible">
         <div class="animation-test" style="position: relative; margin: auto;">
-            <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;color:gray!important"
+            <textarea *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;color:gray!important;resize:none;"
                  [style.border-color]="i==selectedIndex?'#000':'transparent'"
                  [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="100 + i"
                  [style.width.px]="field.width" [style.height.px]="field.height" [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
                  [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
                  [style.background-color]="i!=selectedIndex?'transparent':'rgba(255, 255, 255, 0.26)'"
-                 [draggable] (click)="dragstart(i, $event)" (dragstart)="dragstart(i, $event)" (drag)="onDrag(i,$event)">
-                {{field.text}}
-            </div>
-            <div style="position:absolute; z-index:400;" *ngIf="template.textFields[selectedIndex]"
+                 [draggable] (click)="dragstart(i, $event)" (dragstart)="dragstart(i, $event)" (drag)="onDrag(i,$event)" [(ngModel)]="field.text"
+                 autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </textarea>
+            <div style="position:absolute; z-index:400;width:10px;height:10px;cursor: nw-resize;" *ngIf="template.textFields[selectedIndex]"
                  [style.top.px]="resizerCoordinates.y" [style.left.px]="resizerCoordinates.x"
                  [draggable] (drag)="resize($event)" class="square-tile">
-                <i></i>
+                <i class="right"></i>
+                <i class="bottom"></i>
             </div>
             <img *ngIf="template" [src]="'imageapi/byid/' + template.imageId" style="position:initial;width:100%;height:100%;z-index:90;"
                  (mousedown)="selectedIndex=-1" />
         </div>
     </div>
 </div>
+
+<p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
+<p-growl [value]="msgs"></p-growl>

@@ -191,7 +191,7 @@ DetailsComponent = __decorate([
         moduleId: module.id,
         templateUrl: "./details.html",
         providers: [image_service_1.ImageService],
-        styles: ["\n    .textField {\n        border-width: 1px;\n        border-style: dashed;\n        cursor: pointer;\n        line-height: normal;\n        overflow: hidden;\n    }\n\n    .square-tile i {\n        position: inherit;\n        width: 5px;\n        height: 5px;\n        border: solid 1px black;\n        background: white;\n        cursor: nw-resize;\n    }"],
+        styles: ["\n    .textField {\n        border-width: 1px;\n        border-style: dashed;\n        cursor: pointer;\n        line-height: normal;\n        overflow: hidden;\n    }\n\n    .square-tile i.bottom {\n        position: absolute;\n        width: 5px;\n        height: 5px;\n        left: -16px;\n        border-top: 8px dashed;\n        border-right: 8px solid transparent;\n        border-left: 8px solid transparent;\n    }\n    .square-tile i.right {\n        position: absolute;\n        width: 5px;\n        height: 5px;\n        top: -16px;\n        border-left: 8px dashed;\n        border-top: 8px solid transparent;\n        border-bottom: 8px solid transparent;\n    }"],
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService])
 ], DetailsComponent);
