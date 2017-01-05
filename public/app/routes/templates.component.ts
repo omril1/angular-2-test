@@ -28,8 +28,4 @@ export class TemplatesComponent implements OnInit {
         this.selectedTemplate = template;
         this.modal.show();
     }
-    public baseImageSelect(height: number, width: number): void {
-        this.modal.hide();
-        this.router.navigate(['/details', this.selectedTemplate._id, height, width]);
-    }
 }

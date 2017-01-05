@@ -12,23 +12,14 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
-var router_1 = require("@angular/router");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
 var angular2_color_picker_1 = require("angular2-color-picker");
 var primeng_1 = require("primeng/primeng");
 var app_components_1 = require("./app.components");
+var app_routing_1 = require("./app.routing");
 var index_1 = require("./routes/index");
-var appRoutes = [
-    { path: '', redirectTo: 'list', pathMatch: 'full' },
-    { path: 'about', component: index_1.AboutComponent },
-    { path: 'upload-image', component: index_1.UploadImageComponent },
-    { path: 'list', component: index_1.ListComponent },
-    { path: 'templates', component: index_1.TemplatesComponent },
-    { path: 'details/:id/:height/:width', component: index_1.DetailsComponent }
-];
-exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
 var AppModule = (function () {
     function AppModule() {
     }
@@ -38,15 +29,16 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
-            exports.AppRoutesModule,
-            http_1.HttpModule,
             forms_1.FormsModule,
+            http_1.HttpModule,
             ng2_draggable_1.DraggableModule,
-            ng2_bootstrap_1.DropdownModule.forRoot(),
             angular2_color_picker_1.ColorPickerModule,
+            ng2_bootstrap_1.DropdownModule.forRoot(),
             ng2_bootstrap_1.ModalModule.forRoot(),
+            ng2_bootstrap_1.CollapseModule.forRoot(),
             primeng_1.ContextMenuModule,
-            primeng_1.GrowlModule
+            primeng_1.GrowlModule,
+            app_routing_1.AppRoutesModule,
         ],
         declarations: [
             app_components_1.AppComponent,

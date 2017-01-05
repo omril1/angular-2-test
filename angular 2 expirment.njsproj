@@ -46,12 +46,14 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="public\app\app.view.html" />
     <Content Include="public\app\routes\templates.html" />
     <Content Include="public\app\routes\about.html" />
     <Content Include="public\app\routes\details.html" />
     <Content Include="public\app\routes\list.html" />
     <Content Include="public\app\routes\upload-image.html" />
     <Content Include="public\app\routes\list.component.ts" />
+    <Content Include="public\fonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />
     <TypeScriptCompile Include="app.ts" />
@@ -60,6 +62,7 @@
     <Content Include="README.md" />
     <TypeScriptCompile Include="connectionManager.ts" />
     <TypeScriptCompile Include="processImage.ts" />
+    <TypeScriptCompile Include="public\app\app.routing.ts" />
     <TypeScriptCompile Include="public\app\routes\templates.component.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />

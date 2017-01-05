@@ -68,7 +68,8 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     private msgs: Message[] = [];
-    private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
+    //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
+    private fonts = ["ABeeZee","Abel","Abhaya Libre","Abril Fatface","Aclonica","Acme","Actor","Adamina","Advent Pro","Aguafina Script","Akronim","Aladin","Aldrich","Alef","Alegreya","Alegreya SC","Alegreya Sans","Alegreya Sans SC","Alex Brush","Alfa Slab One","Alice","Alike","Alike Angular","Allan","Allerta","Allerta Stencil","Allura","Almendra","Almendra Display","Almendra SC","Amarante","Amaranth","Amatic SC","Amatica SC","Amethysta","Amiko","Amiri","Amita","Anaheim","Andada","Andika","Angkor","Annie Use Your Telescope","Anonymous Pro","Antic","Antic Didone","Antic Slab","Anton","Arapey","Arbutus","Arbutus Slab","Architects Daughter","Archivo Black","Archivo Narrow","Aref Ruqaa","Arima Madurai","Arimo","Arizonia","Armata","Artifika","Arvo","Arya","Asap","Asar","Asset","Assistant","Astloch","Asul","Athiti","Atma","Atomic Age","Aubrey","Audiowide","Autour One","Average","Average Sans","Averia Gruesa Libre","Averia Libre"]
 
     constructor(private route: ActivatedRoute, private imageService: ImageService) {
     }
@@ -162,13 +163,13 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     dragstart = function (fieldIndex: number, event: DragEvent) {
         this.selectedIndex = fieldIndex;
         this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(event.target);
+        this.setResizer(event.currentTarget);
     }
     onDrag = function (fieldIndex: number, event: any) {
-        let targetRectangle = parseElementRectangle(event.target);
+        let targetRectangle = parseElementRectangle(event.currentTarget);
         this.template.textFields[this.selectedIndex].left = targetRectangle.left;
         this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-        this.setResizer(event.target);
+        this.setResizer(event.currentTarget);
     }
     resize = function (event: DragEvent) {
         let targetRectangle = parseElementRectangle(event.srcElement);

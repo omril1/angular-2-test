@@ -30,7 +30,8 @@ var DetailsComponent = (function () {
         this.selectedIndex = -1;
         this.resizerCoordinates = { x: 0, y: 0 };
         this.msgs = [];
-        this.fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
+        //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
+        this.fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
         this.removeField = function (index) {
             if (index != undefined)
                 this.template.textFields.splice(index, 1);
@@ -82,13 +83,13 @@ var DetailsComponent = (function () {
         this.dragstart = function (fieldIndex, event) {
             this.selectedIndex = fieldIndex;
             this.color = this.template.textFields[this.selectedIndex].color;
-            this.setResizer(event.target);
+            this.setResizer(event.currentTarget);
         };
         this.onDrag = function (fieldIndex, event) {
-            var targetRectangle = parseElementRectangle(event.target);
+            var targetRectangle = parseElementRectangle(event.currentTarget);
             this.template.textFields[this.selectedIndex].left = targetRectangle.left;
             this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-            this.setResizer(event.target);
+            this.setResizer(event.currentTarget);
         };
         this.resize = function (event) {
             var targetRectangle = parseElementRectangle(event.srcElement);

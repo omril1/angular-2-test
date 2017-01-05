@@ -24,11 +24,12 @@
                 </button>
                 <h4 class="modal-title">Modal Example</h4>
             </div>
-            <div class="modal-body">
+            <div *ngIf="selectedTemplate" class="modal-body">
                 select Size:
                 <br />
-                <button class="btn btn-primary" (click)="baseImageSelect(100,100)">100x100</button>
-                <button class="btn btn-primary" (click)="baseImageSelect(3508,2480)">3508x2480</button>
+                <!--<button class="btn btn-primary" (click)="baseImageSelect(100,100)">100x100</button>-->
+                <button class="btn btn-primary" [routerLink]="['/details',selectedTemplate._id,100,100]">100x100</button>
+                <button class="btn btn-primary" [routerLink]="['/details',selectedTemplate._id,3508,2480]">3508x2480</button>
             </div>
         </div>
     </div>

@@ -25,10 +25,6 @@ var TemplatesComponent = (function () {
         this.selectedTemplate = template;
         this.modal.show();
     };
-    TemplatesComponent.prototype.baseImageSelect = function (height, width) {
-        this.modal.hide();
-        this.router.navigate(['/details', this.selectedTemplate._id, height, width]);
-    };
     return TemplatesComponent;
 }());
 __decorate([
