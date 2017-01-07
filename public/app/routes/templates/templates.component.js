@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
-var image_service_1 = require("../services/image.service");
+var image_service_1 = require("../../services/image.service");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
 var TemplatesComponent = (function () {
     function TemplatesComponent(imageService, router) {

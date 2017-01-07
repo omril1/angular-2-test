@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var image_service_1 = require("../services/image.service");
 var ListComponent = (function () {
     function ListComponent() {
     }
@@ -19,7 +18,7 @@ ListComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         templateUrl: "./list.html",
-        providers: [image_service_1.ImageService],
+        providers: [],
     }),
     __metadata("design:paramtypes", [])
 ], ListComponent);

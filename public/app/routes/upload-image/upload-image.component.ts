@@ -1,4 +1,5 @@
-﻿import { Component } from '@angular/core';
+﻿import { DomSanitizer } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -6,6 +7,14 @@ import { FileUploader } from 'ng2-file-upload';
     templateUrl: "./upload-image.html",
 })
 export class UploadImageComponent {
+    
+    constructor(private sanitizer: DomSanitizer) {
+        //dirty way to add a thumbnail support.
+        this.uploader.onAfterAddingFile = (fileItem) => {
+            (<any>fileItem).previewUrl = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
+        }
+    }
+
     public uploader: FileUploader = new FileUploader({
         url: "/imageapi/upload",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],

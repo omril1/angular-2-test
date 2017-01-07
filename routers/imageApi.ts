@@ -88,7 +88,7 @@ export default function api() {
         })
     });
     api.get("/templates", (req: express.Request, res: express.Response) => {
-        TemplateModel.find({}).exec(function (err: Error, templates: Template[]) {
+        TemplateModel.find({}).sort({ dateAdded: 1 }).exec(function (err: Error, templates: Template[]) {
             if (err)
                 res.send(err);
             else

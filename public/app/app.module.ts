@@ -12,7 +12,7 @@ import { ContextMenuModule, GrowlModule } from 'primeng/primeng';
 import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
 import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
-
+import { safeStyle } from "./pipes/safeStyle";
 
 import { ImageService } from './services/image.service'
 
@@ -39,7 +39,8 @@ import { ImageService } from './services/image.service'
         DetailsComponent,
         UploadImageComponent,
         FileSelectDirective,
-        FileDropDirective
+        FileDropDirective,
+        safeStyle,
     ],
     bootstrap: [AppComponent]
 })

@@ -8,10 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var platform_browser_1 = require("@angular/platform-browser");
 var core_1 = require("@angular/core");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var UploadImageComponent = (function () {
-    function UploadImageComponent() {
+    function UploadImageComponent(sanitizer) {
+        var _this = this;
+        this.sanitizer = sanitizer;
         this.uploader = new ng2_file_upload_1.FileUploader({
             url: "/imageapi/upload",
             allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
@@ -19,6 +22,10 @@ var UploadImageComponent = (function () {
             maxFileSize: 3 * 1024 * 1024
         });
         this.hasBaseDropZoneOver = false;
+        //dirty way to add a thumbnail support.
+        this.uploader.onAfterAddingFile = function (fileItem) {
+            fileItem.previewUrl = _this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
+        };
     }
     UploadImageComponent.prototype.fileOverBase = function (e) {
         this.hasBaseDropZoneOver = e;
@@ -30,7 +37,7 @@ UploadImageComponent = __decorate([
         moduleId: module.id,
         templateUrl: "./upload-image.html",
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [platform_browser_1.DomSanitizer])
 ], UploadImageComponent);
 exports.UploadImageComponent = UploadImageComponent;
 //# sourceMappingURL=upload-image.component.js.map

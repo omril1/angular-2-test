@@ -61,7 +61,7 @@ function api() {
         });
     });
     api.get("/templates", function (req, res) {
-        TemplateModel.find({}).exec(function (err, templates) {
+        TemplateModel.find({}).sort({ dateAdded: 1 }).exec(function (err, templates) {
             if (err)
                 res.send(err);
             else

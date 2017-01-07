@@ -26,6 +26,7 @@ export interface ItextField {
     italic: boolean;
     align: string;
     underline: boolean;
+    rotation: number;
 }
 
 @Injectable()

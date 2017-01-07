@@ -20,6 +20,7 @@ var primeng_1 = require("primeng/primeng");
 var app_components_1 = require("./app.components");
 var app_routing_1 = require("./app.routing");
 var index_1 = require("./routes/index");
+var safeStyle_1 = require("./pipes/safeStyle");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -48,7 +49,8 @@ AppModule = __decorate([
             index_1.DetailsComponent,
             index_1.UploadImageComponent,
             ng2_file_upload_1.FileSelectDirective,
-            ng2_file_upload_1.FileDropDirective
+            ng2_file_upload_1.FileDropDirective,
+            safeStyle_1.safeStyle,
         ],
         bootstrap: [app_components_1.AppComponent]
     }),

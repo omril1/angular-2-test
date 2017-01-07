@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
 import { MenuItem, ContextMenu, Message } from 'primeng/primeng';
-import { ImageService, ItextField, Template } from '../services/image.service';
+import { ImageService, ItextField, Template } from '../../services/image.service';
 let domtoimage = require('dom-to-image');
 
 interface coordinates {
@@ -17,40 +17,15 @@ let parseElementRectangle = function (target: any) {
         top: Number(target.style.top.replace('px', '')),
         width: Number(target.style.width.replace('px', '')),
         height: Number(target.style.height.replace('px', '')),
-    }
+        rotation: Number(target.style.transform.replace('rotate(', '').replace('rad)', ''))
+    };
 }
 
 @Component({
     moduleId: module.id,
-    templateUrl: "./details.html",
+    templateUrl: "details.html",
+    styleUrls: ["details.css"],
     providers: [ImageService],
-    styles: [`
-    .textField {
-        border-width: 1px;
-        border-style: dashed;
-        cursor: pointer;
-        line-height: normal;
-        overflow: hidden;
-    }
-
-    .square-tile i.bottom {
-        position: absolute;
-        width: 5px;
-        height: 5px;
-        left: -16px;
-        border-top: 8px dashed;
-        border-right: 8px solid transparent;
-        border-left: 8px solid transparent;
-    }
-    .square-tile i.right {
-        position: absolute;
-        width: 5px;
-        height: 5px;
-        top: -16px;
-        border-left: 8px dashed;
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-    }`],
 })
 export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('container') containerViewChild: HTMLDivElement;
@@ -62,19 +37,17 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     private template: Template;
     private imageWidth: number;
     private imageHeight: number;
-    private fieldsCounter: Number = 0;
-    private selectedIndex: Number = -1;
+    private fieldsCounter = 0;
+    private selectedIndex = -1;
+    private color: string;
     private resizerCoordinates: coordinates = { x: 0, y: 0 };
-
-
     private msgs: Message[] = [];
     //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
-    private fonts = ["ABeeZee","Abel","Abhaya Libre","Abril Fatface","Aclonica","Acme","Actor","Adamina","Advent Pro","Aguafina Script","Akronim","Aladin","Aldrich","Alef","Alegreya","Alegreya SC","Alegreya Sans","Alegreya Sans SC","Alex Brush","Alfa Slab One","Alice","Alike","Alike Angular","Allan","Allerta","Allerta Stencil","Allura","Almendra","Almendra Display","Almendra SC","Amarante","Amaranth","Amatic SC","Amatica SC","Amethysta","Amiko","Amiri","Amita","Anaheim","Andada","Andika","Angkor","Annie Use Your Telescope","Anonymous Pro","Antic","Antic Didone","Antic Slab","Anton","Arapey","Arbutus","Arbutus Slab","Architects Daughter","Archivo Black","Archivo Narrow","Aref Ruqaa","Arima Madurai","Arimo","Arizonia","Armata","Artifika","Arvo","Arya","Asap","Asar","Asset","Assistant","Astloch","Asul","Athiti","Atma","Atomic Age","Aubrey","Audiowide","Autour One","Average","Average Sans","Averia Gruesa Libre","Averia Libre"]
+    private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"]
 
     constructor(private route: ActivatedRoute, private imageService: ImageService) {
     }
-
-    ngOnInit() {
+    public ngOnInit() {
         this.route.params.subscribe(params => {
             //this.imageID = params['id'];
             this.imageService.getTemplate(params['id'])
@@ -106,13 +79,12 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         ];
     }
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
+    }
+    public ngOnDestroy() {
     }
 
-    ngOnDestroy() {
-    }
-
-    removeField = function (index?: number) {
+    private removeField(index?: number) {
         if (index != undefined)
             this.template.textFields.splice(index, 1);
         else if (this.selectedIndex != -1) {
@@ -120,13 +92,13 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
             this.selectedIndex = -1;
         }
     };
-    colorChanged = function (color: string) {
+    private colorChanged(color: string) {
         this.color = color;
         if (this.selectedIndex != -1) {
             this.template.textFields[this.selectedIndex].color = color;
         }
     };
-    addField = function () {
+    private addField() {
         this.template.textFields.push(<ItextField>{
             left: 1000 / 3,
             top: 30,
@@ -134,69 +106,74 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
             height: 40,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: 30,
+            fontSize: 2,
             bold: true,
             align: 'center',
             italic: false,
             underline: false,
             color: "#337ab7",
-            index: this.fieldsCounter++
+            index: this.fieldsCounter++,
+            rotation: 0,
         });
     };
-    setProperty = function (propName: string, prop: any) {
+    private setProperty(propName: string, prop: any) {
         if (this.template && this.template.textFields[this.selectedIndex]) {
             this.template.textFields[this.selectedIndex][propName] = prop;
         }
     };
-    hasProperty = function (propName: string, prop: any) {
+    private hasProperty(propName: string, prop: any) {
         if (this.template && this.template.textFields[this.selectedIndex]) {
             return this.template.textFields[this.selectedIndex][propName] == prop;
         }
         else
             return false;
     };
-    toggleProperty = function (propName: string) {
+    private toggleProperty(propName: string) {
         if (this.template.textFields[this.selectedIndex]) {
             this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
         }
     }
-    dragstart = function (fieldIndex: number, event: DragEvent) {
+    private dragstart(fieldIndex: number, event: DragEvent) {
         this.selectedIndex = fieldIndex;
         this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(event.currentTarget);
+        this.setResizer(<HTMLLIElement>event.currentTarget);
     }
-    onDrag = function (fieldIndex: number, event: any) {
+    private onDrag(fieldIndex: number, event: any) {
         let targetRectangle = parseElementRectangle(event.currentTarget);
         this.template.textFields[this.selectedIndex].left = targetRectangle.left;
         this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-        this.setResizer(event.currentTarget);
+        //this.setResizer(event.currentTarget);
     }
-    resize = function (event: DragEvent) {
+    private resize(event: DragEvent) {
         let targetRectangle = parseElementRectangle(event.srcElement);
-        let parseX = Number(targetRectangle.left) - this.template.textFields[this.selectedIndex].left;
-        let parseY = Number(targetRectangle.top) - this.template.textFields[this.selectedIndex].top;
-        if (parseX < 0 || parseY < 0) {
-            if (parseX < 0)
-                this.resizerCoordinates.x = targetRectangle.left;
-            if (parseY < 0)
-                this.resizerCoordinates.y = targetRectangle.top;
-        }
-        else {
-            this.template.textFields[this.selectedIndex].width = parseX;
-            this.template.textFields[this.selectedIndex].height = parseY;
-        }
+        let parseX = Math.max(Number(targetRectangle.left), 0);
+        let parseY = Math.max(Number(targetRectangle.top), 0);
+
+        this.template.textFields[this.selectedIndex].width = parseX;
+        this.template.textFields[this.selectedIndex].height = parseY;
     }
-    private setResizer = function (target: HTMLLIElement) {
+    private setResizer(target: HTMLLIElement) {
         let targetRectangle = parseElementRectangle(target);
-        this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
-        this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
+        //this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
+        //this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
+        this.resizerCoordinates.x = 0;
+        this.resizerCoordinates.y = 0;
     }
-    private sendToProcessing() {
+    private rotate(event: DragEvent) {
+        let e = this.template.textFields[this.selectedIndex];
+        let targetRectangle = parseElementRectangle(event.srcElement);
+        let {dx, dy} = { dx: targetRectangle.left - e.width / 2, dy: targetRectangle.top - e.height / 2 };
+        this.template.textFields[this.selectedIndex].rotation = -Math.atan2(dx, dy);
+    }
+
+
+
+    private sendToProcessing = function () {
         this.imageService.sendToProcessing(this.template).then(result => {
             window.open(result.text());
         });
     }
-    private domtoimage() {
+    private domtoimage = function () {
         domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
             .then(function (dataUrl) {
                 var link = document.createElement('a');
@@ -205,7 +182,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
                 link.click();
             });
     }
-    private saveInServer() {
+    private saveInServer = function () {
         this.imageService.saveInServer(this.template).then(result => {
             this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
         });

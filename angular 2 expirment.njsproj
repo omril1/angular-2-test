@@ -47,12 +47,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="public\app\app.view.html" />
-    <Content Include="public\app\routes\templates.html" />
-    <Content Include="public\app\routes\about.html" />
-    <Content Include="public\app\routes\details.html" />
-    <Content Include="public\app\routes\list.html" />
-    <Content Include="public\app\routes\upload-image.html" />
-    <Content Include="public\app\routes\list.component.ts" />
+    <Content Include="public\app\routes\details\details.css" />
+    <Content Include="public\app\routes\templates\templates.html" />
+    <Content Include="public\app\routes\about\about.html" />
+    <Content Include="public\app\routes\details\details.html" />
+    <Content Include="public\app\routes\list\list.html" />
+    <Content Include="public\app\routes\upload-image\upload-image.html" />
+    <Content Include="public\app\routes\list\list.component.ts" />
     <Content Include="public\fonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />
@@ -63,15 +64,16 @@
     <TypeScriptCompile Include="connectionManager.ts" />
     <TypeScriptCompile Include="processImage.ts" />
     <TypeScriptCompile Include="public\app\app.routing.ts" />
-    <TypeScriptCompile Include="public\app\routes\templates.component.ts" />
+    <TypeScriptCompile Include="public\app\pipes\safeStyle.ts" />
+    <TypeScriptCompile Include="public\app\routes\templates\templates.component.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />
     <TypeScriptCompile Include="public\app\app.components.ts" />
     <TypeScriptCompile Include="public\app\app.module.ts" />
     <TypeScriptCompile Include="public\app\main.ts" />
-    <TypeScriptCompile Include="public\app\routes\about.component.ts" />
-    <TypeScriptCompile Include="public\app\routes\details.component.ts" />
-    <TypeScriptCompile Include="public\app\routes\upload-image.component.ts" />
+    <TypeScriptCompile Include="public\app\routes\about\about.component.ts" />
+    <TypeScriptCompile Include="public\app\routes\details\details.component.ts" />
+    <TypeScriptCompile Include="public\app\routes\upload-image\upload-image.component.ts" />
     <TypeScriptCompile Include="public\app\services\image.service.ts" />
     <TypeScriptCompile Include="routers\api.ts" />
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
@@ -80,6 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
+    <Folder Include="public\app\pipes\" />
+    <Folder Include="public\app\routes\about\" />
+    <Folder Include="public\app\routes\details\" />
+    <Folder Include="public\app\routes\list\" />
+    <Folder Include="public\app\routes\upload-image\" />
+    <Folder Include="public\app\routes\templates\" />
     <Folder Include="public\app\services\" />
     <Folder Include="routers\" />
     <Folder Include="public\" />

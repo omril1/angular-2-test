@@ -1,6 +1,11 @@
 ﻿var mongoose = require('mongoose');
+var shortid = require('shortid');
 var Schema = mongoose.Schema;
 var templateSchema = {
+    _id: {
+        type: String,
+        'default': shortid.generate
+    },
     name: String,
     imageId: {
         type: Schema.Types.ObjectId,
@@ -24,6 +29,10 @@ var templateSchema = {
             _id: false
         }],
         default: []
+    },
+    dateAdded: {
+        type: Date,
+        default: Date.now
     }
 };
 

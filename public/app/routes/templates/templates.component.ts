@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ImageService, Template } from '../services/image.service';
+import { ImageService, Template } from '../../services/image.service';
 import { ModalDirective } from 'ng2-bootstrap';
 
 @Component({

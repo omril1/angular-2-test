@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var primeng_1 = require("primeng/primeng");
-var image_service_1 = require("../services/image.service");
+var image_service_1 = require("../../services/image.service");
 var domtoimage = require('dom-to-image');
 var parseElementRectangle = function (target) {
     return {
@@ -19,6 +19,7 @@ var parseElementRectangle = function (target) {
         top: Number(target.style.top.replace('px', '')),
         width: Number(target.style.width.replace('px', '')),
         height: Number(target.style.height.replace('px', '')),
+        rotation: Number(target.style.transform.replace('rotate(', '').replace('rad)', ''))
     };
 };
 var DetailsComponent = (function () {
@@ -32,84 +33,25 @@ var DetailsComponent = (function () {
         this.msgs = [];
         //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
         this.fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
-        this.removeField = function (index) {
-            if (index != undefined)
-                this.template.textFields.splice(index, 1);
-            else if (this.selectedIndex != -1) {
-                this.template.textFields.splice(this.selectedIndex, 1);
-                this.selectedIndex = -1;
-            }
-        };
-        this.colorChanged = function (color) {
-            this.color = color;
-            if (this.selectedIndex != -1) {
-                this.template.textFields[this.selectedIndex].color = color;
-            }
-        };
-        this.addField = function () {
-            this.template.textFields.push({
-                left: 1000 / 3,
-                top: 30,
-                width: 1000 / 3,
-                height: 40,
-                text: "טקסט לבדיקת תצוגה",
-                font: "Arial",
-                fontSize: 30,
-                bold: true,
-                align: 'center',
-                italic: false,
-                underline: false,
-                color: "#337ab7",
-                index: this.fieldsCounter++
+        this.sendToProcessing = function () {
+            this.imageService.sendToProcessing(this.template).then(function (result) {
+                window.open(result.text());
             });
         };
-        this.setProperty = function (propName, prop) {
-            if (this.template && this.template.textFields[this.selectedIndex]) {
-                this.template.textFields[this.selectedIndex][propName] = prop;
-            }
+        this.domtoimage = function () {
+            domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
+                .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'my-image-name.jpeg';
+                link.href = dataUrl;
+                link.click();
+            });
         };
-        this.hasProperty = function (propName, prop) {
-            if (this.template && this.template.textFields[this.selectedIndex]) {
-                return this.template.textFields[this.selectedIndex][propName] == prop;
-            }
-            else
-                return false;
-        };
-        this.toggleProperty = function (propName) {
-            if (this.template.textFields[this.selectedIndex]) {
-                this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
-            }
-        };
-        this.dragstart = function (fieldIndex, event) {
-            this.selectedIndex = fieldIndex;
-            this.color = this.template.textFields[this.selectedIndex].color;
-            this.setResizer(event.currentTarget);
-        };
-        this.onDrag = function (fieldIndex, event) {
-            var targetRectangle = parseElementRectangle(event.currentTarget);
-            this.template.textFields[this.selectedIndex].left = targetRectangle.left;
-            this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-            this.setResizer(event.currentTarget);
-        };
-        this.resize = function (event) {
-            var targetRectangle = parseElementRectangle(event.srcElement);
-            var parseX = Number(targetRectangle.left) - this.template.textFields[this.selectedIndex].left;
-            var parseY = Number(targetRectangle.top) - this.template.textFields[this.selectedIndex].top;
-            if (parseX < 0 || parseY < 0) {
-                if (parseX < 0)
-                    this.resizerCoordinates.x = targetRectangle.left;
-                if (parseY < 0)
-                    this.resizerCoordinates.y = targetRectangle.top;
-            }
-            else {
-                this.template.textFields[this.selectedIndex].width = parseX;
-                this.template.textFields[this.selectedIndex].height = parseY;
-            }
-        };
-        this.setResizer = function (target) {
-            var targetRectangle = parseElementRectangle(target);
-            this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
-            this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
+        this.saveInServer = function () {
+            var _this = this;
+            this.imageService.saveInServer(this.template).then(function (result) {
+                _this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
+            });
         };
         this.showContextMenu = function (event) {
             _this.contextmenu.show(event);
@@ -153,25 +95,90 @@ var DetailsComponent = (function () {
     };
     DetailsComponent.prototype.ngOnDestroy = function () {
     };
-    DetailsComponent.prototype.sendToProcessing = function () {
-        this.imageService.sendToProcessing(this.template).then(function (result) {
-            window.open(result.text());
+    DetailsComponent.prototype.removeField = function (index) {
+        if (index != undefined)
+            this.template.textFields.splice(index, 1);
+        else if (this.selectedIndex != -1) {
+            this.template.textFields.splice(this.selectedIndex, 1);
+            this.selectedIndex = -1;
+        }
+    };
+    ;
+    DetailsComponent.prototype.colorChanged = function (color) {
+        this.color = color;
+        if (this.selectedIndex != -1) {
+            this.template.textFields[this.selectedIndex].color = color;
+        }
+    };
+    ;
+    DetailsComponent.prototype.addField = function () {
+        this.template.textFields.push({
+            left: 1000 / 3,
+            top: 30,
+            width: 1000 / 3,
+            height: 40,
+            text: "טקסט לבדיקת תצוגה",
+            font: "Arial",
+            fontSize: 2,
+            bold: true,
+            align: 'center',
+            italic: false,
+            underline: false,
+            color: "#337ab7",
+            index: this.fieldsCounter++,
+            rotation: 0,
         });
     };
-    DetailsComponent.prototype.domtoimage = function () {
-        domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
-            .then(function (dataUrl) {
-            var link = document.createElement('a');
-            link.download = 'my-image-name.jpeg';
-            link.href = dataUrl;
-            link.click();
-        });
+    ;
+    DetailsComponent.prototype.setProperty = function (propName, prop) {
+        if (this.template && this.template.textFields[this.selectedIndex]) {
+            this.template.textFields[this.selectedIndex][propName] = prop;
+        }
     };
-    DetailsComponent.prototype.saveInServer = function () {
-        var _this = this;
-        this.imageService.saveInServer(this.template).then(function (result) {
-            _this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
-        });
+    ;
+    DetailsComponent.prototype.hasProperty = function (propName, prop) {
+        if (this.template && this.template.textFields[this.selectedIndex]) {
+            return this.template.textFields[this.selectedIndex][propName] == prop;
+        }
+        else
+            return false;
+    };
+    ;
+    DetailsComponent.prototype.toggleProperty = function (propName) {
+        if (this.template.textFields[this.selectedIndex]) {
+            this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
+        }
+    };
+    DetailsComponent.prototype.dragstart = function (fieldIndex, event) {
+        this.selectedIndex = fieldIndex;
+        this.color = this.template.textFields[this.selectedIndex].color;
+        this.setResizer(event.currentTarget);
+    };
+    DetailsComponent.prototype.onDrag = function (fieldIndex, event) {
+        var targetRectangle = parseElementRectangle(event.currentTarget);
+        this.template.textFields[this.selectedIndex].left = targetRectangle.left;
+        this.template.textFields[this.selectedIndex].top = targetRectangle.top;
+        //this.setResizer(event.currentTarget);
+    };
+    DetailsComponent.prototype.resize = function (event) {
+        var targetRectangle = parseElementRectangle(event.srcElement);
+        var parseX = Math.max(Number(targetRectangle.left), 0);
+        var parseY = Math.max(Number(targetRectangle.top), 0);
+        this.template.textFields[this.selectedIndex].width = parseX;
+        this.template.textFields[this.selectedIndex].height = parseY;
+    };
+    DetailsComponent.prototype.setResizer = function (target) {
+        var targetRectangle = parseElementRectangle(target);
+        //this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
+        //this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
+        this.resizerCoordinates.x = 0;
+        this.resizerCoordinates.y = 0;
+    };
+    DetailsComponent.prototype.rotate = function (event) {
+        var e = this.template.textFields[this.selectedIndex];
+        var targetRectangle = parseElementRectangle(event.srcElement);
+        var _a = { dx: targetRectangle.left - e.width / 2, dy: targetRectangle.top - e.height / 2 }, dx = _a.dx, dy = _a.dy;
+        this.template.textFields[this.selectedIndex].rotation = -Math.atan2(dx, dy);
     };
     return DetailsComponent;
 }());
@@ -190,9 +197,9 @@ __decorate([
 DetailsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        templateUrl: "./details.html",
+        templateUrl: "details.html",
+        styleUrls: ["details.css"],
         providers: [image_service_1.ImageService],
-        styles: ["\n    .textField {\n        border-width: 1px;\n        border-style: dashed;\n        cursor: pointer;\n        line-height: normal;\n        overflow: hidden;\n    }\n\n    .square-tile i.bottom {\n        position: absolute;\n        width: 5px;\n        height: 5px;\n        left: -16px;\n        border-top: 8px dashed;\n        border-right: 8px solid transparent;\n        border-left: 8px solid transparent;\n    }\n    .square-tile i.right {\n        position: absolute;\n        width: 5px;\n        height: 5px;\n        top: -16px;\n        border-left: 8px dashed;\n        border-top: 8px solid transparent;\n        border-bottom: 8px solid transparent;\n    }"],
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService])
 ], DetailsComponent);
