@@ -12,16 +12,8 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var primeng_1 = require("primeng/primeng");
 var image_service_1 = require("../../services/image.service");
+var utils = require("../../utils");
 var domtoimage = require('dom-to-image');
-var parseElementRectangle = function (target) {
-    return {
-        left: Number(target.style.left.replace('px', '')),
-        top: Number(target.style.top.replace('px', '')),
-        width: Number(target.style.width.replace('px', '')),
-        height: Number(target.style.height.replace('px', '')),
-        rotation: Number(target.style.transform.replace('rotate(', '').replace('rad)', ''))
-    };
-};
 var DetailsComponent = (function () {
     function DetailsComponent(route, imageService) {
         var _this = this;
@@ -57,32 +49,26 @@ var DetailsComponent = (function () {
             _this.contextmenu.show(event);
         };
     }
+    Object.defineProperty(DetailsComponent.prototype, "selectedField", {
+        get: function () {
+            return this.template.textFields[this.selectedIndex];
+        },
+        enumerable: true,
+        configurable: true
+    });
     DetailsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             //this.imageID = params['id'];
-            _this.imageService.getTemplate(params['id'])
-                .then(function (template) {
-                return _this.template = template;
+            _this.imageService.getTemplate(params['id']).then(function (template) { return _this.template = template; }, function (err) {
+                console.error(err);
+                _this.template = null;
+                _this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
             });
             _this.imageHeight = parseInt(params['height']);
             _this.imageWidth = parseInt(params['width']);
         });
         this.items = [
-            {
-                label: 'File',
-                items: [{
-                        label: 'New',
-                        icon: 'fa-plus',
-                        items: [
-                            { label: 'Project' },
-                            { label: 'Other' },
-                        ]
-                    },
-                    { label: 'Open' },
-                    { label: 'Quit' }
-                ]
-            },
             {
                 label: 'Print',
                 icon: 'fa-print',
@@ -90,10 +76,6 @@ var DetailsComponent = (function () {
                 }
             }
         ];
-    };
-    DetailsComponent.prototype.ngAfterViewInit = function () {
-    };
-    DetailsComponent.prototype.ngOnDestroy = function () {
     };
     DetailsComponent.prototype.removeField = function (index) {
         if (index != undefined)
@@ -149,36 +131,63 @@ var DetailsComponent = (function () {
             this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
         }
     };
-    DetailsComponent.prototype.dragstart = function (fieldIndex, event) {
+    DetailsComponent.prototype.selectField = function (fieldIndex, event) {
         this.selectedIndex = fieldIndex;
         this.color = this.template.textFields[this.selectedIndex].color;
         this.setResizer(event.currentTarget);
     };
+    DetailsComponent.prototype.dragstart = function (fieldIndex, event) {
+        this.selectedIndex = fieldIndex;
+        this.color = this.template.textFields[this.selectedIndex].color;
+        this.setResizer(event.currentTarget);
+        event.srcElement.classList.add('dragged');
+        utils.noGhostImage(event);
+    };
+    DetailsComponent.prototype.dragend = function (event) {
+        event.srcElement.classList.remove('dragged');
+    };
     DetailsComponent.prototype.onDrag = function (fieldIndex, event) {
-        var targetRectangle = parseElementRectangle(event.currentTarget);
+        var targetRectangle = utils.parseElementRectangle(event.currentTarget);
         this.template.textFields[this.selectedIndex].left = targetRectangle.left;
         this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-        //this.setResizer(event.currentTarget);
+    };
+    DetailsComponent.prototype.resizestart = function (event) {
+        utils.noGhostImage(event);
     };
     DetailsComponent.prototype.resize = function (event) {
-        var targetRectangle = parseElementRectangle(event.srcElement);
+        var targetRectangle = utils.parseElementRectangle(event.srcElement);
         var parseX = Math.max(Number(targetRectangle.left), 0);
         var parseY = Math.max(Number(targetRectangle.top), 0);
         this.template.textFields[this.selectedIndex].width = parseX;
         this.template.textFields[this.selectedIndex].height = parseY;
     };
     DetailsComponent.prototype.setResizer = function (target) {
-        var targetRectangle = parseElementRectangle(target);
-        //this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
-        //this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
-        this.resizerCoordinates.x = 0;
-        this.resizerCoordinates.y = 0;
+        this.resizerCoordinates = { x: 0, y: 0 };
     };
     DetailsComponent.prototype.rotate = function (event) {
-        var e = this.template.textFields[this.selectedIndex];
-        var targetRectangle = parseElementRectangle(event.srcElement);
-        var _a = { dx: targetRectangle.left - e.width / 2, dy: targetRectangle.top - e.height / 2 }, dx = _a.dx, dy = _a.dy;
-        this.template.textFields[this.selectedIndex].rotation = -Math.atan2(dx, dy);
+        var targetRectangle = utils.parseElementRectangle(event.srcElement);
+        //console.log(event.clientX, event.detail, event.offsetX, event.x);
+        //console.log(event.srcElement.getBoundingClientRect());
+        var _a = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 }, dx = _a.dx, dy = _a.dy;
+        var angle = -(180 * Math.atan2(dx, dy) / Math.PI);
+        var variance = 7;
+        for (var _i = 0, _b = [0, 90, 180]; _i < _b.length; _i++) {
+            var a = _b[_i];
+            var sign = angle > 0 ? 1 : -1;
+            if (angle < a + variance && angle > a - variance || angle < -a + variance && angle > -a - variance)
+                angle = a * sign;
+        }
+        this.template.textFields[this.selectedIndex].rotation = angle;
+    };
+    DetailsComponent.prototype.rotatestart = function (event) {
+        event.srcElement.classList.add('dragged');
+        var _a = { dx: this.selectedField.left + this.selectedField.width / 2, dy: this.selectedField.top + this.selectedField.height / 2 }, dx = _a.dx, dy = _a.dy;
+        //this.printArea.nativeElement.appendChild(utils.createLine(dx + event.offsetX, dy + event.offsetY, dx, dy));
+    };
+    DetailsComponent.prototype.rotateend = function (event) {
+        event.srcElement.classList.remove('dragged');
+        event.srcElement.style.left = null;
+        event.srcElement.style.top = null;
     };
     return DetailsComponent;
 }());

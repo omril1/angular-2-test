@@ -1,24 +1,15 @@
-﻿import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
 import { MenuItem, ContextMenu, Message } from 'primeng/primeng';
 import { ImageService, ItextField, Template } from '../../services/image.service';
+import * as utils from '../../utils';
 let domtoimage = require('dom-to-image');
 
 interface coordinates {
     x: number;
     y: number;
-}
-
-let parseElementRectangle = function (target: any) {
-    return {
-        left: Number(target.style.left.replace('px', '')),
-        top: Number(target.style.top.replace('px', '')),
-        width: Number(target.style.width.replace('px', '')),
-        height: Number(target.style.height.replace('px', '')),
-        rotation: Number(target.style.transform.replace('rotate(', '').replace('rad)', ''))
-    };
 }
 
 @Component({
@@ -27,7 +18,7 @@ let parseElementRectangle = function (target: any) {
     styleUrls: ["details.css"],
     providers: [ImageService],
 })
-export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DetailsComponent implements OnInit {
     @ViewChild('container') containerViewChild: HTMLDivElement;
     @ViewChild('contextmenu') contextmenu: ContextMenu;
     @ViewChild('printArea') printArea: ElementRef;
@@ -42,6 +33,9 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     private color: string;
     private resizerCoordinates: coordinates = { x: 0, y: 0 };
     private msgs: Message[] = [];
+    get selectedField(): ItextField {
+        return this.template.textFields[this.selectedIndex];
+    }
     //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
     private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"]
 
@@ -50,27 +44,15 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit() {
         this.route.params.subscribe(params => {
             //this.imageID = params['id'];
-            this.imageService.getTemplate(params['id'])
-                .then((template) =>
-                    this.template = template);
+            this.imageService.getTemplate(params['id']).then(template => this.template = template, err => {
+                console.error(err);
+                this.template = null;
+                this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
+            });
             this.imageHeight = parseInt(params['height']);
             this.imageWidth = parseInt(params['width']);
         });
         this.items = [
-            {
-                label: 'File',
-                items: [{
-                    label: 'New',
-                    icon: 'fa-plus',
-                    items: [
-                        { label: 'Project' },
-                        { label: 'Other' },
-                    ]
-                },
-                { label: 'Open' },
-                { label: 'Quit' }
-                ]
-            },
             {
                 label: 'Print',
                 icon: 'fa-print',
@@ -78,10 +60,6 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         ];
-    }
-    public ngAfterViewInit() {
-    }
-    public ngOnDestroy() {
     }
 
     private removeField(index?: number) {
@@ -133,19 +111,32 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
             this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
         }
     }
-    private dragstart(fieldIndex: number, event: DragEvent) {
+    private selectField(fieldIndex: number, event: MouseEvent) {
         this.selectedIndex = fieldIndex;
         this.color = this.template.textFields[this.selectedIndex].color;
         this.setResizer(<HTMLLIElement>event.currentTarget);
     }
+    private dragstart(fieldIndex: number, event: DragEvent) {
+        this.selectedIndex = fieldIndex;
+        this.color = this.template.textFields[this.selectedIndex].color;
+        this.setResizer(<HTMLLIElement>event.currentTarget);
+
+        event.srcElement.classList.add('dragged');
+        utils.noGhostImage(event);
+    }
+    private dragend(event: DragEvent) {
+        event.srcElement.classList.remove('dragged');
+    }
     private onDrag(fieldIndex: number, event: any) {
-        let targetRectangle = parseElementRectangle(event.currentTarget);
+        let targetRectangle = utils.parseElementRectangle(event.currentTarget);
         this.template.textFields[this.selectedIndex].left = targetRectangle.left;
         this.template.textFields[this.selectedIndex].top = targetRectangle.top;
-        //this.setResizer(event.currentTarget);
+    }
+    private resizestart(event: DragEvent) {
+        utils.noGhostImage(event);
     }
     private resize(event: DragEvent) {
-        let targetRectangle = parseElementRectangle(event.srcElement);
+        let targetRectangle = utils.parseElementRectangle(event.srcElement);
         let parseX = Math.max(Number(targetRectangle.left), 0);
         let parseY = Math.max(Number(targetRectangle.top), 0);
 
@@ -153,17 +144,32 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewInit {
         this.template.textFields[this.selectedIndex].height = parseY;
     }
     private setResizer(target: HTMLLIElement) {
-        let targetRectangle = parseElementRectangle(target);
-        //this.resizerCoordinates.x = targetRectangle.left + targetRectangle.width;
-        //this.resizerCoordinates.y = targetRectangle.top + targetRectangle.height;
-        this.resizerCoordinates.x = 0;
-        this.resizerCoordinates.y = 0;
+        this.resizerCoordinates = { x: 0, y: 0 };
     }
+
     private rotate(event: DragEvent) {
-        let e = this.template.textFields[this.selectedIndex];
-        let targetRectangle = parseElementRectangle(event.srcElement);
-        let {dx, dy} = { dx: targetRectangle.left - e.width / 2, dy: targetRectangle.top - e.height / 2 };
-        this.template.textFields[this.selectedIndex].rotation = -Math.atan2(dx, dy);
+        let targetRectangle = utils.parseElementRectangle(event.srcElement);
+        //console.log(event.clientX, event.detail, event.offsetX, event.x);
+        //console.log(event.srcElement.getBoundingClientRect());
+        let {dx, dy} = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 };
+        let angle = -(180 * Math.atan2(dx, dy) / Math.PI);
+        let variance = 7;
+        for (let a of [0, 90, 180]) {
+            let sign = angle > 0 ? 1 : -1;
+            if (angle < a + variance && angle > a - variance || angle < -a + variance && angle > -a - variance)
+                angle = a * sign;
+        }
+        this.template.textFields[this.selectedIndex].rotation = angle;
+    }
+    private rotatestart(event: DragEvent) {
+        event.srcElement.classList.add('dragged');
+        let {dx, dy} = { dx: this.selectedField.left + this.selectedField.width / 2, dy: this.selectedField.top + this.selectedField.height / 2 };
+        //this.printArea.nativeElement.appendChild(utils.createLine(dx + event.offsetX, dy + event.offsetY, dx, dy));
+    }
+    private rotateend(event: DragEvent) {
+        event.srcElement.classList.remove('dragged');
+        (<HTMLElement>event.srcElement).style.left = null;
+        (<HTMLElement>event.srcElement).style.top = null;
     }
 
 

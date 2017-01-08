@@ -99,8 +99,12 @@ export default function api() {
         TemplateModel.findById(req.params.tempname).exec(function (err: Error, template: Template) {
             if (err)
                 res.send(err);
-            else
-                res.send(template);
+            else {
+                if (template)
+                    res.send(template);
+                else
+                    res.send(404);
+            }
         });
     });
     api.post("/upload", function (req: any, res: express.Response) {

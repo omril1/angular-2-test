@@ -26,6 +26,7 @@ var templateSchema = {
             italic: Boolean,
             align: String,
             underline: Boolean,
+            rotation: Number,
             _id: false
         }],
         default: []

@@ -79,6 +79,7 @@
     <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\mongodb\mongodb.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
+    <TypeScriptCompile Include="public\app\utils.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />

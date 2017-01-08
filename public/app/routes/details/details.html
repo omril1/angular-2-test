@@ -8,13 +8,13 @@
             <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
             <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
             <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
-            <a class="btn btn-default" *ngIf="template" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="template.textFields[selectedIndex]?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
+            <a class="btn btn-default" *ngIf="template" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="selectedField?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
             <div class="btn-group" dropdown dropdown-append-to-body>
                 <button type="button" class="btn btn-default" dropdownToggle>
                     <i class="fa fa-text-height"></i>
                 </button>
                 <ul *ngIf="template" class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
-                    <li *ngFor="let fontSize of [template.textFields[selectedIndex]?.fontSize-5,template.textFields[selectedIndex]?.fontSize-1,template.textFields[selectedIndex]?.fontSize,template.textFields[selectedIndex]?.fontSize+1,template.textFields[selectedIndex]?.fontSize+5]"
+                    <li *ngFor="let fontSize of [selectedField?.fontSize-5,selectedField?.fontSize-1,selectedField?.fontSize,selectedField?.fontSize+1,selectedField?.fontSize+5]"
                         role="menuitem" (click)="setProperty('fontSize', fontSize)">
                         <button class="dropdown-item" [style.font-size.em]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}" style="width:100%;">{{fontSize}}. T</button>
                     </li>
@@ -63,30 +63,33 @@
                 </div>
             </li>
         </ol>
+        <label>debug values:</label>
+        <textarea style="width:100%;" disabled>{{selectedField?.rotation}}</textarea>
     </div>
-    <div class="panel-body col-md-9 print-area" #printArea style="visibility:visible">
-        <div class="animation-test" style="position: relative; margin: auto;float:left;">
+    <div class="panel-body col-md-9 print-area" style="visibility:visible">
+        <div class="animation-test" #printArea style="position: relative; margin: auto;float:left;">
             <div class="text-fields-container">
                 <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;" [style.-webkit-user-modify]="i==selectedIndex?'read-write-plaintext-only':'unset'"
-                     [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.em]="field.fontSize" [style.z-index]="100 + i"
+                     [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.em]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + field.index"
                      [style.width.px]="field.width" [style.height.px]="field.height" [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
                      [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
-                     [style.transform]="'rotateZ(' + field.rotation + 'rad)' | safeStyle"
-                     [draggable] (click)="dragstart(i, $event)" (dragstart)="dragstart(i, $event)" (drag)="onDrag(i,$event)"
+                     [style.transform]="'rotateZ(' + field.rotation + 'deg)' | safeStyle"
+                     [draggable] (click)="selectField(i, $event)" (dragstart)="dragstart(i, $event)" (dragend)="dragend($event)" (drag)="onDrag(i,$event)"
                      [textContent]="field.text" (input)="field.text=$event.target.textContent">{{field.text}}</div>
             </div>
-            <div class="inTemplate-tools" *ngIf="template.textFields[selectedIndex]"
-                 [style.top.px]="template.textFields[selectedIndex].top" [style.left.px]="template.textFields[selectedIndex].left"
-                 [style.width.px]="template.textFields[selectedIndex].width" [style.height.px]="template.textFields[selectedIndex].height"
-                 [style.transform]="'rotateZ(' + template.textFields[selectedIndex].rotation + 'rad)' | safeStyle">
-                <!--[style.top.px]="resizerCoordinates.y" [style.left.px]="resizerCoordinates.x"-->
+            <div class="inTemplate-tools" *ngIf="selectedField"
+                 [style.top.px]="selectedField.top" [style.left.px]="selectedField.left"
+                 [style.width.px]="selectedField.width" [style.height.px]="selectedField.height"
+                 [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedField.index">
                 <div class="resizer" style="position: absolute;"
-                     [draggable] (drag)="resize($event)">
+                     [style.left.px]="selectedField.width" [style.top.px]="selectedField.height"
+                     [draggable] (dragstart)="resizestart($event)" (drag)="resize($event)">
                     <i class="right"></i>
                     <i class="bottom"></i>
                 </div>
                 <div class="rotation-handle" style="position: absolute;"
-                     [draggable] (drag)="rotate($event)">↻</div>
+                     [draggable] [style.left.px]="selectedField.width/2 - 10"
+                     (drag)="rotate($event)" (dragstart)="rotatestart($event)" (dragend)="rotateend($event)">↻</div>
             </div>
             <img *ngIf="template" [src]="'imageapi/byid/' + template.imageId" style="position:initial;width:100%;height:100%;z-index:90;-webkit-user-drag:none;"
                  (mousedown)="selectedIndex=-1" />

@@ -37,10 +37,7 @@ var ImageService = (function () {
     ImageService.prototype.getTemplate = function (templateId) {
         return this.http.get(this.baseUrl + "/template/" + templateId)
             .map(function (response) { return response.json(); })
-            .toPromise()
-            .catch(function (error) {
-            throw (error || 'Server error');
-        });
+            .toPromise().catch(function (reason) { console.error(reason); return null; });
     };
     ImageService.prototype.sendToProcessing = function (template) {
         var body = JSON.stringify(template);

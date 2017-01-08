@@ -56,10 +56,7 @@ export class ImageService {
     getTemplate(templateId: string) {
         return this.http.get(`${this.baseUrl}/template/${templateId}`)
             .map(response => <Template>response.json())
-            .toPromise()
-            .catch((error: any) => {
-                throw (error || 'Server error')
-            });
+            .toPromise().catch(reason => { console.error(reason); return <Template>null; });
     }
 
     sendToProcessing(template: Template) {

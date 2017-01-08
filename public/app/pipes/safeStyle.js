@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var platform_browser_1 = require("@angular/platform-browser");
 var core_1 = require("@angular/core");
 var safeStyle = (function () {
     function safeStyle(sanitizer) {
@@ -20,7 +21,7 @@ var safeStyle = (function () {
 }());
 safeStyle = __decorate([
     core_1.Pipe({ name: 'safeStyle' }),
-    __metadata("design:paramtypes", [core_1.Sanitizer])
+    __metadata("design:paramtypes", [platform_browser_1.DomSanitizer])
 ], safeStyle);
 exports.safeStyle = safeStyle;
 //# sourceMappingURL=safeStyle.js.map
