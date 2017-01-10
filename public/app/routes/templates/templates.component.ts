@@ -7,8 +7,7 @@ import { ModalDirective } from 'ng2-bootstrap';
     moduleId: module.id,
     templateUrl: "./templates.html",
     providers: [ImageService],
-    styles: [`.image-item {height:200px;}
-              .image-item a h4 {height:20px;margin-top:5px;}`]
+    styleUrls: ["templates.css"]
 })
 export class TemplatesComponent implements OnInit {
     templateList: Template[];

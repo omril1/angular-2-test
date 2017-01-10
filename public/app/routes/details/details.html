@@ -4,29 +4,85 @@
 </div>
 <div>
     <div class="btn-toolbar pull-right" role="group">
+        <div class="btn-group" dropdown dropdown-append-to-body *ngIf="template && selectedField">
+            <a class="btn btn-default color-picker" *ngIf="template && selectedField" (colorPickerChange)="selectedField.stroke.color=$event" [colorPicker]="selectedField.stroke.color" [style.color]="selectedField.stroke.color">
+                <i class="fa fa-eyedropper"></i>
+            </a>
+            <button type="button" class="btn btn-default" dropdownToggle style="padding: 4px 3px;">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="menuitem">
+                    <p-slider [(ngModel)]="selectedField.stroke.width" [min]="0" [max]="40"></p-slider>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-group" dropdown dropdown-append-to-body *ngIf="template && selectedField">
+            <button type="button" class="btn btn-default color-picker" (colorPickerChange)="selectedField.shadow.color=$event" [colorPicker]="selectedField.shadow.color" [style.color]="selectedField.shadow.color">
+                <i class="fa fa-eyedropper"></i>
+            </button>
+            <button type="button" class="btn btn-default" dropdownToggle style="padding: 4px 3px;">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="menuitem">
+                    <label>x</label>
+                    <input type="range" [(ngModel)]="selectedField.shadow.x" min="-20" max="20" />
+                </li>
+                <li role="menuitem">
+                    <label>y</label>
+                    <input type="range" [(ngModel)]="selectedField.shadow.y" min="-20" max="20" />
+                </li>
+                <li role="menuitem">
+                    <label>blur</label>
+                    <input type="range" [(ngModel)]="selectedField.shadow.blur" min="-1" max="20" />
+                </li>
+                <li role="menuitem">
+                    <label>x</label>
+                    <p-slider [(ngModel)]="selectedField.shadow.x" [min]="-20" [max]="20"></p-slider>
+                </li>
+                <li role="menuitem">
+                    <label>y</label>
+                    <p-slider [(ngModel)]="selectedField.shadow.y" [min]="-20" [max]="20"></p-slider>
+                </li>
+                <li role="menuitem">
+                    <label>blur</label>
+                    <p-slider [(ngModel)]="selectedField.shadow.blur" [min]="-1" [max]="20"></p-slider>
+                </li>
+            </ul>
+        </div>
         <div class="btn-group">
             <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
             <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
             <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
-            <a class="btn btn-default" *ngIf="template" (colorPickerChange)="colorChanged($event)" [colorPicker]="color" [style.background-color]="selectedField?.color" style="height:30px;background-position:initial;"><i class="fa fa-eyedropper"></i></a>
+            <a class="btn btn-default color-picker" *ngIf="template && selectedField" (colorPickerChange)="selectedField.color=$event" [colorPicker]="selectedField.color" [style.color]="selectedField.color"><i class="fa fa-eyedropper"></i></a>
             <div class="btn-group" dropdown dropdown-append-to-body>
                 <button type="button" class="btn btn-default" dropdownToggle>
-                    <i class="fa fa-text-height"></i>
+                    <i class="fa fa-text-width" aria-hidden="true"></i> <span class="caret"></span>
+                </button>
+                <div *ngIf="template && selectedField" class="dropdown-menu" role="menu">
+                    <input type="range" [(ngModel)]="selectedField.wordSpace" min="-20" max="20" />
+                    <input type="range" [(ngModel)]="selectedField.letterSpace" min="-20" max="20" />
+                </div>
+            </div>
+            <div class="btn-group" dropdown dropdown-append-to-body>
+                <button type="button" class="btn btn-default" dropdownToggle>
+                    <i class="fa fa-text-height"></i><span class="caret"></span>
                 </button>
                 <ul *ngIf="template" class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
-                    <li *ngFor="let fontSize of [selectedField?.fontSize-5,selectedField?.fontSize-1,selectedField?.fontSize,selectedField?.fontSize+1,selectedField?.fontSize+5]"
+                    <li *ngFor="let fontSize of fontSizes"
                         role="menuitem" (click)="setProperty('fontSize', fontSize)">
-                        <button class="dropdown-item" [style.font-size.em]="fontSize" [style.line-height.px]="fontSize+10" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}" style="width:100%;">{{fontSize}}. T</button>
+                        <button class="dropdown-item" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}" style="width:100%;">{{fontSize}}. T</button>
                     </li>
                 </ul>
             </div>
             <div class="btn-group" dropdown dropdown-append-to-body>
                 <button type="button" class="btn btn-default" dropdownToggle>
-                    פונט <span class="caret"></span>
+                    <i class="fa fa-font" aria-hidden="true"></i> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
                     <li role="menuitem" *ngFor="let font of fonts" (click)="setProperty('font', font)">
-                        <button class="dropdown-item" [style.font-family]="font" [ngClass]="{'btn-info':hasProperty('font',font)}" style="width:100%;" tabindex="0">{{font}}</button>
+                        <button class="dropdown-item" [style.font-family]="font" [ngClass]="{'btn-info':hasProperty('font',font)}" style="width:100%;">{{font}}</button>
                     </li>
                 </ul>
             </div>
@@ -46,11 +102,11 @@
         <button (click)="domtoimage()">הורד כתמונה</button>
         <button (click)="saveInServer()">שמור</button>
     </div>
+    <div class="clearfix"></div>
 </div>
-<div class="clearfix"></div>
 <br />
 <div class="panel panel-default row" *ngIf="template">
-    <div class="col-md-3" style="margin-top:10px;">
+    <div class="col-md-3 col-sm-3" style="margin-top:10px;">
         <ol class="list-unstyled">
             <li *ngFor="let field of template.textFields; let i=index" class="animation-test" style="margin-bottom:5px;">
                 <div class="input-group">
@@ -64,23 +120,26 @@
             </li>
         </ol>
         <label>debug values:</label>
-        <textarea style="width:100%;" disabled>{{selectedField?.rotation}}</textarea>
+        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{mouseEvent|json}}</textarea>
     </div>
-    <div class="panel-body col-md-9 print-area" style="visibility:visible">
-        <div class="animation-test" #printArea style="position: relative; margin: auto;float:left;">
+    <div class="panel-body col-md-9 col-sm-9">
+        <div class="animation-test print-area" #printArea (keyup)="keyUp($event)">
             <div class="text-fields-container">
                 <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;" [style.-webkit-user-modify]="i==selectedIndex?'read-write-plaintext-only':'unset'"
-                     [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.em]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + field.index"
+                     [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + i"
                      [style.width.px]="field.width" [style.height.px]="field.height" [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
                      [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
+                     [style.word-spacing.px]="field.wordSpace" [style.letter-spacing.px]="field.letterSpace"
                      [style.transform]="'rotateZ(' + field.rotation + 'deg)' | safeStyle"
+                     [style.-webkit-text-stroke-color]="field.stroke.color" [style.-webkit-text-stroke-width.px]="field.stroke.width/10"
+                     [style.text-shadow]="field.shadow.blur!=-1?field.shadow.x+'px ' +field.shadow.y+'px ' +field.shadow.blur+'px ' +field.shadow.color:'none'"
                      [draggable] (click)="selectField(i, $event)" (dragstart)="dragstart(i, $event)" (dragend)="dragend($event)" (drag)="onDrag(i,$event)"
                      [textContent]="field.text" (input)="field.text=$event.target.textContent">{{field.text}}</div>
             </div>
-            <div class="inTemplate-tools" *ngIf="selectedField"
+            <div class="inTemplate-tools" *ngIf="template && selectedField"
                  [style.top.px]="selectedField.top" [style.left.px]="selectedField.left"
                  [style.width.px]="selectedField.width" [style.height.px]="selectedField.height"
-                 [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedField.index">
+                 [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedIndex">
                 <div class="resizer" style="position: absolute;"
                      [style.left.px]="selectedField.width" [style.top.px]="selectedField.height"
                      [draggable] (dragstart)="resizestart($event)" (drag)="resize($event)">

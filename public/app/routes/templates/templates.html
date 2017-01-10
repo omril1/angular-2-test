@@ -1,18 +1,20 @@
-﻿<div class="row">
-    <a class="col-md-4 col-lg-3" *ngFor='let template of templateList' style="cursor:pointer;text-decoration:none">
-        <div class="thumbnail bootsnipp-thumb" (click)="openModal(template)">
+﻿<div class="container">
+    <div class="row">
+        <a class="col-md-4 col-lg-3" *ngFor='let template of templateList' style="cursor:pointer;text-decoration:none">
+            <div class="thumbnail bootsnipp-thumb" (click)="openModal(template)">
 
-            <div>
-                <p class="snipp-title ellipis" [title]="template.name">{{template.name}}&nbsp;</p>
-            </div>
-            <div style="height:180px;width:250px;text-align:center;">
-                <img class="lazy" style="max-height: 180px;max-width: 250px;object-fit:contain" [src]="'imageapi/thumbnail/' + template.imageId">
-            </div>
+                <div>
+                    <p class="snipp-title ellipis" [title]="template.name">{{template.name}}&nbsp;</p>
+                </div>
+                <div class="lazy">
+                    <img [src]="'imageapi/thumbnail/' + template.imageId">
+                </div>
 
-            <div class="caption">
+                <div class="caption">
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+    </div>
 </div>
 
 <div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

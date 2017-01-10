@@ -19,7 +19,6 @@ export interface ItextField {
     height: number;
     text: string;
     font: string;
-    index: number;
     fontSize: number;
     color: string;
     bold: boolean;
@@ -27,6 +26,18 @@ export interface ItextField {
     align: string;
     underline: boolean;
     rotation: number;
+    stroke: {
+        color: string;
+        width: number;
+    };
+    shadow: {
+        color: string;
+        x: number;
+        y: number;
+        blur: number;
+    };
+    letterSpace: number,
+    wordSpace: number,
 }
 
 @Injectable()

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
@@ -22,8 +22,31 @@ export class DetailsComponent implements OnInit {
     @ViewChild('container') containerViewChild: HTMLDivElement;
     @ViewChild('contextmenu') contextmenu: ContextMenu;
     @ViewChild('printArea') printArea: ElementRef;
+    // ~~~~~~~~~~~~ Global keyboard events ~~~~~~~~~
+    //@HostListener('window:keydown', ['$event'])
+    //keyboardInput(event: any) {
+    //    console.log('keydown event fired', event);
+    //    if (this.selectedField) {
+    //        this.selectedField.left += 5;
+    //    }
+    //}
 
-    //private textFields = Array<ItextField>();
+    // ~~~~~~~ focused element keyboard events ~~~~~~
+    private keyUp(event) {
+        console.log('keyup even fired', event);
+    }
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+        let printArea = this.printArea.nativeElement;
+        let nHeight = printArea.children[printArea.children.length - 1].naturalHeight
+        let height = event.target.innerHeight - printArea.getBoundingClientRect().top;
+        this.printArea.nativeElement.style.height = height + 'px';
+        let aspectRation = nHeight / height;
+        this.template.textFields = this.template.textFields.map(field => { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
+    }
+
+
+    private mouseEvent: any[];
     private items: MenuItem[];
     private template: Template;
     private imageWidth: number;
@@ -37,7 +60,8 @@ export class DetailsComponent implements OnInit {
         return this.template.textFields[this.selectedIndex];
     }
     //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
-    private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"]
+    private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
+    private fontSizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 55];
 
     constructor(private route: ActivatedRoute, private imageService: ImageService) {
     }
@@ -52,14 +76,11 @@ export class DetailsComponent implements OnInit {
             this.imageHeight = parseInt(params['height']);
             this.imageWidth = parseInt(params['width']);
         });
-        this.items = [
-            {
-                label: 'Print',
-                icon: 'fa-print',
-                command: (event) => {
-                }
-            }
-        ];
+        this.items = [{
+            label: 'Print',
+            icon: 'fa-print',
+            command: (event) => { }
+        }];
     }
 
     private removeField(index?: number) {
@@ -70,21 +91,15 @@ export class DetailsComponent implements OnInit {
             this.selectedIndex = -1;
         }
     };
-    private colorChanged(color: string) {
-        this.color = color;
-        if (this.selectedIndex != -1) {
-            this.template.textFields[this.selectedIndex].color = color;
-        }
-    };
     private addField() {
         this.template.textFields.push(<ItextField>{
             left: 1000 / 3,
             top: 30,
-            width: 1000 / 3,
-            height: 40,
+            width: 420,
+            height: 60,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: 2,
+            fontSize: 42,
             bold: true,
             align: 'center',
             italic: false,
@@ -92,6 +107,10 @@ export class DetailsComponent implements OnInit {
             color: "#337ab7",
             index: this.fieldsCounter++,
             rotation: 0,
+            stroke: { color: '#000000', width: 0 },
+            shadow: { x: 0, y: 0, blur: -1, color: '#000000' },
+            letterSpace: 0,
+            wordSpace: 0
         });
     };
     private setProperty(propName: string, prop: any) {
@@ -121,11 +140,11 @@ export class DetailsComponent implements OnInit {
         this.color = this.template.textFields[this.selectedIndex].color;
         this.setResizer(<HTMLLIElement>event.currentTarget);
 
-        event.srcElement.classList.add('dragged');
+        (<HTMLLIElement>event.currentTarget).classList.add('dragged');
         utils.noGhostImage(event);
     }
     private dragend(event: DragEvent) {
-        event.srcElement.classList.remove('dragged');
+        (<HTMLLIElement>event.currentTarget).classList.remove('dragged');
     }
     private onDrag(fieldIndex: number, event: any) {
         let targetRectangle = utils.parseElementRectangle(event.currentTarget);
@@ -148,17 +167,14 @@ export class DetailsComponent implements OnInit {
     }
 
     private rotate(event: DragEvent) {
+        this.mouseEvent = [event.clientX, event.detail, event.offsetX, event.x];
         let targetRectangle = utils.parseElementRectangle(event.srcElement);
         //console.log(event.clientX, event.detail, event.offsetX, event.x);
         //console.log(event.srcElement.getBoundingClientRect());
         let {dx, dy} = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 };
         let angle = -(180 * Math.atan2(dx, dy) / Math.PI);
-        let variance = 7;
-        for (let a of [0, 90, 180]) {
-            let sign = angle > 0 ? 1 : -1;
-            if (angle < a + variance && angle > a - variance || angle < -a + variance && angle > -a - variance)
-                angle = a * sign;
-        }
+        //round the angle to the nearest whole right angle if possible.
+        angle = utils.roundAngle(angle, 7);
         this.template.textFields[this.selectedIndex].rotation = angle;
     }
     private rotatestart(event: DragEvent) {

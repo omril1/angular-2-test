@@ -1,9 +1,10 @@
 ﻿.text-fields-container .textField {
+    will-change: left, top, transition;
     cursor: pointer;
     line-height: normal;
     overflow: hidden;
     white-space: pre;
-    /*transition-timing-function: ease-in-out;*/
+    -webkit-text-stroke-width: 1px;
 }
 
     .text-fields-container .textField.dragged {
@@ -22,6 +23,7 @@
     }
 
     .inTemplate-tools .resizer {
+        will-change: left, top;
         width: 10px;
         height: 10px;
         cursor: nw-resize;
@@ -32,7 +34,7 @@
             width: 5px;
             height: 5px;
             left: -16px;
-            border-top: 8px dashed;
+            border-top: 8px dashed black;
             border-right: 8px solid transparent;
             border-left: 8px solid transparent;
         }
@@ -42,12 +44,13 @@
             width: 5px;
             height: 5px;
             top: -16px;
-            border-left: 8px dashed;
+            border-left: 8px dashed black;
             border-top: 8px solid transparent;
             border-bottom: 8px solid transparent;
         }
 
     .inTemplate-tools .rotation-handle {
+        will-change: left, top;
         left: 50%;
         top: 100%;
         width: 20px;

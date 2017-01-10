@@ -7,7 +7,7 @@ import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
 import { DropdownModule, ModalModule, CollapseModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
-import { ContextMenuModule, GrowlModule } from 'primeng/primeng';
+import { ContextMenuModule, GrowlModule, SliderModule, GMapModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
@@ -29,6 +29,8 @@ import { ImageService } from './services/image.service'
         CollapseModule.forRoot(),
         ContextMenuModule,
         GrowlModule,
+        SliderModule,
+        GMapModule,
         AppRoutesModule,
     ],
     declarations: [

@@ -25,6 +25,7 @@ var DetailsComponent = (function () {
         this.msgs = [];
         //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
         this.fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
+        this.fontSizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 55];
         this.sendToProcessing = function () {
             this.imageService.sendToProcessing(this.template).then(function (result) {
                 window.open(result.text());
@@ -49,6 +50,26 @@ var DetailsComponent = (function () {
             _this.contextmenu.show(event);
         };
     }
+    // ~~~~~~~~~~~~ Global keyboard events ~~~~~~~~~
+    //@HostListener('window:keydown', ['$event'])
+    //keyboardInput(event: any) {
+    //    console.log('keydown event fired', event);
+    //    if (this.selectedField) {
+    //        this.selectedField.left += 5;
+    //    }
+    //}
+    // ~~~~~~~ focused element keyboard events ~~~~~~
+    DetailsComponent.prototype.keyUp = function (event) {
+        console.log('keyup even fired', event);
+    };
+    DetailsComponent.prototype.onResize = function (event) {
+        var printArea = this.printArea.nativeElement;
+        var nHeight = printArea.children[printArea.children.length - 1].naturalHeight;
+        var height = event.target.innerHeight - printArea.getBoundingClientRect().top;
+        this.printArea.nativeElement.style.height = height + 'px';
+        var aspectRation = nHeight / height;
+        this.template.textFields = this.template.textFields.map(function (field) { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
+    };
     Object.defineProperty(DetailsComponent.prototype, "selectedField", {
         get: function () {
             return this.template.textFields[this.selectedIndex];
@@ -68,14 +89,11 @@ var DetailsComponent = (function () {
             _this.imageHeight = parseInt(params['height']);
             _this.imageWidth = parseInt(params['width']);
         });
-        this.items = [
-            {
+        this.items = [{
                 label: 'Print',
                 icon: 'fa-print',
-                command: function (event) {
-                }
-            }
-        ];
+                command: function (event) { }
+            }];
     };
     DetailsComponent.prototype.removeField = function (index) {
         if (index != undefined)
@@ -86,22 +104,15 @@ var DetailsComponent = (function () {
         }
     };
     ;
-    DetailsComponent.prototype.colorChanged = function (color) {
-        this.color = color;
-        if (this.selectedIndex != -1) {
-            this.template.textFields[this.selectedIndex].color = color;
-        }
-    };
-    ;
     DetailsComponent.prototype.addField = function () {
         this.template.textFields.push({
             left: 1000 / 3,
             top: 30,
-            width: 1000 / 3,
-            height: 40,
+            width: 420,
+            height: 60,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: 2,
+            fontSize: 42,
             bold: true,
             align: 'center',
             italic: false,
@@ -109,6 +120,10 @@ var DetailsComponent = (function () {
             color: "#337ab7",
             index: this.fieldsCounter++,
             rotation: 0,
+            stroke: { color: '#000000', width: 0 },
+            shadow: { x: 0, y: 0, blur: -1, color: '#000000' },
+            letterSpace: 0,
+            wordSpace: 0
         });
     };
     ;
@@ -140,11 +155,11 @@ var DetailsComponent = (function () {
         this.selectedIndex = fieldIndex;
         this.color = this.template.textFields[this.selectedIndex].color;
         this.setResizer(event.currentTarget);
-        event.srcElement.classList.add('dragged');
+        event.currentTarget.classList.add('dragged');
         utils.noGhostImage(event);
     };
     DetailsComponent.prototype.dragend = function (event) {
-        event.srcElement.classList.remove('dragged');
+        event.currentTarget.classList.remove('dragged');
     };
     DetailsComponent.prototype.onDrag = function (fieldIndex, event) {
         var targetRectangle = utils.parseElementRectangle(event.currentTarget);
@@ -165,18 +180,14 @@ var DetailsComponent = (function () {
         this.resizerCoordinates = { x: 0, y: 0 };
     };
     DetailsComponent.prototype.rotate = function (event) {
+        this.mouseEvent = [event.clientX, event.detail, event.offsetX, event.x];
         var targetRectangle = utils.parseElementRectangle(event.srcElement);
         //console.log(event.clientX, event.detail, event.offsetX, event.x);
         //console.log(event.srcElement.getBoundingClientRect());
         var _a = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 }, dx = _a.dx, dy = _a.dy;
         var angle = -(180 * Math.atan2(dx, dy) / Math.PI);
-        var variance = 7;
-        for (var _i = 0, _b = [0, 90, 180]; _i < _b.length; _i++) {
-            var a = _b[_i];
-            var sign = angle > 0 ? 1 : -1;
-            if (angle < a + variance && angle > a - variance || angle < -a + variance && angle > -a - variance)
-                angle = a * sign;
-        }
+        //round the angle to the nearest whole right angle if possible.
+        angle = utils.roundAngle(angle, 7);
         this.template.textFields[this.selectedIndex].rotation = angle;
     };
     DetailsComponent.prototype.rotatestart = function (event) {
@@ -203,6 +214,12 @@ __decorate([
     core_1.ViewChild('printArea'),
     __metadata("design:type", core_1.ElementRef)
 ], DetailsComponent.prototype, "printArea", void 0);
+__decorate([
+    core_1.HostListener('window:resize', ['$event']),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], DetailsComponent.prototype, "onResize", null);
 DetailsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

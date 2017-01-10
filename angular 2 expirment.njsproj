@@ -48,6 +48,7 @@
   <ItemGroup>
     <Content Include="public\app\app.view.html" />
     <Content Include="public\app\routes\details\details.css" />
+    <Content Include="public\app\routes\templates\templates.css" />
     <Content Include="public\app\routes\templates\templates.html" />
     <Content Include="public\app\routes\about\about.html" />
     <Content Include="public\app\routes\details\details.html" />

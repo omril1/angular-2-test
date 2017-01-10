@@ -1,6 +1,8 @@
 ﻿body {
-    /*direction:rtl;*/
     background-color: #ececec;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 th {
@@ -11,6 +13,11 @@ th {
     padding-right: 0;
     font-size: large;
     line-height: normal;
+}
+
+.dropdown-menu {
+    padding: 5px 10px;
+    user-select: none;
 }
 
 .ellipis {

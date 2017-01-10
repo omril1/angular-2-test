@@ -19,7 +19,6 @@ var templateSchema = {
             height: Number,
             text: String,
             font: String,
-            index: Number,
             fontSize: Number,
             color: String,
             bold: Boolean,
@@ -27,7 +26,14 @@ var templateSchema = {
             align: String,
             underline: Boolean,
             rotation: Number,
-            _id: false
+            stroke: {
+                color: String,
+                width: Number,
+            },
+            shadow: { x: Number, y: Number, blur: Number, color: String },
+            letterSpace: Number,
+            wordSpace: Number,
+            _id: false,
         }],
         default: []
     },

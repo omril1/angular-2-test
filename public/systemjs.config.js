@@ -6,10 +6,10 @@
     // map tells the System loader where to look for things
     var map = {
         'app': 'app', // 'dist',
-        '@angular': 'npm:/@angular',
-        //'angular2-in-memory-web-api': 'npm:/angular2-in-memory-web-api',
-        'rxjs': 'npm:/rxjs',
-        'moment': 'npm:/moment/moment.js',
+        '@angular': 'npm:@angular',
+        //'angular2-in-memory-web-api': 'npm:angular2-in-memory-web-api',
+        'rxjs': 'npm:rxjs',
+        'moment': 'npm:moment/moment.js',
         'dom-to-image': 'npm:dom-to-image/src/dom-to-image.js',
         'ng2-file-upload': 'npm:ng2-file-upload/bundles/ng2-file-upload.umd.js',
         'ng2-draggable': 'npm:ng2-draggable/index.js',

@@ -39,6 +39,8 @@ AppModule = __decorate([
             ng2_bootstrap_1.CollapseModule.forRoot(),
             primeng_1.ContextMenuModule,
             primeng_1.GrowlModule,
+            primeng_1.SliderModule,
+            primeng_1.GMapModule,
             app_routing_1.AppRoutesModule,
         ],
         declarations: [

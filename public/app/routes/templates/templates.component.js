@@ -36,7 +36,7 @@ TemplatesComponent = __decorate([
         moduleId: module.id,
         templateUrl: "./templates.html",
         providers: [image_service_1.ImageService],
-        styles: [".image-item {height:200px;}\n              .image-item a h4 {height:20px;margin-top:5px;}"]
+        styleUrls: ["templates.css"]
     }),
     __metadata("design:paramtypes", [image_service_1.ImageService,
         router_1.Router])

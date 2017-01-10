@@ -12,7 +12,15 @@
   * @param event DragEvent of the element's ghost to hide.
   */
 export let noGhostImage = function (event: DragEvent) {
-    event.dataTransfer.setDragImage(event.srcElement, -99999, -99999);
+    event.dataTransfer.setDragImage(<HTMLLIElement>event.currentTarget, -99999, -99999);
+}
+export let roundAngle = function (angle, variance = 7) {
+    for (let a of [0, 90, 180]) {
+        let sign = angle > 0 ? 1 : -1;
+        if (angle < a + variance && angle > a - variance || angle < -a + variance && angle > -a - variance)
+            angle = a * sign;
+    }
+    return angle;
 }
 export let createLineElement = function (x, y, length, angle) {
     var line = document.createElement("div");
