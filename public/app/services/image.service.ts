@@ -42,13 +42,19 @@ export interface ItextField {
 
 @Injectable()
 export class ImageService {
-    private baseUrl: string;
-
-    constructor(private http: Http) {
-        this.baseUrl = '/imageapi';
+    private baseUrl = '/imageapi';
+    //private _pageSizes: { [id: string]: { width: number; height: number; }; } = { 'A4': { width: 793.7007874015748, height: 1122.51968503937 }, 'A5': { width: 561.259842519685, height: 793.7007874015748 } };
+    //rounded some numbers
+    private _pageSizes: { [id: string]: { width: number; height: number; }; } = { 'A4': { width: 793.7, height: 1122.52 }, 'A5': { width: 561.26, height: 793.700 } };
+    public get pageSizes() {
+        return this._pageSizes;
     }
 
-    getImageNames() {
+
+    constructor(private http: Http) {
+    }
+
+    public getImageNames() {
         return this.http.get(`${this.baseUrl}/allimages`)
             .map(response => response.json())
             .toPromise()
@@ -56,7 +62,7 @@ export class ImageService {
                 throw (error || 'Server error')
             });
     }
-    getTemplates() {
+    public getTemplates() {
         return this.http.get(`${this.baseUrl}/templates`)
             .map(response => <Template[]>response.json())
             .toPromise()
@@ -64,13 +70,13 @@ export class ImageService {
                 throw (error || 'Server error')
             });
     }
-    getTemplate(templateId: string) {
+    public getTemplate(templateId: string) {
         return this.http.get(`${this.baseUrl}/template/${templateId}`)
             .map(response => <Template>response.json())
             .toPromise().catch(reason => { console.error(reason); return <Template>null; });
     }
 
-    sendToProcessing(template: Template) {
+    public sendToProcessing(template: Template) {
         let body = JSON.stringify(template);
         let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
         let options = new RequestOptions({ headers: headers });
@@ -79,7 +85,7 @@ export class ImageService {
                 Promise.reject(error || 'Server error'));
     }
 
-    saveInServer(template: Template) {
+    public saveInServer(template: Template) {
         let body = JSON.stringify(template);
         let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
         let options = new RequestOptions({ headers: headers });

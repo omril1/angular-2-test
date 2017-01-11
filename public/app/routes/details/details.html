@@ -120,14 +120,17 @@
             </li>
         </ol>
         <label>debug values:</label>
-        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{mouseEvent|json}}</textarea>
+        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{debugValue|json}}</textarea>
     </div>
     <div class="panel-body col-md-9 col-sm-9">
-        <div class="animation-test print-area" #printArea (keyup)="keyUp($event)">
+        <div class="print-area" #printArea (keyup)="keyUp($event)" [style.width.px]="imageWidth" [style.height.px]="imageHeight">
             <div class="text-fields-container">
-                <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;" [style.-webkit-user-modify]="i==selectedIndex?'read-write-plaintext-only':'unset'"
-                     [(style.top.px)]="field.top" [(style.left.px)]="field.left" [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + i"
-                     [style.width.px]="field.width" [style.height.px]="field.height" [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
+                <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;"
+                     [style.-webkit-user-modify]="i==selectedIndex?'read-write-plaintext-only':'unset'"
+                     [style.top.px]="field.top" [style.left.px]="field.left"
+                     [style.width.px]="field.width" [style.height.px]="field.height"
+                     [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + i"
+                     [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
                      [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
                      [style.word-spacing.px]="field.wordSpace" [style.letter-spacing.px]="field.letterSpace"
                      [style.transform]="'rotateZ(' + field.rotation + 'deg)' | safeStyle"
@@ -142,7 +145,7 @@
                  [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedIndex">
                 <div class="resizer" style="position: absolute;"
                      [style.left.px]="selectedField.width" [style.top.px]="selectedField.height"
-                     [draggable] (dragstart)="resizestart($event)" (drag)="resize($event)">
+                     [draggable] (dragstart)="resizestart($event)" (drag)="resize($event)" (dragend)="resizeEnd($event)">
                     <i class="right"></i>
                     <i class="bottom"></i>
                 </div>

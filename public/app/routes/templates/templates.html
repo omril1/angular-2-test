@@ -18,20 +18,16 @@
 </div>
 
 <div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-sm" style="direction:rtl;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" (click)="modal.hide()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Modal Example</h4>
+                <h4 class="modal-title">בחר גודל דף</h4>
             </div>
             <div *ngIf="selectedTemplate" class="modal-body">
-                select Size:
-                <br />
-                <!--<button class="btn btn-primary" (click)="baseImageSelect(100,100)">100x100</button>-->
-                <button class="btn btn-primary" [routerLink]="['/details',selectedTemplate._id,100,100]">100x100</button>
-                <button class="btn btn-primary" [routerLink]="['/details',selectedTemplate._id,3508,2480]">3508x2480</button>
+                <button class="btn btn-primary" *ngFor="let size of pageSizes" [routerLink]="['/details', selectedTemplate._id, size]">{{size}}</button>
             </div>
         </div>
     </div>

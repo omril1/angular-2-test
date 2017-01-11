@@ -16,6 +16,7 @@ var TemplatesComponent = (function () {
     function TemplatesComponent(imageService, router) {
         this.imageService = imageService;
         this.router = router;
+        this.pageSizes = Object.keys(imageService.pageSizes);
     }
     TemplatesComponent.prototype.ngOnInit = function () {
         var _this = this;

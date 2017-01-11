@@ -21,7 +21,7 @@ var DetailsComponent = (function () {
         this.imageService = imageService;
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
-        this.resizerCoordinates = { x: 0, y: 0 };
+        //private color: string;
         this.msgs = [];
         //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
         this.fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
@@ -32,7 +32,14 @@ var DetailsComponent = (function () {
             });
         };
         this.domtoimage = function () {
-            domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
+            domtoimage.toJpeg(this.printArea.nativeElement, {
+                quality: 1, filter: function (node) {
+                    var result = true;
+                    if (node.classList)
+                        result = !node.classList.contains('inTemplate-tools');
+                    return result;
+                }
+            })
                 .then(function (dataUrl) {
                 var link = document.createElement('a');
                 link.download = 'my-image-name.jpeg';
@@ -63,12 +70,12 @@ var DetailsComponent = (function () {
         console.log('keyup even fired', event);
     };
     DetailsComponent.prototype.onResize = function (event) {
-        var printArea = this.printArea.nativeElement;
-        var nHeight = printArea.children[printArea.children.length - 1].naturalHeight;
-        var height = event.target.innerHeight - printArea.getBoundingClientRect().top;
-        this.printArea.nativeElement.style.height = height + 'px';
-        var aspectRation = nHeight / height;
-        this.template.textFields = this.template.textFields.map(function (field) { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
+        //let printArea = this.printArea.nativeElement;
+        //let nHeight = printArea.children[printArea.children.length - 1].naturalHeight
+        //let height = event.target.innerHeight - printArea.getBoundingClientRect().top;
+        //this.printArea.nativeElement.style.height = height + 'px';
+        //let aspectRation = nHeight / height;
+        //this.template.textFields = this.template.textFields.map(field => { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
     };
     Object.defineProperty(DetailsComponent.prototype, "selectedField", {
         get: function () {
@@ -86,8 +93,9 @@ var DetailsComponent = (function () {
                 _this.template = null;
                 _this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
             });
-            _this.imageHeight = parseInt(params['height']);
-            _this.imageWidth = parseInt(params['width']);
+            var pageSizes = _this.imageService.pageSizes[params['pageSize']];
+            _this.imageHeight = pageSizes.height;
+            _this.imageWidth = pageSizes.width;
         });
         this.items = [{
                 label: 'Print',
@@ -106,13 +114,13 @@ var DetailsComponent = (function () {
     ;
     DetailsComponent.prototype.addField = function () {
         this.template.textFields.push({
-            left: 1000 / 3,
-            top: 30,
-            width: 420,
-            height: 60,
+            left: this.imageWidth / 4,
+            top: this.imageHeight / 22,
+            width: this.imageWidth / 2,
+            height: this.imageHeight / 20,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: 42,
+            fontSize: this.imageWidth / 19,
             bold: true,
             align: 'center',
             italic: false,
@@ -127,6 +135,14 @@ var DetailsComponent = (function () {
         });
     };
     ;
+    DetailsComponent.prototype.getStyle = function (field) {
+        return {
+            left: field.left,
+            top: field.top,
+            width: field.width,
+            height: field.height,
+        };
+    };
     DetailsComponent.prototype.setProperty = function (propName, prop) {
         if (this.template && this.template.textFields[this.selectedIndex]) {
             this.template.textFields[this.selectedIndex][propName] = prop;
@@ -148,13 +164,11 @@ var DetailsComponent = (function () {
     };
     DetailsComponent.prototype.selectField = function (fieldIndex, event) {
         this.selectedIndex = fieldIndex;
-        this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(event.currentTarget);
+        //this.color = this.template.textFields[this.selectedIndex].color;
     };
     DetailsComponent.prototype.dragstart = function (fieldIndex, event) {
         this.selectedIndex = fieldIndex;
-        this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(event.currentTarget);
+        //this.color = this.template.textFields[this.selectedIndex].color;
         event.currentTarget.classList.add('dragged');
         utils.noGhostImage(event);
     };
@@ -162,43 +176,46 @@ var DetailsComponent = (function () {
         event.currentTarget.classList.remove('dragged');
     };
     DetailsComponent.prototype.onDrag = function (fieldIndex, event) {
-        var targetRectangle = utils.parseElementRectangle(event.currentTarget);
-        this.template.textFields[this.selectedIndex].left = targetRectangle.left;
-        this.template.textFields[this.selectedIndex].top = targetRectangle.top;
+        this.template.textFields[this.selectedIndex].left = Number(event.currentTarget.style.left.replace('px', ''));
+        this.template.textFields[this.selectedIndex].top = Number(event.currentTarget.style.top.replace('px', ''));
     };
     DetailsComponent.prototype.resizestart = function (event) {
         utils.noGhostImage(event);
     };
     DetailsComponent.prototype.resize = function (event) {
-        var targetRectangle = utils.parseElementRectangle(event.srcElement);
-        var parseX = Math.max(Number(targetRectangle.left), 0);
-        var parseY = Math.max(Number(targetRectangle.top), 0);
+        var parseX = Math.max(Number(event.currentTarget.style.left.replace('px', '')), 0);
+        var parseY = Math.max(Number(event.currentTarget.style.top.replace('px', '')), 0);
         this.template.textFields[this.selectedIndex].width = parseX;
         this.template.textFields[this.selectedIndex].height = parseY;
     };
-    DetailsComponent.prototype.setResizer = function (target) {
-        this.resizerCoordinates = { x: 0, y: 0 };
+    DetailsComponent.prototype.resizeEnd = function (event) {
+        //(<HTMLElement>event.srcElement).style.left = null;
+        //(<HTMLElement>event.srcElement).style.top = null;
     };
     DetailsComponent.prototype.rotate = function (event) {
-        this.mouseEvent = [event.clientX, event.detail, event.offsetX, event.x];
-        var targetRectangle = utils.parseElementRectangle(event.srcElement);
-        //console.log(event.clientX, event.detail, event.offsetX, event.x);
-        //console.log(event.srcElement.getBoundingClientRect());
-        var _a = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 }, dx = _a.dx, dy = _a.dy;
+        this.doMath(event);
+    };
+    DetailsComponent.prototype.rotatestart = function (event) {
+        event.srcElement.classList.add('dragged');
+        this.rotationCenter = {
+            x: this.printArea.nativeElement.getBoundingClientRect().left + this.selectedField.left + this.selectedField.width / 2,
+            y: this.printArea.nativeElement.getBoundingClientRect().top + this.selectedField.top + this.selectedField.height / 2
+        };
+        this.debugValue = [this.rotationCenter, event.x, event.y];
+        //document.body.appendChild(utils.createLine(event.x, event.y, this.rotationCenter.x, this.rotationCenter.y));
+    };
+    DetailsComponent.prototype.rotateend = function (event) {
+        event.srcElement.classList.remove('dragged');
+        this.doMath(event);
+        event.srcElement.style.left = null;
+        event.srcElement.style.top = null;
+    };
+    DetailsComponent.prototype.doMath = function (event) {
+        var _a = { dx: event.x - this.rotationCenter.x, dy: event.y - this.rotationCenter.y }, dx = _a.dx, dy = _a.dy;
         var angle = -(180 * Math.atan2(dx, dy) / Math.PI);
         //round the angle to the nearest whole right angle if possible.
         angle = utils.roundAngle(angle, 7);
         this.template.textFields[this.selectedIndex].rotation = angle;
-    };
-    DetailsComponent.prototype.rotatestart = function (event) {
-        event.srcElement.classList.add('dragged');
-        var _a = { dx: this.selectedField.left + this.selectedField.width / 2, dy: this.selectedField.top + this.selectedField.height / 2 }, dx = _a.dx, dy = _a.dy;
-        //this.printArea.nativeElement.appendChild(utils.createLine(dx + event.offsetX, dy + event.offsetY, dx, dy));
-    };
-    DetailsComponent.prototype.rotateend = function (event) {
-        event.srcElement.classList.remove('dragged');
-        event.srcElement.style.left = null;
-        event.srcElement.style.top = null;
     };
     return DetailsComponent;
 }());

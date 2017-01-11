@@ -7,7 +7,7 @@ var appRoutes = [
     { path: 'upload-image', component: index_1.UploadImageComponent },
     { path: 'list', component: index_1.ListComponent },
     { path: 'templates', component: index_1.TemplatesComponent },
-    { path: 'details/:id/:height/:width', component: index_1.DetailsComponent }
+    { path: 'details/:id/:pageSize', component: index_1.DetailsComponent }
 ];
 exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
 //# sourceMappingURL=app.routing.js.map

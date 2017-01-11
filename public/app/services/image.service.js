@@ -17,7 +17,17 @@ var ImageService = (function () {
     function ImageService(http) {
         this.http = http;
         this.baseUrl = '/imageapi';
+        //private _pageSizes: { [id: string]: { width: number; height: number; }; } = { 'A4': { width: 793.7007874015748, height: 1122.51968503937 }, 'A5': { width: 561.259842519685, height: 793.7007874015748 } };
+        //rounded some numbers
+        this._pageSizes = { 'A4': { width: 793.7, height: 1122.52 }, 'A5': { width: 561.26, height: 793.700 } };
     }
+    Object.defineProperty(ImageService.prototype, "pageSizes", {
+        get: function () {
+            return this._pageSizes;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ImageService.prototype.getImageNames = function () {
         return this.http.get(this.baseUrl + "/allimages")
             .map(function (response) { return response.json(); })

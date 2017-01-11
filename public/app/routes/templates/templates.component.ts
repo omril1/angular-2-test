@@ -10,15 +10,19 @@ import { ModalDirective } from 'ng2-bootstrap';
     styleUrls: ["templates.css"]
 })
 export class TemplatesComponent implements OnInit {
-    templateList: Template[];
-    selectedTemplate: Template;
+    private templateList: Template[];
+    private selectedTemplate: Template;
+    private pageSizes: string[];
     @ViewChild('modal') public modal: ModalDirective;
+
+
     constructor(
         private imageService: ImageService,
         private router: Router) {
+        this.pageSizes = Object.keys(imageService.pageSizes);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.imageService.getTemplates().then(
             value => this.templateList = value
         );

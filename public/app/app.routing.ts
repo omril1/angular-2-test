@@ -7,6 +7,6 @@ const appRoutes: Routes = [
     { path: 'upload-image', component: UploadImageComponent },
     { path: 'list', component: ListComponent },
     { path: 'templates', component: TemplatesComponent },
-    { path: 'details/:id/:height/:width', component: DetailsComponent }
+    { path: 'details/:id/:pageSize', component: DetailsComponent }
 ];
 export const AppRoutesModule = RouterModule.forRoot(appRoutes);

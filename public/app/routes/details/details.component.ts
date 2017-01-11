@@ -7,11 +7,6 @@ import { ImageService, ItextField, Template } from '../../services/image.service
 import * as utils from '../../utils';
 let domtoimage = require('dom-to-image');
 
-interface coordinates {
-    x: number;
-    y: number;
-}
-
 @Component({
     moduleId: module.id,
     templateUrl: "details.html",
@@ -37,24 +32,24 @@ export class DetailsComponent implements OnInit {
     }
     @HostListener('window:resize', ['$event'])
     onResize(event) {
-        let printArea = this.printArea.nativeElement;
-        let nHeight = printArea.children[printArea.children.length - 1].naturalHeight
-        let height = event.target.innerHeight - printArea.getBoundingClientRect().top;
-        this.printArea.nativeElement.style.height = height + 'px';
-        let aspectRation = nHeight / height;
-        this.template.textFields = this.template.textFields.map(field => { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
+        //let printArea = this.printArea.nativeElement;
+        //let nHeight = printArea.children[printArea.children.length - 1].naturalHeight
+        //let height = event.target.innerHeight - printArea.getBoundingClientRect().top;
+        //this.printArea.nativeElement.style.height = height + 'px';
+        //let aspectRation = nHeight / height;
+        //this.template.textFields = this.template.textFields.map(field => { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
     }
 
 
-    private mouseEvent: any[];
+    private debugValue: any[];
     private items: MenuItem[];
     private template: Template;
     private imageWidth: number;
     private imageHeight: number;
     private fieldsCounter = 0;
     private selectedIndex = -1;
-    private color: string;
-    private resizerCoordinates: coordinates = { x: 0, y: 0 };
+    private rotationCenter: { x: number, y: number };
+    //private color: string;
     private msgs: Message[] = [];
     get selectedField(): ItextField {
         return this.template.textFields[this.selectedIndex];
@@ -73,8 +68,9 @@ export class DetailsComponent implements OnInit {
                 this.template = null;
                 this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
             });
-            this.imageHeight = parseInt(params['height']);
-            this.imageWidth = parseInt(params['width']);
+            let pageSizes = this.imageService.pageSizes[params['pageSize']]
+            this.imageHeight = pageSizes.height;
+            this.imageWidth = pageSizes.width;
         });
         this.items = [{
             label: 'Print',
@@ -93,13 +89,13 @@ export class DetailsComponent implements OnInit {
     };
     private addField() {
         this.template.textFields.push(<ItextField>{
-            left: 1000 / 3,
-            top: 30,
-            width: 420,
-            height: 60,
+            left: this.imageWidth / 4,
+            top: this.imageHeight / 22,
+            width: this.imageWidth / 2,
+            height: this.imageHeight / 20,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: 42,
+            fontSize: this.imageWidth / 19,
             bold: true,
             align: 'center',
             italic: false,
@@ -113,6 +109,14 @@ export class DetailsComponent implements OnInit {
             wordSpace: 0
         });
     };
+    private getStyle(field) {
+        return {
+            left: field.left,
+            top: field.top,
+            width: field.width,
+            height: field.height,
+        };
+    }
     private setProperty(propName: string, prop: any) {
         if (this.template && this.template.textFields[this.selectedIndex]) {
             this.template.textFields[this.selectedIndex][propName] = prop;
@@ -132,13 +136,11 @@ export class DetailsComponent implements OnInit {
     }
     private selectField(fieldIndex: number, event: MouseEvent) {
         this.selectedIndex = fieldIndex;
-        this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(<HTMLLIElement>event.currentTarget);
+        //this.color = this.template.textFields[this.selectedIndex].color;
     }
     private dragstart(fieldIndex: number, event: DragEvent) {
         this.selectedIndex = fieldIndex;
-        this.color = this.template.textFields[this.selectedIndex].color;
-        this.setResizer(<HTMLLIElement>event.currentTarget);
+        //this.color = this.template.textFields[this.selectedIndex].color;
 
         (<HTMLLIElement>event.currentTarget).classList.add('dragged');
         utils.noGhostImage(event);
@@ -146,46 +148,49 @@ export class DetailsComponent implements OnInit {
     private dragend(event: DragEvent) {
         (<HTMLLIElement>event.currentTarget).classList.remove('dragged');
     }
-    private onDrag(fieldIndex: number, event: any) {
-        let targetRectangle = utils.parseElementRectangle(event.currentTarget);
-        this.template.textFields[this.selectedIndex].left = targetRectangle.left;
-        this.template.textFields[this.selectedIndex].top = targetRectangle.top;
+    private onDrag(fieldIndex: number, event: DragEvent) {
+        this.template.textFields[this.selectedIndex].left = Number((<HTMLElement>event.currentTarget).style.left.replace('px', ''));
+        this.template.textFields[this.selectedIndex].top = Number((<HTMLElement>event.currentTarget).style.top.replace('px', ''));
     }
     private resizestart(event: DragEvent) {
         utils.noGhostImage(event);
     }
     private resize(event: DragEvent) {
-        let targetRectangle = utils.parseElementRectangle(event.srcElement);
-        let parseX = Math.max(Number(targetRectangle.left), 0);
-        let parseY = Math.max(Number(targetRectangle.top), 0);
+        let parseX = Math.max(Number((<HTMLElement>event.currentTarget).style.left.replace('px', '')), 0);
+        let parseY = Math.max(Number((<HTMLElement>event.currentTarget).style.top.replace('px', '')), 0);
 
         this.template.textFields[this.selectedIndex].width = parseX;
         this.template.textFields[this.selectedIndex].height = parseY;
     }
-    private setResizer(target: HTMLLIElement) {
-        this.resizerCoordinates = { x: 0, y: 0 };
+    private resizeEnd(event: DragEvent) {
+        //(<HTMLElement>event.srcElement).style.left = null;
+        //(<HTMLElement>event.srcElement).style.top = null;
     }
 
     private rotate(event: DragEvent) {
-        this.mouseEvent = [event.clientX, event.detail, event.offsetX, event.x];
-        let targetRectangle = utils.parseElementRectangle(event.srcElement);
-        //console.log(event.clientX, event.detail, event.offsetX, event.x);
-        //console.log(event.srcElement.getBoundingClientRect());
-        let {dx, dy} = { dx: targetRectangle.left - this.selectedField.width / 2, dy: targetRectangle.top - this.selectedField.height / 2 };
+        this.doMath(event);
+    }
+    private rotatestart(event: DragEvent) {
+        event.srcElement.classList.add('dragged');
+        this.rotationCenter = {
+            x: this.printArea.nativeElement.getBoundingClientRect().left + this.selectedField.left + this.selectedField.width / 2,
+            y: this.printArea.nativeElement.getBoundingClientRect().top + this.selectedField.top + this.selectedField.height / 2
+        };
+        this.debugValue = [this.rotationCenter, event.x, event.y];
+        //document.body.appendChild(utils.createLine(event.x, event.y, this.rotationCenter.x, this.rotationCenter.y));
+    }
+    private rotateend(event: DragEvent) {
+        event.srcElement.classList.remove('dragged');
+        this.doMath(event);
+        (<HTMLElement>event.srcElement).style.left = null;
+        (<HTMLElement>event.srcElement).style.top = null;
+    }
+    private doMath(event) {
+        let {dx, dy} = { dx: event.x - this.rotationCenter.x, dy: event.y - this.rotationCenter.y };
         let angle = -(180 * Math.atan2(dx, dy) / Math.PI);
         //round the angle to the nearest whole right angle if possible.
         angle = utils.roundAngle(angle, 7);
         this.template.textFields[this.selectedIndex].rotation = angle;
-    }
-    private rotatestart(event: DragEvent) {
-        event.srcElement.classList.add('dragged');
-        let {dx, dy} = { dx: this.selectedField.left + this.selectedField.width / 2, dy: this.selectedField.top + this.selectedField.height / 2 };
-        //this.printArea.nativeElement.appendChild(utils.createLine(dx + event.offsetX, dy + event.offsetY, dx, dy));
-    }
-    private rotateend(event: DragEvent) {
-        event.srcElement.classList.remove('dragged');
-        (<HTMLElement>event.srcElement).style.left = null;
-        (<HTMLElement>event.srcElement).style.top = null;
     }
 
 
@@ -196,7 +201,14 @@ export class DetailsComponent implements OnInit {
         });
     }
     private domtoimage = function () {
-        domtoimage.toJpeg(this.printArea.nativeElement, { quality: 1 })
+        domtoimage.toJpeg(this.printArea.nativeElement, {
+            quality: 1, filter: node => {
+                let result = true;
+                if (node.classList)
+                    result = !node.classList.contains('inTemplate-tools');
+                return result;
+            }
+        })
             .then(function (dataUrl) {
                 var link = document.createElement('a');
                 link.download = 'my-image-name.jpeg';

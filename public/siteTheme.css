@@ -1,8 +1,8 @@
 ﻿body {
     background-color: #ececec;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*overflow: hidden;*/
 }
 
 th {
@@ -61,16 +61,25 @@ th {
     overflow-y: auto;
 }
 
-.animation-test {
+.spinning {
     animation-direction: normal;
     animation-duration: 10s;
     animation-iteration-count: infinite;
-    animation-name: example;
+    animation-name: spinning;
     animation-timing-function: linear;
-    animation-play-state: paused;
+    /*animation-play-state: paused;*/
 }
 
-@keyframes example {
+.blurry {
+    animation-direction: normal;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-name: blurry;
+    animation-timing-function: ease-in-out;
+    /*animation-play-state: paused;*/
+}
+
+@keyframes spinning {
     0% {
         transform: skew(0deg) rotateZ(0deg);
     }
@@ -81,5 +90,19 @@ th {
 
     100% {
         transform: skew(0deg) rotateZ(360deg);
+    }
+}
+
+@keyframes blurry {
+    from {
+        filter: unset;
+    }
+
+    50% {
+        filter: blur(10px);
+    }
+
+    to {
+        filter: unset;
     }
 }
