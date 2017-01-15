@@ -13,6 +13,14 @@ var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/toPromise");
+//export interface imageField {
+//    top: number;
+//    left: number;
+//    width: number;
+//    height: number;
+//    rotation: number;
+//    imageId: string;
+//}
 var ImageService = (function () {
     function ImageService(http) {
         this.http = http;

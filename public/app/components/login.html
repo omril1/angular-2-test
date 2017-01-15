@@ -1,0 +1,11 @@
+﻿<div style="direction:rtl;">
+    <label class="pull-right">שם משתמש:</label>
+    <input class="pull-left" type="text" [(ngModel)]="username"/>
+    <br />
+    <label class="pull-right">סיסמה:</label>
+    <input class="pull-left" type="password" [(ngModel)]="password"/>
+    <div class="clear-fix"></div>
+    <br />
+
+    <button (click)="sendCredentials()">התחבר</button>
+</div>

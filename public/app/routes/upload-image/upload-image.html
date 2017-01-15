@@ -1,14 +1,4 @@
-﻿<style>
-    .my-drop-zone {
-        border: dotted 3px lightgray;
-    }
-
-    .nv-file-over {
-        border: dotted 3px red;
-    }
-</style>
-
-<div class="container">
+﻿<div class="container">
     <div class="row">
         <div class="col-md-9" style="margin-bottom: 40px;direction:rtl;">
 
@@ -85,13 +75,12 @@
 
         <div class="col-md-3">
             <div ng2FileDrop
-                 [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-                 (fileOver)="fileOverBase($event)"
+                 [ngClass]="{'nv-file-over': fileOver}"
+                 (fileOver)="fileOver=$event"
                  [uploader]="uploader"
                  class="well my-drop-zone">
                 <h3>זרוק כאן קבצים</h3>
             </div>
-            <img [src]="filePreviewPath" width="200" *ngIf="filePreviewPath" />
             <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;" accept="image/*" />
             <br />
         </div>

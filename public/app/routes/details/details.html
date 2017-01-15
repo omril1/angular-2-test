@@ -3,64 +3,50 @@
     <input *ngIf="template" [(ngModel)]="template.name" style="width: 390px;padding: 0 5px;">
 </div>
 <div>
-    <div class="btn-toolbar pull-right" role="group">
-        <div class="btn-group" dropdown dropdown-append-to-body *ngIf="template && selectedField">
-            <a class="btn btn-default color-picker" *ngIf="template && selectedField" (colorPickerChange)="selectedField.stroke.color=$event" [colorPicker]="selectedField.stroke.color" [style.color]="selectedField.stroke.color">
+    <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
+    </div>
+    <div class="btn-toolbar pull-right" role="group" *ngIf="template && selectedField && !selectedField.isImage">
+        <div class="btn-group" dropdown dropdown-append-to-body>
+            <a class="btn btn-default color-picker" (colorPickerChange)="selectedField.stroke.color=$event" [colorPicker]="selectedField.stroke.color" [style.color]="selectedField.stroke.color">
                 <i class="fa fa-eyedropper"></i>
             </a>
-            <button type="button" class="btn btn-default" dropdownToggle style="padding: 4px 3px;">
+            <p-overlayPanel #strokePanel appendTo="body" [style]="{'width':'160px'}">
+                <p-slider [(ngModel)]="selectedField.stroke.width" [min]="0" [max]="40"></p-slider>
+            </p-overlayPanel>
+            <button type="button" class="btn btn-default" pButton label="Basic" (click)="strokePanel.toggle($event)" style="padding: 4px 3px;">
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
-                <li role="menuitem">
-                    <p-slider [(ngModel)]="selectedField.stroke.width" [min]="0" [max]="40"></p-slider>
-                </li>
-            </ul>
         </div>
-        <div class="btn-group" dropdown dropdown-append-to-body *ngIf="template && selectedField">
+        <div class="btn-group" dropdown dropdown-append-to-body>
             <button type="button" class="btn btn-default color-picker" (colorPickerChange)="selectedField.shadow.color=$event" [colorPicker]="selectedField.shadow.color" [style.color]="selectedField.shadow.color">
                 <i class="fa fa-eyedropper"></i>
             </button>
-            <button type="button" class="btn btn-default" dropdownToggle style="padding: 4px 3px;">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li role="menuitem">
-                    <label>x</label>
-                    <input type="range" [(ngModel)]="selectedField.shadow.x" min="-20" max="20" />
-                </li>
-                <li role="menuitem">
-                    <label>y</label>
-                    <input type="range" [(ngModel)]="selectedField.shadow.y" min="-20" max="20" />
-                </li>
-                <li role="menuitem">
-                    <label>blur</label>
-                    <input type="range" [(ngModel)]="selectedField.shadow.blur" min="-1" max="20" />
-                </li>
-                <li role="menuitem">
-                    <label>x</label>
-                    <p-slider [(ngModel)]="selectedField.shadow.x" [min]="-20" [max]="20"></p-slider>
-                </li>
-                <li role="menuitem">
-                    <label>y</label>
-                    <p-slider [(ngModel)]="selectedField.shadow.y" [min]="-20" [max]="20"></p-slider>
-                </li>
-                <li role="menuitem">
+            <p-overlayPanel #shadowPanel appendTo="body" [style]="{'width':'160px'}">
+                <div>
                     <label>blur</label>
                     <p-slider [(ngModel)]="selectedField.shadow.blur" [min]="-1" [max]="20"></p-slider>
-                </li>
-            </ul>
+                    <label>x</label>
+                    <p-slider [(ngModel)]="selectedField.shadow.x" [min]="-20" [max]="20"></p-slider>
+                    <label>y</label>
+                    <p-slider [(ngModel)]="selectedField.shadow.y" [min]="-20" [max]="20"></p-slider>
+                </div>
+            </p-overlayPanel>
+            <button type="button" class="btn btn-default" pButton label="Basic" (click)="shadowPanel.toggle($event)" style="padding: 4px 3px;">
+                <span class="caret"></span>
+            </button>
         </div>
         <div class="btn-group">
             <a class="btn" (click)="toggleProperty('bold')" [ngClass]="{'btn-info':hasProperty('bold',true),'btn-default':!hasProperty('bold',true)}"><i class="fa fa-bold"></i></a>
             <a class="btn" (click)="toggleProperty('italic')" [ngClass]="{'btn-info':hasProperty('italic',true),'btn-default':!hasProperty('italic',true)}"><i class="fa fa-italic"></i></a>
             <a class="btn" (click)="toggleProperty('underline')" [ngClass]="{'btn-info':hasProperty('underline',true),'btn-default':!hasProperty('underline',true)}"><i class="fa fa-underline"></i></a>
-            <a class="btn btn-default color-picker" *ngIf="template && selectedField" (colorPickerChange)="selectedField.color=$event" [colorPicker]="selectedField.color" [style.color]="selectedField.color"><i class="fa fa-eyedropper"></i></a>
+            <a class="btn btn-default color-picker" (colorPickerChange)="selectedField.color=$event" [colorPicker]="selectedField.color" [style.color]="selectedField.color"><i class="fa fa-eyedropper"></i></a>
             <div class="btn-group" dropdown dropdown-append-to-body>
                 <button type="button" class="btn btn-default" dropdownToggle>
                     <i class="fa fa-text-width" aria-hidden="true"></i> <span class="caret"></span>
                 </button>
-                <div *ngIf="template && selectedField" class="dropdown-menu" role="menu">
+                <div class="dropdown-menu" role="menu">
                     <input type="range" [(ngModel)]="selectedField.wordSpace" min="-20" max="20" />
                     <input type="range" [(ngModel)]="selectedField.letterSpace" min="-20" max="20" />
                 </div>
@@ -69,7 +55,7 @@
                 <button type="button" class="btn btn-default" dropdownToggle>
                     <i class="fa fa-text-height"></i><span class="caret"></span>
                 </button>
-                <ul *ngIf="template" class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
+                <ul class="dropdown-menu" role="menu" aria-labelledby="btn-append-to-body">
                     <li *ngFor="let fontSize of fontSizes"
                         role="menuitem" (click)="setProperty('fontSize', fontSize)">
                         <button class="dropdown-item" [ngClass]="{'btn-info':hasProperty('fontSize',fontSize)}" style="width:100%;">{{fontSize}}. T</button>
@@ -92,10 +78,6 @@
             <a class="btn" (click)="setProperty('align', 'center')" [ngClass]="{'btn-info':hasProperty('align','center'),'btn-default':!hasProperty('align','center')}"><i class="fa fa-align-center"></i></a>
             <a class="btn" (click)="setProperty('align', 'right')" [ngClass]="{'btn-info':hasProperty('align','right'),'btn-default':!hasProperty('align','right')}"><i class="fa fa-align-right"></i></a>
         </div>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
-            <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
-        </div>
     </div>
     <div #container class="pull-left" (contextmenu)="showContextMenu($event)">
         <button (click)="sendToProcessing()">Process in server</button>
@@ -106,58 +88,57 @@
 </div>
 <br />
 <div class="panel panel-default row" *ngIf="template">
-    <div class="col-md-3 col-sm-3" style="margin-top:10px;">
-        <ol class="list-unstyled">
-            <li *ngFor="let field of template.textFields; let i=index" class="animation-test" style="margin-bottom:5px;">
-                <div class="input-group">
-                    <input type="text" [(ngModel)]="field.text" class="form-control" style="height: 30px;margin-bottom:0;" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" (click)="removeField(i)">
-                            <i class="fa fa-remove red" style="color:#dc0000;"></i>
-                        </button>
-                    </span>
-                </div>
-            </li>
-        </ol>
+    <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite">
+
         <label>debug values:</label>
-        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{debugValue|json}}</textarea>
+        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{selectedField|json}}</textarea>
+        <br />
+
+        <div ng2FileDrop
+             [style.border-color]="fileOver?'red':'transparent'"
+             (fileOver)="fileOver=$event"
+             [uploader]="uploader" style="border:dotted 3px">
+            <div class="images-resources" *ngIf="uploader.queue.length>0">
+                <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
+                    <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
+                    <progressbar [value]="item.progress">
+                        <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
+                    </progressbar>
+                </div>
+            </div>
+            <h3>זרוק כאן קבצים</h3>
+        </div>
+        <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
     </div>
     <div class="panel-body col-md-9 col-sm-9">
-        <div class="print-area" #printArea (keyup)="keyUp($event)" [style.width.px]="imageWidth" [style.height.px]="imageHeight">
-            <div class="text-fields-container">
-                <div *ngFor="let field of template.textFields; let i=index" class="textField" style="position: absolute;"
-                     [style.-webkit-user-modify]="i==selectedIndex?'read-write-plaintext-only':'unset'"
-                     [style.top.px]="field.top" [style.left.px]="field.left"
-                     [style.width.px]="field.width" [style.height.px]="field.height"
-                     [style.color]="field.color" [style.font-size.px]="field.fontSize" [style.z-index]="(i==selectedIndex?200:100) + i"
-                     [style.font-family]="field.font" [style.font-weight]="field.bold?'bold':'normal'"
-                     [style.font-style]="field.italic?'italic':'normal'" [style.text-decoration]="field.underline?'underline':'none'" [style.text-align]="field.align"
-                     [style.word-spacing.px]="field.wordSpace" [style.letter-spacing.px]="field.letterSpace"
-                     [style.transform]="'rotateZ(' + field.rotation + 'deg)' | safeStyle"
-                     [style.-webkit-text-stroke-color]="field.stroke.color" [style.-webkit-text-stroke-width.px]="field.stroke.width/10"
-                     [style.text-shadow]="field.shadow.blur!=-1?field.shadow.x+'px ' +field.shadow.y+'px ' +field.shadow.blur+'px ' +field.shadow.color:'none'"
-                     [draggable] (click)="selectField(i, $event)" (dragstart)="dragstart(i, $event)" (dragend)="dragend($event)" (drag)="onDrag(i,$event)"
-                     [textContent]="field.text" (input)="field.text=$event.target.textContent">{{field.text}}</div>
+        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)' | safeStyle">
+            <div class="fields-container">
+                <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" [class.image]="field.isImage" style="position: absolute;"
+                     [ngStyle]="getStyle(field, i)" [draggable]
+                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)"
+                     [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false">
+                </div>
             </div>
             <div class="inTemplate-tools" *ngIf="template && selectedField"
-                 [style.top.px]="selectedField.top" [style.left.px]="selectedField.left"
-                 [style.width.px]="selectedField.width" [style.height.px]="selectedField.height"
+                 [style.top.px]="selectedField.top*zoomLevel" [style.left.px]="selectedField.left*zoomLevel"
+                 [style.width.px]="selectedField.width*zoomLevel" [style.height.px]="selectedField.height*zoomLevel"
                  [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedIndex">
                 <div class="resizer" style="position: absolute;"
-                     [style.left.px]="selectedField.width" [style.top.px]="selectedField.height"
-                     [draggable] (dragstart)="resizestart($event)" (drag)="resize($event)" (dragend)="resizeEnd($event)">
+                     [style.left.px]="selectedField.width*zoomLevel" [style.top.px]="selectedField.height*zoomLevel"
+                     [draggable] (dragstart)="resizeStart($event)" (drag)="onResize($event)" (dragend)="resizeEnd($event)">
                     <i class="right"></i>
                     <i class="bottom"></i>
                 </div>
                 <div class="rotation-handle" style="position: absolute;"
-                     [draggable] [style.left.px]="selectedField.width/2 - 10"
-                     (drag)="rotate($event)" (dragstart)="rotatestart($event)" (dragend)="rotateend($event)">↻</div>
+                     [draggable] [style.left.px]="selectedField.width * zoomLevel/2 - 10"
+                     (drag)="onRotate($event)" (dragstart)="rotateStart($event)" (dragend)="rotateEnd($event)">↻</div>
             </div>
-            <img *ngIf="template" [src]="'imageapi/byid/' + template.imageId" style="position:initial;width:100%;height:100%;z-index:90;-webkit-user-drag:none;"
-                 (mousedown)="selectedIndex=-1" />
+            <img *ngIf="template" class="base-image" [src]="'imageapi/byid/'+template.imageId" (mousedown)="selectedIndex=-1" />
         </div>
     </div>
 </div>
+
+<zoom-toolbar (zoomChanged)="zoomChange($event)"></zoom-toolbar>
 
 <p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
 <p-growl [value]="msgs"></p-growl>

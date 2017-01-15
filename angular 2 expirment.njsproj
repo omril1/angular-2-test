@@ -47,6 +47,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="public\app\app.view.html" />
+    <Content Include="public\app\components\login.html" />
+    <Content Include="public\app\components\zoomToolbar.html" />
     <Content Include="public\app\routes\details\details.css" />
     <Content Include="public\app\routes\templates\templates.css" />
     <Content Include="public\app\routes\templates\templates.html" />
@@ -55,6 +57,7 @@
     <Content Include="public\app\routes\list\list.html" />
     <Content Include="public\app\routes\upload-image\upload-image.html" />
     <Content Include="public\app\routes\list\list.component.ts" />
+    <Content Include="public\favicon.ico" />
     <Content Include="public\fonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />
@@ -63,11 +66,15 @@
     <Content Include="public\index.html" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="connectionManager.ts" />
+    <TypeScriptCompile Include="models\usersModel.ts" />
     <TypeScriptCompile Include="processImage.ts" />
     <TypeScriptCompile Include="public\app\app.routing.ts" />
+    <TypeScriptCompile Include="public\app\components\login.ts" />
+    <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
     <TypeScriptCompile Include="public\app\pipes\safeStyle.ts" />
     <TypeScriptCompile Include="public\app\routes\templates\templates.component.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
+    <TypeScriptCompile Include="public\app\services\login.service.ts" />
     <TypeScriptCompile Include="routers\imageApi.ts" />
     <TypeScriptCompile Include="public\app\app.components.ts" />
     <TypeScriptCompile Include="public\app\app.module.ts" />
@@ -84,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
+    <Folder Include="public\app\components\" />
     <Folder Include="public\app\pipes\" />
     <Folder Include="public\app\routes\about\" />
     <Folder Include="public\app\routes\details\" />

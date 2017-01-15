@@ -5,13 +5,15 @@ import { HttpModule } from '@angular/http';
 
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
-import { DropdownModule, ModalModule, CollapseModule } from 'ng2-bootstrap';
+import { DropdownModule, ModalModule, CollapseModule, PopoverModule, ProgressbarModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
-import { ContextMenuModule, GrowlModule, SliderModule, GMapModule } from 'primeng/primeng';
+import { ContextMenuModule, GrowlModule, SliderModule, GMapModule, OverlayPanelModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
 import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
+import { LoginComponent } from './components/login';
+import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { safeStyle } from "./pipes/safeStyle";
 
 import { ImageService } from './services/image.service'
@@ -27,10 +29,13 @@ import { ImageService } from './services/image.service'
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
         CollapseModule.forRoot(),
+        PopoverModule.forRoot(),
+        ProgressbarModule.forRoot(),
         ContextMenuModule,
         GrowlModule,
         SliderModule,
         GMapModule,
+        OverlayPanelModule,
         AppRoutesModule,
     ],
     declarations: [
@@ -40,6 +45,8 @@ import { ImageService } from './services/image.service'
         ListComponent,
         DetailsComponent,
         UploadImageComponent,
+        ZoomToolbarComponent,
+        LoginComponent,
         FileSelectDirective,
         FileDropDirective,
         safeStyle,

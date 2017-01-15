@@ -5,9 +5,17 @@ import { FileUploader } from 'ng2-file-upload';
 @Component({
     moduleId: module.id,
     templateUrl: "./upload-image.html",
+    styles: [`
+    .my-drop-zone {
+        border: dotted 3px lightgray;
+    }
+
+    .nv-file-over {
+        border: dotted 3px red;
+    }`]
 })
 export class UploadImageComponent {
-    
+
     constructor(private sanitizer: DomSanitizer) {
         //dirty way to add a thumbnail support.
         this.uploader.onAfterAddingFile = (fileItem) => {
@@ -21,9 +29,4 @@ export class UploadImageComponent {
         removeAfterUpload: false,
         maxFileSize: 3 * 1024 * 1024
     });
-
-    public hasBaseDropZoneOver: boolean = false;
-    public fileOverBase(e: any): void {
-        this.hasBaseDropZoneOver = e;
-    }
 }

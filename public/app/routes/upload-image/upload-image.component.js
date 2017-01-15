@@ -21,21 +21,18 @@ var UploadImageComponent = (function () {
             removeAfterUpload: false,
             maxFileSize: 3 * 1024 * 1024
         });
-        this.hasBaseDropZoneOver = false;
         //dirty way to add a thumbnail support.
         this.uploader.onAfterAddingFile = function (fileItem) {
             fileItem.previewUrl = _this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         };
     }
-    UploadImageComponent.prototype.fileOverBase = function (e) {
-        this.hasBaseDropZoneOver = e;
-    };
     return UploadImageComponent;
 }());
 UploadImageComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         templateUrl: "./upload-image.html",
+        styles: ["\n    .my-drop-zone {\n        border: dotted 3px lightgray;\n    }\n\n    .nv-file-over {\n        border: dotted 3px red;\n    }"]
     }),
     __metadata("design:paramtypes", [platform_browser_1.DomSanitizer])
 ], UploadImageComponent);

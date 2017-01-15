@@ -1,42 +1,55 @@
-﻿.print-area {
-    margin: auto;
-    position: relative;
+﻿.images-resources {
+    padding: .5vw;
+    font-size: 0;
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
+    -ms-flex-direction: column;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    display: -webkit-box;
+    display: flex;
 }
 
-.text-fields-container .textField {
+    .images-resources div {
+        -webkit-box-flex: auto;
+        -ms-flex: auto;
+        flex: auto;
+        width: 80px;
+        margin: .5vw;
+    }
+
+        .images-resources div img {
+            width: 100%;
+            height: auto;
+        }
+
+.print-area {
+    position: relative;
+    /*-ms-zoom: reset;
+    zoom: reset;*/
+    user-select: none;
+}
+
+.fields-container .moveableField {
     will-change: left, top, transition;
     cursor: pointer;
     line-height: normal;
     overflow: hidden;
     white-space: pre;
-    -webkit-text-stroke-width: 1px;
 }
 
-    .text-fields-container .textField:hover:after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 1;
-        content: '';
-        border: 1px dashed rgba(0,0,0,.1);
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        box-sizing: border-box;
-        z-index: 2;
+    .fields-container .moveableField.image {
+        background-repeat: round;
     }
-    .text-fields-container .textField:hover:before {
+
+    .fields-container .moveableField:hover:after {
         position: absolute;
         top: 0;
         left: 0;
-        opacity: 1;
-        content: '';
-        border: 1px dashed rgba(0,0,0,.1);
         width: 100%;
         height: 100%;
-        pointer-events: none;
-        box-sizing: border-box;
-        z-index: 2;
+        content: '';
+        border: 1px dashed rgba(0,0,0,.2);
     }
 
 .inTemplate-tools {
@@ -96,3 +109,11 @@
         .inTemplate-tools .rotation-handle.dragged {
             opacity: 0;
         }
+
+.print-area .base-image {
+    position: initial;
+    width: 100%;
+    height: 100%;
+    z-index: 90;
+    -webkit-user-drag: none;
+}

@@ -1,9 +1,11 @@
 ﻿import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
 import { MenuItem, ContextMenu, Message } from 'primeng/primeng';
-import { ImageService, ItextField, Template } from '../../services/image.service';
+import { ImageService, moveableField, Template } from '../../services/image.service';
+import { FileUploader } from 'ng2-file-upload';
 import * as utils from '../../utils';
 let domtoimage = require('dom-to-image');
 
@@ -17,48 +19,32 @@ export class DetailsComponent implements OnInit {
     @ViewChild('container') containerViewChild: HTMLDivElement;
     @ViewChild('contextmenu') contextmenu: ContextMenu;
     @ViewChild('printArea') printArea: ElementRef;
-    // ~~~~~~~~~~~~ Global keyboard events ~~~~~~~~~
-    //@HostListener('window:keydown', ['$event'])
-    //keyboardInput(event: any) {
-    //    console.log('keydown event fired', event);
-    //    if (this.selectedField) {
-    //        this.selectedField.left += 5;
-    //    }
-    //}
-
-    // ~~~~~~~ focused element keyboard events ~~~~~~
-    private keyUp(event) {
-        console.log('keyup even fired', event);
-    }
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        //let printArea = this.printArea.nativeElement;
-        //let nHeight = printArea.children[printArea.children.length - 1].naturalHeight
-        //let height = event.target.innerHeight - printArea.getBoundingClientRect().top;
-        //this.printArea.nativeElement.style.height = height + 'px';
-        //let aspectRation = nHeight / height;
-        //this.template.textFields = this.template.textFields.map(field => { field.top *= aspectRation; field.left *= aspectRation; field.width *= aspectRation; field.height *= aspectRation; return field; });
-    }
-
 
     private debugValue: any[];
     private items: MenuItem[];
     private template: Template;
     private imageWidth: number;
     private imageHeight: number;
+    private zoomLevel: number = 1;
     private fieldsCounter = 0;
     private selectedIndex = -1;
     private rotationCenter: { x: number, y: number };
-    //private color: string;
     private msgs: Message[] = [];
-    get selectedField(): ItextField {
-        return this.template.textFields[this.selectedIndex];
-    }
-    //private fonts = ["Arial", "David Transparent", "Guttman Calligraphic", "Guttman David", "Guttman Stam", "Guttman Yad", "Guttman Yad-Brush", "Guttman-Aram", "Levenim MT", "Lucida Sans Unicode", "Microsoft Sans Serif", "Miriam Transparent", "Narkisim", "Tahoma"];
     private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
     private fontSizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 55];
+    public uploader: FileUploader = new FileUploader({
+        url: "/imageapi/upload",
+        allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
+        removeAfterUpload: false,
+        maxFileSize: 3 * 1024 * 1024,
+        autoUpload: false
+    });
 
-    constructor(private route: ActivatedRoute, private imageService: ImageService) {
+    get selectedField(): moveableField {
+        return this.template.moveableFields[this.selectedIndex];
+    }
+
+    constructor(private route: ActivatedRoute, private imageService: ImageService, private sanitizer: DomSanitizer) {
     }
     public ngOnInit() {
         this.route.params.subscribe(params => {
@@ -77,18 +63,21 @@ export class DetailsComponent implements OnInit {
             icon: 'fa-print',
             command: (event) => { }
         }];
+        this.uploader.onAfterAddingFile = (fileItem) => {
+            (<any>fileItem).previewUrl = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
+        };
     }
 
     private removeField(index?: number) {
         if (index != undefined)
-            this.template.textFields.splice(index, 1);
+            this.template.moveableFields.splice(index, 1);
         else if (this.selectedIndex != -1) {
-            this.template.textFields.splice(this.selectedIndex, 1);
+            this.template.moveableFields.splice(this.selectedIndex, 1);
             this.selectedIndex = -1;
         }
     };
     private addField() {
-        this.template.textFields.push(<ItextField>{
+        this.template.moveableFields.push(<moveableField>{
             left: this.imageWidth / 4,
             top: this.imageHeight / 22,
             width: this.imageWidth / 2,
@@ -106,101 +95,133 @@ export class DetailsComponent implements OnInit {
             stroke: { color: '#000000', width: 0 },
             shadow: { x: 0, y: 0, blur: -1, color: '#000000' },
             letterSpace: 0,
-            wordSpace: 0
+            wordSpace: 0,
+            isImage: false
         });
     };
-    private getStyle(field) {
-        return {
-            left: field.left,
-            top: field.top,
-            width: field.width,
-            height: field.height,
-        };
+    private getStyle(field: moveableField, index: number) {
+        if (field.isImage) {
+            return {
+                'left': field.left * this.zoomLevel + "px",
+                'top': field.top * this.zoomLevel + "px",
+                'width': field.width * this.zoomLevel + "px",
+                'height': field.height * this.zoomLevel + "px",
+                'transform': 'rotateZ(' + field.rotation + 'deg)',
+                'z-index': (index == this.selectedIndex ? 400 : 100) + index,
+                'background-image': 'url(/imageapi/byid/' + field.imageId + ')',
+            }
+        }
+        else {
+            let textShadow = field.shadow.blur != -1 ? field.shadow.x + 'px ' + field.shadow.y + 'px ' + field.shadow.blur + 'px ' + field.shadow.color : 'none';
+            return {
+                'left': field.left * this.zoomLevel + "px",
+                'top': field.top * this.zoomLevel + "px",
+                'width': field.width * this.zoomLevel + "px",
+                'height': field.height * this.zoomLevel + "px",
+                'transform': 'rotateZ(' + field.rotation + 'deg)',
+                'z-index': (index == this.selectedIndex ? 400 : 200) + index,
+                'font-size': field.fontSize * this.zoomLevel + "px",
+                'word-spacing': field.wordSpace * this.zoomLevel + "px",
+                'letter-spacing': field.letterSpace * this.zoomLevel + "px",
+                '-webkit-user-modify': index == this.selectedIndex ? 'read-write-plaintext-only' : 'unset',
+                'color': field.color,
+                'font-family': field.font,
+                'font-weight': field.bold ? 'bold' : 'normal',
+                'font-style': field.italic ? 'italic' : 'normal',
+                'text-decoration': field.underline ? 'underline' : 'none',
+                'text-align': field.align,
+                '-webkit-text-stroke-color': field.stroke.color,
+                '-webkit-text-stroke-width': field.stroke.width / 10 + "px",
+                'text-shadow': textShadow
+            };
+        }
     }
     private setProperty(propName: string, prop: any) {
-        if (this.template && this.template.textFields[this.selectedIndex]) {
-            this.template.textFields[this.selectedIndex][propName] = prop;
+        if (this.template && this.selectedField) {
+            this.selectedField[propName] = prop;
         }
     };
     private hasProperty(propName: string, prop: any) {
-        if (this.template && this.template.textFields[this.selectedIndex]) {
-            return this.template.textFields[this.selectedIndex][propName] == prop;
+        if (this.template && this.selectedField) {
+            return this.selectedField[propName] == prop;
         }
         else
             return false;
     };
     private toggleProperty(propName: string) {
-        if (this.template.textFields[this.selectedIndex]) {
-            this.template.textFields[this.selectedIndex][propName] = !this.template.textFields[this.selectedIndex][propName];
+        if (this.selectedField) {
+            this.selectedField[propName] = !this.selectedField[propName];
         }
     }
-    private selectField(fieldIndex: number, event: MouseEvent) {
+    private dragStart(fieldIndex: number, event: DragEvent) {
         this.selectedIndex = fieldIndex;
-        //this.color = this.template.textFields[this.selectedIndex].color;
-    }
-    private dragstart(fieldIndex: number, event: DragEvent) {
-        this.selectedIndex = fieldIndex;
-        //this.color = this.template.textFields[this.selectedIndex].color;
 
         (<HTMLLIElement>event.currentTarget).classList.add('dragged');
         utils.noGhostImage(event);
     }
-    private dragend(event: DragEvent) {
+    private dragEnd(event: DragEvent) {
         (<HTMLLIElement>event.currentTarget).classList.remove('dragged');
     }
     private onDrag(fieldIndex: number, event: DragEvent) {
-        this.template.textFields[this.selectedIndex].left = Number((<HTMLElement>event.currentTarget).style.left.replace('px', ''));
-        this.template.textFields[this.selectedIndex].top = Number((<HTMLElement>event.currentTarget).style.top.replace('px', ''));
+        this.selectedField.left = Number((<HTMLElement>event.currentTarget).style.left.replace('px', '')) / this.zoomLevel;
+        this.selectedField.top = Number((<HTMLElement>event.currentTarget).style.top.replace('px', '')) / this.zoomLevel;
     }
-    private resizestart(event: DragEvent) {
+    private resizeStart(event: DragEvent) {
         utils.noGhostImage(event);
     }
-    private resize(event: DragEvent) {
-        let parseX = Math.max(Number((<HTMLElement>event.currentTarget).style.left.replace('px', '')), 0);
-        let parseY = Math.max(Number((<HTMLElement>event.currentTarget).style.top.replace('px', '')), 0);
+    private onResize(event: DragEvent) {
+        let parseX = Math.max(Number((<HTMLElement>event.currentTarget).style.left.replace('px', '')), 0) / this.zoomLevel;
+        let parseY = Math.max(Number((<HTMLElement>event.currentTarget).style.top.replace('px', '')), 0) / this.zoomLevel;
 
-        this.template.textFields[this.selectedIndex].width = parseX;
-        this.template.textFields[this.selectedIndex].height = parseY;
+        this.selectedField.width = parseX;
+        this.selectedField.height = parseY;
     }
     private resizeEnd(event: DragEvent) {
         //(<HTMLElement>event.srcElement).style.left = null;
         //(<HTMLElement>event.srcElement).style.top = null;
     }
-
-    private rotate(event: DragEvent) {
-        this.doMath(event);
+    private onRotate(event: DragEvent) {
+        this.rotate(event);
+        //the last event on rotation emits mouse position of 0,0. might be a bug.
     }
-    private rotatestart(event: DragEvent) {
+    private rotateStart(event: DragEvent) {
         event.srcElement.classList.add('dragged');
         this.rotationCenter = {
-            x: this.printArea.nativeElement.getBoundingClientRect().left + this.selectedField.left + this.selectedField.width / 2,
-            y: this.printArea.nativeElement.getBoundingClientRect().top + this.selectedField.top + this.selectedField.height / 2
+            x: this.printArea.nativeElement.getBoundingClientRect().left + this.selectedField.left * this.zoomLevel + this.selectedField.width * this.zoomLevel / 2,
+            y: this.printArea.nativeElement.getBoundingClientRect().top + this.selectedField.top * this.zoomLevel + this.selectedField.height * this.zoomLevel / 2
         };
         this.debugValue = [this.rotationCenter, event.x, event.y];
-        //document.body.appendChild(utils.createLine(event.x, event.y, this.rotationCenter.x, this.rotationCenter.y));
     }
-    private rotateend(event: DragEvent) {
+    private rotateEnd(event: DragEvent) {
         event.srcElement.classList.remove('dragged');
-        this.doMath(event);
+        this.rotate(event);
         (<HTMLElement>event.srcElement).style.left = null;
         (<HTMLElement>event.srcElement).style.top = null;
     }
-    private doMath(event) {
+    private rotate(event) {
         let {dx, dy} = { dx: event.x - this.rotationCenter.x, dy: event.y - this.rotationCenter.y };
         let angle = -(180 * Math.atan2(dx, dy) / Math.PI);
         //round the angle to the nearest whole right angle if possible.
         angle = utils.roundAngle(angle, 7);
-        this.template.textFields[this.selectedIndex].rotation = angle;
+        this.selectedField.rotation = angle;
+    }
+    private zoomChange(zoomLevel) {
+        this.zoomLevel = zoomLevel;
     }
 
 
 
-    private sendToProcessing = function () {
-        this.imageService.sendToProcessing(this.template).then(result => {
-            window.open(result.text());
+    private sendToProcessing() {
+        //this.imageService.sendToProcessing(this.template).then(result => {
+        //    window.open(result.text());
+        //});
+        this.imageService.saveInServer(this.template).then(result => {
+            window.open('/imageapi/dummypdf/' + this.template._id + '.pdf');
+        }, err => {
+            this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     }
-    private domtoimage = function () {
+    private domtoimage() {
         domtoimage.toJpeg(this.printArea.nativeElement, {
             quality: 1, filter: node => {
                 let result = true;
@@ -216,12 +237,14 @@ export class DetailsComponent implements OnInit {
                 link.click();
             });
     }
-    private saveInServer = function () {
+    private saveInServer() {
         this.imageService.saveInServer(this.template).then(result => {
             this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
+        }, err => {
+            this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     }
-    private showContextMenu = (event) => {
+    private showContextMenu(event) {
         this.contextmenu.show(event);
     };
 }

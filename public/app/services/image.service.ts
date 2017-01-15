@@ -10,35 +10,47 @@ export interface Template {
     name?: string;
     _id: string;
     imageId: string;
-    textFields: ItextField[];
+    moveableFields: moveableField[];
 }
-export interface ItextField {
+export interface moveableField {
     top: number;
     left: number;
     width: number;
     height: number;
-    text: string;
-    font: string;
-    fontSize: number;
-    color: string;
-    bold: boolean;
-    italic: boolean;
-    align: string;
-    underline: boolean;
     rotation: number;
-    stroke: {
+    isImage: boolean;
+
+    text?: string;
+    font?: string;
+    fontSize?: number;
+    color?: string;
+    bold?: boolean;
+    italic?: boolean;
+    align?: string;
+    underline?: boolean;
+    stroke?: {
         color: string;
         width: number;
     };
-    shadow: {
+    shadow?: {
         color: string;
         x: number;
         y: number;
         blur: number;
     };
-    letterSpace: number,
-    wordSpace: number,
+    letterSpace?: number;
+    wordSpace?: number;
+
+    imageId?: string;
 }
+//export interface imageField {
+//    top: number;
+//    left: number;
+//    width: number;
+//    height: number;
+//    rotation: number;
+//    imageId: string;
+//}
 
 @Injectable()
 export class ImageService {

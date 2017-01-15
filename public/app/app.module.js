@@ -20,6 +20,8 @@ var primeng_1 = require("primeng/primeng");
 var app_components_1 = require("./app.components");
 var app_routing_1 = require("./app.routing");
 var index_1 = require("./routes/index");
+var login_1 = require("./components/login");
+var zoomToolbar_1 = require("./components/zoomToolbar");
 var safeStyle_1 = require("./pipes/safeStyle");
 var AppModule = (function () {
     function AppModule() {
@@ -37,10 +39,13 @@ AppModule = __decorate([
             ng2_bootstrap_1.DropdownModule.forRoot(),
             ng2_bootstrap_1.ModalModule.forRoot(),
             ng2_bootstrap_1.CollapseModule.forRoot(),
+            ng2_bootstrap_1.PopoverModule.forRoot(),
+            ng2_bootstrap_1.ProgressbarModule.forRoot(),
             primeng_1.ContextMenuModule,
             primeng_1.GrowlModule,
             primeng_1.SliderModule,
             primeng_1.GMapModule,
+            primeng_1.OverlayPanelModule,
             app_routing_1.AppRoutesModule,
         ],
         declarations: [
@@ -50,6 +55,8 @@ AppModule = __decorate([
             index_1.ListComponent,
             index_1.DetailsComponent,
             index_1.UploadImageComponent,
+            zoomToolbar_1.ZoomToolbarComponent,
+            login_1.LoginComponent,
             ng2_file_upload_1.FileSelectDirective,
             ng2_file_upload_1.FileDropDirective,
             safeStyle_1.safeStyle,

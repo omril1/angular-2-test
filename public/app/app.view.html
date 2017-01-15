@@ -18,7 +18,12 @@
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/login']">התחבר</a></li>
+                <li>
+                    <a (click)="loginPanel.toggle($event)" style="cursor:pointer">התחבר</a>
+                    <p-overlayPanel #loginPanel appendTo="body">
+                        <login (loginResult)="loginPanel.hide()"></login>
+                    </p-overlayPanel>
+                </li>
             </ul>
         </div>
     </div>

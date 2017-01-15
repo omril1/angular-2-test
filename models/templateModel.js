@@ -1,17 +1,18 @@
 ﻿var mongoose = require('mongoose');
 var shortid = require('shortid');
 var Schema = mongoose.Schema;
-var templateSchema = {
+
+module.exports = mongoose.model('template', {
     _id: {
         type: String,
-        'default': shortid.generate
+        default: shortid.generate
     },
     name: String,
     imageId: {
         type: Schema.Types.ObjectId,
         required: true
     },
-    textFields: {
+    moveableFields: {
         type: [{
             top: Number,
             left: Number,
@@ -33,6 +34,10 @@ var templateSchema = {
             shadow: { x: Number, y: Number, blur: Number, color: String },
             letterSpace: Number,
             wordSpace: Number,
+
+
+            isImage: Boolean,
+            imageId: String,
             _id: false,
         }],
         default: []
@@ -41,6 +46,4 @@ var templateSchema = {
         type: Date,
         default: Date.now
     }
-};
-
-module.exports = mongoose.model('template', templateSchema);
+});
