@@ -27,6 +27,6 @@ export class UploadImageComponent {
         url: "/imageapi/upload",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
         removeAfterUpload: false,
-        maxFileSize: 3 * 1024 * 1024
+        maxFileSize: 3 * 1024 * 1024 //3 MB
     });
 }

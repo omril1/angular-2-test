@@ -38,7 +38,7 @@ ZoomToolbarComponent = __decorate([
         moduleId: module.id,
         selector: 'zoom-toolbar',
         templateUrl: 'zoomToolbar.html',
-        styles: ["\n        :host { position:fixed;bottom:0;right:0;margin:0px 15px 40px 0;-ms-zoom:reset;zoom:reset;opacity:0.4;transition:opacity 0.5s ease;z-index:1000; }\n        :host:hover { opacity:1 }\n        .zoom-buttons { display: block;float:right;margin-bottom:5px; }\n        .zoom-buttons button { width:30px;height:30px;border-radius:50%;margin:2px;outline:none }\n    "]
+        styles: ["\n        :host { position:fixed;bottom:0;right:0;margin:0px 15px 40px 0;-ms-zoom:reset;zoom:reset;opacity:0.4;transition:opacity 0.5s ease;z-index:1000; }\n        :host:hover { opacity:1 }\n        .zoom-buttons { display: block;float:right;margin-bottom:5px; }\n        .zoom-buttons button { width:40px;height:40px;border-radius:50%;margin:2px;outline:none }\n        .zoom-buttons button svg{pointer-events: none; display: block; width: 100%; height: 100%;}\n    "]
     }),
     __metadata("design:paramtypes", [])
 ], ZoomToolbarComponent);

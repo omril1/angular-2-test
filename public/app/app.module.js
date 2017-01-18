@@ -12,6 +12,7 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
+var angular2_jwt_1 = require("angular2-jwt");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
@@ -48,6 +49,7 @@ AppModule = __decorate([
             primeng_1.OverlayPanelModule,
             app_routing_1.AppRoutesModule,
         ],
+        providers: [angular2_jwt_1.AUTH_PROVIDERS],
         declarations: [
             app_components_1.AppComponent,
             index_1.AboutComponent,

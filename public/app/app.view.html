@@ -18,11 +18,25 @@
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li>
+                <!--<li>
                     <a (click)="loginPanel.toggle($event)" style="cursor:pointer">התחבר</a>
                     <p-overlayPanel #loginPanel appendTo="body">
                         <login (loginResult)="loginPanel.hide()"></login>
                     </p-overlayPanel>
+                </li>-->
+                <li *ngIf="auth.profile">
+                    <img [src]="auth.profile.picture" class="img-thumbnail" style="height:50px;" (click)="profilePanel.toggle($event)" />
+                    <p-overlayPanel #profilePanel appendTo="body">
+                        <textarea rows="8" style="width:470px;resize:vertical;" readonly>{{auth.profile|json}}</textarea>
+                    </p-overlayPanel>
+                </li>
+                <li>
+                    <!-- We'll show the login link if the user is not currently logged in -->
+                    <a (click)="auth.login()" *ngIf="!auth.authenticated()" style="cursor:pointer">התחבר</a>
+                </li>
+                <li>
+                    <!-- On the other hand, if the user is logged in, we'll show a log out link -->
+                    <a (click)="auth.logout()" *ngIf="auth.authenticated()" style="cursor:pointer">התנתק</a>
                 </li>
             </ul>
         </div>

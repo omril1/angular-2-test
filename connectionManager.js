@@ -28,6 +28,5 @@ exports.connect = function () {
         });
         return mongoose.connection;
     });
-    //}
 };
 //# sourceMappingURL=connectionManager.js.map

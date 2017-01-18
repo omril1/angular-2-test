@@ -1,4 +1,5 @@
-﻿body {
+﻿.ui-overlaypanel-content,
+body {
     background-color: #ececec;
     width: 100%;
     height: 100%;

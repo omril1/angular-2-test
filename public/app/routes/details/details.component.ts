@@ -1,9 +1,9 @@
 ﻿import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
-import { MenuItem, ContextMenu, Message } from 'primeng/primeng';
+import { MenuItem, Message } from 'primeng/primeng';
 import { ImageService, moveableField, Template } from '../../services/image.service';
 import { FileUploader } from 'ng2-file-upload';
 import * as utils from '../../utils';
@@ -16,16 +16,14 @@ let domtoimage = require('dom-to-image');
     providers: [ImageService],
 })
 export class DetailsComponent implements OnInit {
-    @ViewChild('container') containerViewChild: HTMLDivElement;
-    @ViewChild('contextmenu') contextmenu: ContextMenu;
     @ViewChild('printArea') printArea: ElementRef;
 
     private debugValue: any[];
-    private items: MenuItem[];
     private template: Template;
     private imageWidth: number;
     private imageHeight: number;
     private zoomLevel: number = 1;
+    private pdfURL: SafeResourceUrl;
     private fieldsCounter = 0;
     private selectedIndex = -1;
     private rotationCenter: { x: number, y: number };
@@ -48,7 +46,7 @@ export class DetailsComponent implements OnInit {
     }
     public ngOnInit() {
         this.route.params.subscribe(params => {
-            //this.imageID = params['id'];
+            this.pdfURL = this.sanitizer.bypassSecurityTrustResourceUrl('/imageapi/dummypdf/' + params['id'] + '.pdf');
             this.imageService.getTemplate(params['id']).then(template => this.template = template, err => {
                 console.error(err);
                 this.template = null;
@@ -58,11 +56,6 @@ export class DetailsComponent implements OnInit {
             this.imageHeight = pageSizes.height;
             this.imageWidth = pageSizes.width;
         });
-        this.items = [{
-            label: 'Print',
-            icon: 'fa-print',
-            command: (event) => { }
-        }];
         this.uploader.onAfterAddingFile = (fileItem) => {
             (<any>fileItem).previewUrl = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         };
@@ -244,7 +237,4 @@ export class DetailsComponent implements OnInit {
             this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     }
-    private showContextMenu(event) {
-        this.contextmenu.show(event);
-    };
 }

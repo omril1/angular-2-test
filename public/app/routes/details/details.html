@@ -13,7 +13,10 @@
                 <i class="fa fa-eyedropper"></i>
             </a>
             <p-overlayPanel #strokePanel appendTo="body" [style]="{'width':'160px'}">
-                <p-slider [(ngModel)]="selectedField.stroke.width" [min]="0" [max]="40"></p-slider>
+                <div>
+                    <label>stroke width</label>
+                    <p-slider [(ngModel)]="selectedField.stroke.width" [min]="-1" [max]="20"></p-slider>
+                </div>
             </p-overlayPanel>
             <button type="button" class="btn btn-default" pButton label="Basic" (click)="strokePanel.toggle($event)" style="padding: 4px 3px;">
                 <span class="caret"></span>
@@ -79,38 +82,40 @@
             <a class="btn" (click)="setProperty('align', 'right')" [ngClass]="{'btn-info':hasProperty('align','right'),'btn-default':!hasProperty('align','right')}"><i class="fa fa-align-right"></i></a>
         </div>
     </div>
-    <div #container class="pull-left" (contextmenu)="showContextMenu($event)">
-        <button (click)="sendToProcessing()">Process in server</button>
-        <button (click)="domtoimage()">הורד כתמונה</button>
-        <button (click)="saveInServer()">שמור</button>
+    <div class="pull-left" style="direction:rtl;">
+        <button class="btn btn-primary" (click)="sendToProcessing()">הורד כPDF</button>
+        <button class="btn btn-primary" (click)="domtoimage()">הורד כתמונה</button>
+        <button class="btn btn-primary" (click)="saveInServer()">שמור</button>
+        <button class="btn btn-primary" (click)="pdfPanel.toggle($event)">פתח PDF</button>
+        <p-overlayPanel #pdfPanel [style]="{overflow: 'auto',resize: 'both',direction: 'ltr'}">
+            <!--<iframe *ngIf="pdfURL" [src]="pdfURL" style="overflow: auto;width:100%;height:100%;direction: ltr;"></iframe>-->
+            <embed width="100%" height="100%" name="plugin" id="plugin" [src]="pdfURL" type="application/pdf" internalinstanceid="331" title="">
+        </p-overlayPanel>
     </div>
     <div class="clearfix"></div>
 </div>
 <br />
-<div class="panel panel-default row" *ngIf="template">
-    <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite">
+<div class="panel panel-default row" *ngIf="template" style="display:flex;">
+    <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;border:dotted 3px;" ng2FileDrop
+         [style.border-color]="fileOver?'red':'transparent'"
+         (fileOver)="fileOver=$event"
+         [uploader]="uploader">
 
         <label>debug values:</label>
         <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{selectedField|json}}</textarea>
         <br />
 
-        <div ng2FileDrop
-             [style.border-color]="fileOver?'red':'transparent'"
-             (fileOver)="fileOver=$event"
-             [uploader]="uploader" style="border:dotted 3px">
-            <div class="images-resources" *ngIf="uploader.queue.length>0">
-                <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
-                    <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
-                    <progressbar [value]="item.progress">
-                        <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
-                    </progressbar>
-                </div>
+        <div class="images-resources" *ngIf="uploader.queue.length>0">
+            <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
+                <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
+                <progressbar [value]="item.progress">
+                    <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
+                </progressbar>
             </div>
-            <h3>זרוק כאן קבצים</h3>
         </div>
         <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
     </div>
-    <div class="panel-body col-md-9 col-sm-9">
+    <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;height:76vh">
         <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)' | safeStyle">
             <div class="fields-container">
                 <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" [class.image]="field.isImage" style="position: absolute;"
@@ -139,6 +144,4 @@
 </div>
 
 <zoom-toolbar (zoomChanged)="zoomChange($event)"></zoom-toolbar>
-
-<p-contextMenu #contextmenu [model]="items" [appendTo]="'body'">asd</p-contextMenu>
 <p-growl [value]="msgs"></p-growl>

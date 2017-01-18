@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
-var primeng_1 = require("primeng/primeng");
 var image_service_1 = require("../../services/image.service");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var utils = require("../../utils");
@@ -45,7 +44,7 @@ var DetailsComponent = (function () {
     DetailsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
-            //this.imageID = params['id'];
+            _this.pdfURL = _this.sanitizer.bypassSecurityTrustResourceUrl('/imageapi/dummypdf/' + params['id'] + '.pdf');
             _this.imageService.getTemplate(params['id']).then(function (template) { return _this.template = template; }, function (err) {
                 console.error(err);
                 _this.template = null;
@@ -55,11 +54,6 @@ var DetailsComponent = (function () {
             _this.imageHeight = pageSizes.height;
             _this.imageWidth = pageSizes.width;
         });
-        this.items = [{
-                label: 'Print',
-                icon: 'fa-print',
-                command: function (event) { }
-            }];
         this.uploader.onAfterAddingFile = function (fileItem) {
             fileItem.previewUrl = _this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         };
@@ -241,20 +235,8 @@ var DetailsComponent = (function () {
             _this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     };
-    DetailsComponent.prototype.showContextMenu = function (event) {
-        this.contextmenu.show(event);
-    };
-    ;
     return DetailsComponent;
 }());
-__decorate([
-    core_1.ViewChild('container'),
-    __metadata("design:type", HTMLDivElement)
-], DetailsComponent.prototype, "containerViewChild", void 0);
-__decorate([
-    core_1.ViewChild('contextmenu'),
-    __metadata("design:type", primeng_1.ContextMenu)
-], DetailsComponent.prototype, "contextmenu", void 0);
 __decorate([
     core_1.ViewChild('printArea'),
     __metadata("design:type", core_1.ElementRef)

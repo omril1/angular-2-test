@@ -16,10 +16,12 @@
         'ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js',
         'angular2-color-picker': 'npm:angular2-color-picker',
         'primeng': 'npm:primeng',
+        'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {
         'app': { main: 'main.js', defaultExtension: 'js' },
+        'angular2-jwt': { defaultExtension: 'js' },
         'rxjs': { defaultExtension: 'js' },
         'angular2-in-memory-web-api': { defaultExtension: 'js' },
         'angular2-color-picker': { main: 'index.js', defaultExtension: 'js' },

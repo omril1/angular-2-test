@@ -71,11 +71,14 @@
     <TypeScriptCompile Include="public\app\app.routing.ts" />
     <TypeScriptCompile Include="public\app\components\login.ts" />
     <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
+    <TypeScriptCompile Include="public\app\configuration\auth0lock.config.ts" />
     <TypeScriptCompile Include="public\app\pipes\safeStyle.ts" />
     <TypeScriptCompile Include="public\app\routes\templates\templates.component.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
-    <TypeScriptCompile Include="public\app\services\login.service.ts" />
-    <TypeScriptCompile Include="routers\imageApi.ts" />
+    <TypeScriptCompile Include="public\app\services\auth.guard.ts" />
+    <TypeScriptCompile Include="public\app\services\auth.service.ts" />
+    <TypeScriptCompile Include="routers\userAPI.ts" />
+    <TypeScriptCompile Include="routers\imageAPI.ts" />
     <TypeScriptCompile Include="public\app\app.components.ts" />
     <TypeScriptCompile Include="public\app\app.module.ts" />
     <TypeScriptCompile Include="public\app\main.ts" />
@@ -84,14 +87,12 @@
     <TypeScriptCompile Include="public\app\routes\upload-image\upload-image.component.ts" />
     <TypeScriptCompile Include="public\app\services\image.service.ts" />
     <TypeScriptCompile Include="routers\api.ts" />
-    <TypeScriptCompile Include="Scripts\typings\express\express.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\mongodb\mongodb.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="public\app\utils.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="public\app\components\" />
+    <Folder Include="public\app\configuration\" />
     <Folder Include="public\app\pipes\" />
     <Folder Include="public\app\routes\about\" />
     <Folder Include="public\app\routes\details\" />
@@ -103,11 +104,6 @@
     <Folder Include="public\" />
     <Folder Include="public\app\" />
     <Folder Include="public\app\routes\" />
-    <Folder Include="Scripts\" />
-    <Folder Include="Scripts\typings\" />
-    <Folder Include="Scripts\typings\express\" />
-    <Folder Include="Scripts\typings\mongodb\" />
-    <Folder Include="Scripts\typings\node\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="public\systemjs.config.js" />

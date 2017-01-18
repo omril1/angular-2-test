@@ -8,7 +8,8 @@
         :host { position:fixed;bottom:0;right:0;margin:0px 15px 40px 0;-ms-zoom:reset;zoom:reset;opacity:0.4;transition:opacity 0.5s ease;z-index:1000; }
         :host:hover { opacity:1 }
         .zoom-buttons { display: block;float:right;margin-bottom:5px; }
-        .zoom-buttons button { width:30px;height:30px;border-radius:50%;margin:2px;outline:none }
+        .zoom-buttons button { width:40px;height:40px;border-radius:50%;margin:2px;outline:none }
+        .zoom-buttons button svg{pointer-events: none; display: block; width: 100%; height: 100%;}
     `]
 })
 export class ZoomToolbarComponent {

@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { AUTH_PROVIDERS } from 'angular2-jwt';
 
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
@@ -15,9 +16,6 @@ import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, 
 import { LoginComponent } from './components/login';
 import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { safeStyle } from "./pipes/safeStyle";
-
-import { ImageService } from './services/image.service'
-
 
 @NgModule({
     imports: [
@@ -38,6 +36,7 @@ import { ImageService } from './services/image.service'
         OverlayPanelModule,
         AppRoutesModule,
     ],
+    providers: [AUTH_PROVIDERS],
     declarations: [
         AppComponent,
         AboutComponent,

@@ -5,16 +5,15 @@ import * as os from 'os';
 import * as path from 'path';
 let PImage = require('pureimage');
 let Grid = require('gridfs-stream');
-let mongoose = require('mongoose');
 import * as connectionManager from './connectionManager';
 
 
 var fnt = PImage.registerFont('D:\\Coding\\angular 2 reconstructed project\\node_modules\\pureimage\\tests\\fonts\\SourceSansPro-Regular.ttf', 'Source Sans Pro')
 
-export default function processImage(image: Template, res: Response): void {
+export default function processImage(template: Template, res: Response): void {
     let gfs = connectionManager.gfs;
-    gfs.findOne({ _id: image.imageId }, (err, result) => {
-        let rs = gfs.createReadStream({ _id: image.imageId });
+    gfs.findOne({ _id: template.imageId }, (err, result) => {
+        let rs = gfs.createReadStream({ _id: template.imageId });
         if (result.contentType == "image/png") {
             PImage.decodePNG(rs, function (img1, err?) {
                 try {
@@ -37,7 +36,7 @@ export default function processImage(image: Template, res: Response): void {
                 }
                 catch (err) {
                     console.log(err)
-                    res.send(500);
+                    res.sendStatus(500);
                 }
             })
         }

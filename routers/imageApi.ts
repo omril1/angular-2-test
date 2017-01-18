@@ -1,6 +1,4 @@
-﻿/// <reference path="../public/app/routes/details/details.component.ts" />
-//let mongoose = require('mongoose');
-let Grid = require('gridfs-stream');
+﻿let Grid = require('gridfs-stream');
 let Busboy = require('busboy');
 import * as path from 'path';
 import * as fs from 'fs';
@@ -9,6 +7,7 @@ import * as connectionManager from '../connectionManager';
 const im = require('imagemagick-stream');
 import processImage from "../processImage";
 import * as express from 'express';
+import { ParsedAsJson } from 'body-parser';
 
 var TemplateModel = require('../models/templateModel');
 
@@ -56,95 +55,85 @@ export default function api() {
     let api = express();
     let gfs = connectionManager.gfs;
 
-    //api.use(express.csrf());
     api.get("/byname/:filename", (req: express.Request, res: express.Response) => {
-        gfs.exist({ filename: req.params.filename }, function (err: Error, result: any) {
+        let options = { filename: req.params['filename'], root: 'tempBases' }
+        gfs.exist(options, function (err: Error, result: any) {
             if (err)
-                res.send(err);
+                res.json(err);
             else if (result) {
-                gfs.createReadStream({ filename: req.params.filename }).pipe(res);
+                gfs.createReadStream(options).pipe(res);
             }
             else
-                res.send(404);
+                res.sendStatus(404);
         });
     });
     api.get('/byid/:id', (req: express.Request, res: express.Response) => {
-        gfs.findOne({ _id: req.params.id }, function (err: Error, file: any) {
-            if (err) return res.status(400).send(err);
-            if (!file) return res.send(404);
+        let options = { _id: req.params['id'], root: 'tempBases' };
+        gfs.findOne(options, function (err: Error, file: any) {
+            if (err) return res.sendStatus(400);
+            if (!file) return res.sendStatus(404);
 
             res.set('Content-Type', file.contentType);
 
-            gfs.createReadStream({ _id: file._id }).pipe(res);
+            gfs.createReadStream(options).pipe(res);
         });
     });
     api.get('/thumbnail/:id', (req: express.Request, res: express.Response) => {
-        gfs.findOne({ _id: req.params.id }, function (err: Error, file: any) {
+        let options = { _id: req.params['id'], root: 'thumbnails' };
+        gfs.findOne(options, function (err: Error, file: any) {
             if (err)
-                return res.status(400).send(err);
+                return res.sendStatus(400);
             else
                 if (!file)
-                    return res.send(404);
+                    return res.sendStatus(404);
                 else {
                     let resize = im().resize('250x180').quality(90);
-                    res.set('Content-Type', file.contentType);
                     resize.on('error', error => console.log(error));
+
+                    res.set('Content-Type', file.contentType);
                     res.on('error', error => console.log(error));
-                    gfs.createReadStream({ _id: file._id })
-                        .pipe(resize)
+                    gfs.createReadStream(options)
+                        //.pipe(resize)
                         .pipe(res);
 
                 }
         });
     });
-    api.get("/allimages", (req: express.Request, res: express.Response) => {
-        gfs.files.find({ contentType: /^image[/]/ }, { _id: 1, filename: 1 }).toArray(function (err: Error, files: any[]) {
-            if (err)
-                res.send(err);
-            else
-                res.send(files);
-        })
-    });
     api.get("/templates", (req: express.Request, res: express.Response) => {
         TemplateModel.find({}).sort({ dateAdded: 1 }).exec(function (err: Error, templates: Template[]) {
             if (err)
-                res.send(err);
+                res.json(err);
             else
-                res.send(templates);
+                res.json(templates);
         });
     });
     api.get("/template/:tempname", (req: express.Request, res: express.Response) => {
-        TemplateModel.findById(req.params.tempname).exec(function (err: Error, template: Template) {
+        TemplateModel.findById(req.params['tempname']).exec(function (err: Error, template: Template) {
             if (err)
-                res.send(err);
+                res.json(err);
             else {
                 if (template)
-                    res.send(template);
+                    res.json(template);
                 else
-                    res.send(404);
+                    res.sendStatus(404);
             }
         });
     });
     api.post("/upload", function (req: any, res: express.Response) {
-        var busboy = new Busboy({
-            headers: req.headers,
-            limits: { fileSize: 2 * 1024 * 1024, files: 1 }
-        });
-        var logError = (err) => {
-            console.log(err);
-            res.send(415);
-        };
+        var busboy = new Busboy({ headers: req.headers, limits: { fileSize: 2 * 1024 * 1024, files: 1 } });
+        var logError = (err) => { console.log(err); res.sendStatus(415); };
         busboy.on('error', logError);
         busboy.on('file', function (fieldname: string, file: any, filename: string, encoding: string, mimetype: string) {
             if (mimetype.startsWith('image/')) {
-                var ws = gfs.createWriteStream({ filename: filename, content_type: mimetype });
+                let options = { filename: filename, content_type: mimetype, root: "tempBases" };
+                var ws = gfs.createWriteStream(options);
                 ws.on('finish', function () {
                     let template = new TemplateModel({ imageId: ws.id, name: filename });
                     template.save((err, result) => {
                         if (err)
                             console.log(err);
                         else
-                            res.send(200);
+                            res.sendStatus(200);
                     });
                 });
                 ws.on('error', logError);
@@ -153,54 +142,92 @@ export default function api() {
             }
             else {
                 file.resume();
-                res.send(415);
+                res.sendStatus(415);
             }
         });
         req.pipe(busboy);
     });
-    api.post("/proccessimage", (req: express.Request, res: express.Response) => {
+    api.post("/proccessimage", (req: express.Request & ParsedAsJson, res: express.Response) => {
         processImage(<Template>req.body, res);
     });
-    api.get("/dummypdf/:templateId", (req: express.Request, res: express.Response) => {
-        if (req.params.templateId.endsWith('.pdf')) {
-            var templateId = req.params.templateId.replace('.pdf', '');
+    api.get("/dummypdf/:templateId", (req: express.Request & ParsedAsJson, res: express.Response) => {
+        if (req.params['templateId'].endsWith('.pdf')) {
+            var templateId = req.params['templateId'].replace('.pdf', '');
             TemplateModel.findById(templateId).exec(function (err: Error, template) {
                 if (err)
-                    res.send(err);
+                    res.json(err);
                 else {
                     if (template) {
+                        console.time("phantom-html-to-pdf");
                         var conversion = require("phantom-html-to-pdf")();
+                        console.timeEnd("phantom-html-to-pdf");
+                        console.time("phantom-html-to-pdf build");
                         conversion({
                             html: buildHtml(<Template>template._doc),
                             paperSize: {
-                                format: 'A5', margin: "0px", width: '561.26px', height: '793.7px', headerHeight: 0, footerHeight: 0
+                                /*format: 'A5',*/ width: '561.26px', height: '793.700px', margin: {
+                                    "top": "-6px",            // default is 0, units: mm, cm, in, px 
+                                    "right": "0cm",
+                                    "bottom": "0cm",
+                                    "left": "0cm"
+                                },
                             },
-                            fitToPage: false,
+                            fitToPage: true,
                             viewportSize: {
                                 width: 1920,
                                 height: 800
                             },
                         }, function (err, pdf) {
-                            console.log(pdf.logs);
-                            console.log(pdf.numberOfPages);
-                            pdf.stream.pipe(res);
+                            if (err)
+                                console.log(err);
+                            else {
+                                if (pdf == undefined) {
+                                    console.log("pdf is undefined");
+                                    res.sendStatus(404);
+                                }
+                                else {
+                                    console.log(pdf.logs);
+                                    console.log(pdf.numberOfPages);
+                                    pdf.stream.pipe(res);
+                                }
+                            }
                         });
-
-                        //var pdf = require('html-pdf');
-                        //var options = {
-                        //    format: 'letter', orientation: "portrait", margin: "0 0 0 0", width: '561.26px', height: '793.7px', border: "0", "base": "http://localhost"
-                        //};
-                        //pdf.create(buildHtml(<Template>template._doc), options).toStream(function (err, stream) {
-                        //    stream.pipe(res);
-                        //});
+                        console.time("phantom-html-to-pdf build");
                     }
                     else
-                        res.send(404);
+                        res.sendStatus(404);
                 }
             });
         }
     });
-    api.post("/save", (req: express.Request, res: express.Response) => {
+    api.get("/dummypdf2/:templateId", (req: express.Request, res: express.Response) => {
+        if (req.params['templateId'].endsWith('.pdf')) {
+            var templateId = req.params['templateId'].replace('.pdf', '');
+            TemplateModel.findById(templateId).exec(function (err: Error, template) {
+                if (err)
+                    res.json(err);
+                else {
+                    if (template) {
+                        console.time('html-pdf');
+                        var pdf = require('html-pdf');
+                        console.timeEnd('html-pdf');
+
+                        console.time('html-pdf build');
+                        var options = {
+                            format: 'A5', orientation: "portrait", margin: "0 0 0 0", border: "0", "base": "http://localhost"
+                        };
+                        pdf.create(buildHtml(<Template>template._doc), options).toStream(function (err, stream) {
+                            stream.pipe(res);
+                        });
+                        console.timeEnd('html-pdf build');
+                    }
+                    else
+                        res.sendStatus(404);
+                }
+            });
+        }
+    });
+    api.post("/save", (req: express.Request & ParsedAsJson & ParsedAsJson, res: express.Response) => {
         TemplateModel.findByIdAndUpdate(req.body._id, { $set: { moveableFields: req.body.moveableFields, name: req.body.name } }, { new: true }, function (err, template) {
             if (err)
                 console.log(err);
@@ -208,30 +235,36 @@ export default function api() {
         });
     });
     api.get('/tempFile/:filename', (req: express.Request, res: express.Response) => {
-        let filePath = path.join(tempPath, req.params.filename);
+        let filePath = path.join(tempPath, req.params['filename']);
         if (fs.existsSync(filePath))
             res.sendFile(filePath);
         else
-            res.send(404);
+            res.sendStatus(404);
     });
     return api;
 
     function buildHtml(template: Template) {
         let templateHtml = `
         <html>
-        <head><meta charset="utf-8" /></head>
-        <body>
-        <div class="print-area" style="width:100%;height:100%;left:0;top:0;position: absolute;>
+        <head><meta charset="utf-8" />
+        <style>*{margin:0;}</style>
+        <link rel="stylesheet" href="http://omri-pc/app/routes/details/details.css"/>
+        </head>
+        <body style="">
+        <div class="print-area" style="width: 561.26px; height: 793px;left:0;top:0;">
             <div class="fields-container">`;
         for (let field of template.moveableFields) {
-            templateHtml +=
-                `<div class="moveableField" style="position: absolute;${buildFieldStyle(field)}">
-                    ${field.text || ''}
-                </div>`
+            var div = `<div class="moveableField" style="position: absolute;${buildFieldStyle(field)}">`
+            if (field.isImage)
+                div += `<img src="http://omri-pc/imageapi/byid/${field.imageId}" style="width:100%;height:100%;" />`;
+            else
+                div += field.text;
+            div += '</div>';
+            templateHtml += div;
         }
         templateHtml +=
             `</div>
-            <img class="base-image" src="http://omri-pc/imageapi/byid/${template.imageId}" style="width:100%;height:100%;"/>
+            <img src="http://omri-pc/imageapi/byid/${template.imageId}" style="width:100%;height:100%;"/>
         </div></body></html>
         `;
         return templateHtml;
@@ -244,22 +277,13 @@ export default function api() {
                 width: ${field.width}px;
                 height: ${field.height}px;
                 transform: rotateZ(${field.rotation}deg);`
-        if (field.isImage) {
-            result += `
-                background-image: url(http://localhost/imageapi/byid/${field.imageId});
-                background-repeat: round;
-            `
-        }
-        else {
-            let textShadow = field.shadow.blur != -1 ? field.shadow.x + 'px ' + field.shadow.y + 'px ' + field.shadow.blur + 'px ' + field.shadow.color : 'none';
+        if (!field.isImage) {
+            let textShadow = field.shadow.blur != -1 ? (field.shadow.color + " " + field.shadow.x + 'px ' + field.shadow.y + 'px ' + field.shadow.blur + 'px') : 'none';
             result += `
                 font-size: ${field.fontSize}px;
                 color: ${field.color};
                 font-family: ${field.font};
-                text-align: ${field.align};`;
-        }
-        return result;
-        /*
+                text-align: ${field.align};
                 word-spacing: ${field.wordSpace}px;
                 letter-spacing: ${field.letterSpace}px;
                 font-weight: ${field.bold ? 'bold' : 'normal'};
@@ -267,6 +291,8 @@ export default function api() {
                 text-decoration: ${field.underline ? 'underline' : 'none'};
                 -webkit-text-stroke-color: ${field.stroke.color};
                 -webkit-text-stroke-width: ${field.stroke.width / 10}px;
-                text-shadow: ${textShadow};*/
+                text-shadow: ${textShadow};`;
+        }
+        return result;
     }
 };

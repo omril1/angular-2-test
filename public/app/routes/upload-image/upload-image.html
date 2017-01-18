@@ -1,4 +1,8 @@
-﻿<div class="container">
+﻿<div class="container well my-drop-zone"
+     ng2FileDrop
+     [ngClass]="{'nv-file-over': fileOver}"
+     (fileOver)="fileOver=$event"
+     [uploader]="uploader">
     <div class="row">
         <div class="col-md-9" style="margin-bottom: 40px;direction:rtl;">
 
@@ -74,11 +78,7 @@
         </div>
 
         <div class="col-md-3">
-            <div ng2FileDrop
-                 [ngClass]="{'nv-file-over': fileOver}"
-                 (fileOver)="fileOver=$event"
-                 [uploader]="uploader"
-                 class="well my-drop-zone">
+            <div>
                 <h3>זרוק כאן קבצים</h3>
             </div>
             <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;" accept="image/*" />

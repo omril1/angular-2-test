@@ -29,5 +29,4 @@ export let connect = function (): Promise<any> {
         });
         return mongoose.connection;
     });
-    //}
 }
