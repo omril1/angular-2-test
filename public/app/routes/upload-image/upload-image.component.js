@@ -16,7 +16,7 @@ var UploadImageComponent = (function () {
         var _this = this;
         this.sanitizer = sanitizer;
         this.uploader = new ng2_file_upload_1.FileUploader({
-            url: "/imageapi/upload",
+            url: "/imageapi/uploadTemplate",
             allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
             removeAfterUpload: false,
             maxFileSize: 3 * 1024 * 1024 //3 MB

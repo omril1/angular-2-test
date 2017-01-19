@@ -1,9 +1,9 @@
 ﻿let mongoose = require('mongoose');
-let Grid = require('gridfs-stream')
+import * as Grid from 'gridfs-stream';
 let connectionString = 'mongodb://localhost:27017/test';
 let logger = console;
 
-export let gfs;
+export let gfs: Grid.Grid;
 export let connect = function (): Promise<any> {
     mongoose.Promise = global.Promise;
     var options = { auto_reconnect: true };
@@ -13,8 +13,7 @@ export let connect = function (): Promise<any> {
         else
             logger.info("connected to mongodb sccessfuly.", { 'connection string': connectionString });
     }).then(function () {
-        Grid.mongo = mongoose.mongo;
-        gfs = Grid(mongoose.connection.db);
+        gfs = Grid(mongoose.connection.db, mongoose.mongo);
         process.on('SIGINT', function () {
             mongoose.connection.close(function () {
                 logger.info('Process exiting now through app termination signal, closing mongoose connection');

@@ -26,8 +26,8 @@ connectionManager.connect().then((mongooseConnection) => {
     app.use(favicon(__dirname + '/public/favicon.ico'));
     app.use(morgan('dev'));
 
-    app.use("/node_modules", serveStatic(__dirname + "/node_modules", { extensions: ['js', 'ts'], fallthrough: false, index: false, redirect: false }));
-    app.use(serveStatic(__dirname + '/public'));
+    app.use("/node_modules", <any>serveStatic(__dirname + "/node_modules", { extensions: ['js', 'ts'], fallthrough: false, index: false, redirect: false }));
+    app.use(<any>serveStatic(__dirname + '/public'));
 
     // parse application/x-www-form-urlencoded 
     app.use(bodyParser.urlencoded({ extended: true }))
@@ -49,10 +49,10 @@ connectionManager.connect().then((mongooseConnection) => {
             res.sendStatus(404);
     });
 
-    http.createServer(app).listen(app.get('port'), function () {
+    http.createServer(<any>app).listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
     });
-    https.createServer({ cert: certificate, key: privateKey }, app).listen(443, function () {
-        console.log('Express server listening on port ' + 443);
-    });
+    //https.createServer({ cert: certificate, key: privateKey }, app).listen(443, function () {
+    //    console.log('Express server listening on port ' + 443);
+    //});
 });

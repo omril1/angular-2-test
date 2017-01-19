@@ -22,6 +22,8 @@ var app_components_1 = require("./app.components");
 var app_routing_1 = require("./app.routing");
 var index_1 = require("./routes/index");
 var login_1 = require("./components/login");
+var auth_guard_1 = require("./services/auth.guard");
+var auth_service_1 = require("./services/auth.service");
 var zoomToolbar_1 = require("./components/zoomToolbar");
 var safeStyle_1 = require("./pipes/safeStyle");
 var AppModule = (function () {
@@ -49,7 +51,7 @@ AppModule = __decorate([
             primeng_1.OverlayPanelModule,
             app_routing_1.AppRoutesModule,
         ],
-        providers: [angular2_jwt_1.AUTH_PROVIDERS],
+        providers: [auth_guard_1.AuthGuard, auth_service_1.Auth, angular2_jwt_1.AUTH_PROVIDERS],
         declarations: [
             app_components_1.AppComponent,
             index_1.AboutComponent,

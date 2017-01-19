@@ -1,8 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
 import he from '../configuration/auth0lock.config';
+//var Auth0Lock = require('auth0-lock'); //fucks up my Systemjs.config, using direct cdn link instead :(
 
-// Avoid name not found warnings
 declare var Auth0Lock: any;
 
 @Injectable()
@@ -13,6 +13,7 @@ export class Auth {
         languageDictionary: he
     });
     public profile = JSON.parse(localStorage.getItem('profile'));
+    public id_token = localStorage.getItem('id_token');
 
     constructor() {
         // Add callback for lock `authenticated` event
@@ -23,6 +24,7 @@ export class Auth {
                 localStorage.setItem('id_token', authResult.idToken);
                 localStorage.setItem('profile', JSON.stringify(profile));
                 this.profile = profile;
+                this.profile = authResult.idToken;
             });
         });
     }
@@ -43,8 +45,10 @@ export class Auth {
         localStorage.removeItem('id_token');
         localStorage.removeItem('profile');
         this.profile = null;
+        this.id_token = null;
     }
     public isAdmin() {
-        return this.profile && this.profile.roles.indexOf('admin') > -1;
+        //return this.profile && this.profile.roles.indexOf('admin') > -1;
+        return true;
     }
 }

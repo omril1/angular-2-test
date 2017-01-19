@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 let PImage = require('pureimage');
-let Grid = require('gridfs-stream');
 import * as connectionManager from './connectionManager';
 
 

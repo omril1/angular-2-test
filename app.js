@@ -1,7 +1,6 @@
 "use strict";
 var express = require("express");
 var http = require("http");
-var https = require("https");
 var path = require("path");
 var fs = require("fs");
 var connectionManager = require("./connectionManager");
@@ -46,8 +45,8 @@ connectionManager.connect().then(function (mongooseConnection) {
     http.createServer(app).listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
     });
-    https.createServer({ cert: certificate, key: privateKey }, app).listen(443, function () {
-        console.log('Express server listening on port ' + 443);
-    });
+    //https.createServer({ cert: certificate, key: privateKey }, app).listen(443, function () {
+    //    console.log('Express server listening on port ' + 443);
+    //});
 });
 //# sourceMappingURL=app.js.map

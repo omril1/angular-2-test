@@ -12,14 +12,16 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
 var image_service_1 = require("../../services/image.service");
+var auth_service_1 = require("../../services/auth.service");
 var ng2_file_upload_1 = require("ng2-file-upload");
 var utils = require("../../utils");
 var domtoimage = require('dom-to-image');
 var DetailsComponent = (function () {
-    function DetailsComponent(route, imageService, sanitizer) {
+    function DetailsComponent(route, imageService, sanitizer, auth) {
         this.route = route;
         this.imageService = imageService;
         this.sanitizer = sanitizer;
+        this.auth = auth;
         this.zoomLevel = 1;
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
@@ -27,11 +29,12 @@ var DetailsComponent = (function () {
         this.fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
         this.fontSizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 55];
         this.uploader = new ng2_file_upload_1.FileUploader({
-            url: "/imageapi/upload",
+            url: "/imageapi/uploadImage",
             allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
             removeAfterUpload: false,
             maxFileSize: 3 * 1024 * 1024,
-            autoUpload: false
+            autoUpload: true,
+            authToken: 'Bearer ' + this.auth.id_token
         });
     }
     Object.defineProperty(DetailsComponent.prototype, "selectedField", {
@@ -248,7 +251,7 @@ DetailsComponent = __decorate([
         styleUrls: ["details.css"],
         providers: [image_service_1.ImageService],
     }),
-    __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService, platform_browser_1.DomSanitizer])
+    __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService, platform_browser_1.DomSanitizer, auth_service_1.Auth])
 ], DetailsComponent);
 exports.DetailsComponent = DetailsComponent;
 //# sourceMappingURL=details.component.js.map

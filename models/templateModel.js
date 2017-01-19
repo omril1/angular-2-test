@@ -12,6 +12,10 @@ module.exports = mongoose.model('template', {
         type: Schema.Types.ObjectId,
         required: true
     },
+    thumbnailId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     moveableFields: {
         type: [{
             top: Number,

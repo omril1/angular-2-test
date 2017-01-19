@@ -1,10 +1,11 @@
-﻿import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
 import { MenuItem, Message } from 'primeng/primeng';
 import { ImageService, moveableField, Template } from '../../services/image.service';
+import { Auth } from '../../services/auth.service';
 import { FileUploader } from 'ng2-file-upload';
 import * as utils from '../../utils';
 let domtoimage = require('dom-to-image');
@@ -31,18 +32,19 @@ export class DetailsComponent implements OnInit {
     private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
     private fontSizes = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 55];
     public uploader: FileUploader = new FileUploader({
-        url: "/imageapi/upload",
+        url: "/imageapi/uploadImage",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
         removeAfterUpload: false,
         maxFileSize: 3 * 1024 * 1024,
-        autoUpload: false
+        autoUpload: true,
+        authToken: 'Bearer ' + this.auth.id_token
     });
 
     get selectedField(): moveableField {
         return this.template.moveableFields[this.selectedIndex];
     }
 
-    constructor(private route: ActivatedRoute, private imageService: ImageService, private sanitizer: DomSanitizer) {
+    constructor(private route: ActivatedRoute, private imageService: ImageService, private sanitizer: DomSanitizer, private auth: Auth) {
     }
     public ngOnInit() {
         this.route.params.subscribe(params => {

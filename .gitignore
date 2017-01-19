@@ -245,3 +245,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/authentication.ts
+/authentication.js.map
+/authentication.js

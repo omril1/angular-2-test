@@ -1,6 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
-var Grid = require('gridfs-stream');
+var Grid = require("gridfs-stream");
 var connectionString = 'mongodb://localhost:27017/test';
 var logger = console;
 exports.connect = function () {
@@ -12,8 +12,7 @@ exports.connect = function () {
         else
             logger.info("connected to mongodb sccessfuly.", { 'connection string': connectionString });
     }).then(function () {
-        Grid.mongo = mongoose.mongo;
-        exports.gfs = Grid(mongoose.connection.db);
+        exports.gfs = Grid(mongoose.connection.db, mongoose.mongo);
         process.on('SIGINT', function () {
             mongoose.connection.close(function () {
                 logger.info('Process exiting now through app termination signal, closing mongoose connection');

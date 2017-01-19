@@ -24,7 +24,7 @@ export class UploadImageComponent {
     }
 
     public uploader: FileUploader = new FileUploader({
-        url: "/imageapi/upload",
+        url: "/imageapi/uploadTemplate",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
         removeAfterUpload: false,
         maxFileSize: 3 * 1024 * 1024 //3 MB

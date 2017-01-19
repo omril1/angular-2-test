@@ -48,6 +48,7 @@
   <ItemGroup>
     <Content Include="public\app\app.view.html" />
     <Content Include="public\app\components\login.html" />
+    <Content Include="public\app\components\uploadPanel.html" />
     <Content Include="public\app\components\zoomToolbar.html" />
     <Content Include="public\app\routes\details\details.css" />
     <Content Include="public\app\routes\templates\templates.css" />
@@ -70,6 +71,7 @@
     <TypeScriptCompile Include="processImage.ts" />
     <TypeScriptCompile Include="public\app\app.routing.ts" />
     <TypeScriptCompile Include="public\app\components\login.ts" />
+    <TypeScriptCompile Include="public\app\components\uploadPanel.ts" />
     <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
     <TypeScriptCompile Include="public\app\configuration\auth0lock.config.ts" />
     <TypeScriptCompile Include="public\app\pipes\safeStyle.ts" />
@@ -109,6 +111,7 @@
     <Content Include="public\systemjs.config.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="authentication.ts" />
     <Compile Include="models\templateModel.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->

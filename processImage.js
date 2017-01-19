@@ -3,7 +3,6 @@ var fs = require("fs");
 var os = require("os");
 var path = require("path");
 var PImage = require('pureimage');
-var Grid = require('gridfs-stream');
 var connectionManager = require("./connectionManager");
 var fnt = PImage.registerFont('D:\\Coding\\angular 2 reconstructed project\\node_modules\\pureimage\\tests\\fonts\\SourceSansPro-Regular.ttf', 'Source Sans Pro');
 function processImage(template, res) {

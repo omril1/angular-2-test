@@ -1,0 +1,19 @@
+﻿<div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;border:dotted 3px;" ng2FileDrop
+     [style.border-color]="fileOver?'red':'transparent'"
+     (fileOver)="fileOver=$event"
+     [uploader]="uploader">
+
+    <label>debug values:</label>
+    <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{selectedField|json}}</textarea>
+    <br />
+
+    <div class="images-resources" *ngIf="uploader.queue.length>0">
+        <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
+            <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
+            <progressbar [value]="item.progress">
+                <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
+            </progressbar>
+        </div>
+    </div>
+    <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
+</div>

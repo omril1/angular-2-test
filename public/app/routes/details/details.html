@@ -115,6 +115,7 @@
         </div>
         <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
     </div>
+
     <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;height:76vh">
         <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)' | safeStyle">
             <div class="fields-container">

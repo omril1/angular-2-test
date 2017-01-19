@@ -4,7 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     //"pretty": true,
-    "traceResolution": true,
+    //"traceResolution": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "emitDecoratorMetadata": true,

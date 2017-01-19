@@ -10,23 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var auth_service_1 = require("./auth.service");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/toPromise");
-//export interface imageField {
-//    top: number;
-//    left: number;
-//    width: number;
-//    height: number;
-//    rotation: number;
-//    imageId: string;
-//}
 var ImageService = (function () {
-    function ImageService(http) {
+    function ImageService(http, auth) {
         this.http = http;
-        this.baseUrl = '/imageapi';
-        //private _pageSizes: { [id: string]: { width: number; height: number; }; } = { 'A4': { width: 793.7007874015748, height: 1122.51968503937 }, 'A5': { width: 561.259842519685, height: 793.7007874015748 } };
-        //rounded some numbers
+        this.auth = auth;
         this._pageSizes = { 'A4': { width: 793.7, height: 1122.52 }, 'A5': { width: 561.26, height: 793.700 } };
     }
     Object.defineProperty(ImageService.prototype, "pageSizes", {
@@ -36,8 +27,8 @@ var ImageService = (function () {
         enumerable: true,
         configurable: true
     });
-    ImageService.prototype.getImageNames = function () {
-        return this.http.get(this.baseUrl + "/allimages")
+    ImageService.prototype.getUserUploadedImages = function () {
+        return this.http.get('/user/userUploads')
             .map(function (response) { return response.json(); })
             .toPromise()
             .catch(function (error) {
@@ -45,7 +36,7 @@ var ImageService = (function () {
         });
     };
     ImageService.prototype.getTemplates = function () {
-        return this.http.get(this.baseUrl + "/templates")
+        return this.http.get("/imageapi/templates")
             .map(function (response) { return response.json(); })
             .toPromise()
             .catch(function (error) {
@@ -53,7 +44,12 @@ var ImageService = (function () {
         });
     };
     ImageService.prototype.getTemplate = function (templateId) {
-        return this.http.get(this.baseUrl + "/template/" + templateId)
+        return this.http.get("/imageapi/template/" + templateId)
+            .map(function (response) { return response.json(); })
+            .toPromise().catch(function (reason) { console.error(reason); return null; });
+    };
+    ImageService.prototype.getTest = function () {
+        return this.http.get("/imageapi/test", { headers: new http_1.Headers({ 'Authorization': 'Bearer ' + this.auth.profile.clientID }) })
             .map(function (response) { return response.json(); })
             .toPromise().catch(function (reason) { console.error(reason); return null; });
     };
@@ -61,7 +57,7 @@ var ImageService = (function () {
         var body = JSON.stringify(template);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
         var options = new http_1.RequestOptions({ headers: headers });
-        return this.http.post(this.baseUrl + "/proccessimage", body, options).toPromise()
+        return this.http.post("/imageapi/proccessimage", body, options).toPromise()
             .catch(function (error) {
             return Promise.reject(error || 'Server error');
         });
@@ -70,7 +66,7 @@ var ImageService = (function () {
         var body = JSON.stringify(template);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
         var options = new http_1.RequestOptions({ headers: headers });
-        return this.http.post(this.baseUrl + "/save", body, options).toPromise()
+        return this.http.post("/imageapi/save", body, options).toPromise()
             .catch(function (error) {
             return Promise.reject(error || 'Server error');
         });
@@ -79,7 +75,7 @@ var ImageService = (function () {
 }());
 ImageService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.Http, auth_service_1.Auth])
 ], ImageService);
 exports.ImageService = ImageService;
 //# sourceMappingURL=image.service.js.map

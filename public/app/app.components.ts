@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { Auth } from './services/auth.service';
-import { AUTH_PROVIDERS } from 'angular2-jwt';
 
 @Component({
     moduleId: module.id,

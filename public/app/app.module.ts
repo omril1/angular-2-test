@@ -14,6 +14,8 @@ import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
 import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
 import { LoginComponent } from './components/login';
+import { AuthGuard } from './services/auth.guard';
+import { Auth } from './services/auth.service';
 import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { safeStyle } from "./pipes/safeStyle";
 
@@ -36,7 +38,7 @@ import { safeStyle } from "./pipes/safeStyle";
         OverlayPanelModule,
         AppRoutesModule,
     ],
-    providers: [AUTH_PROVIDERS],
+    providers: [AuthGuard, Auth, AUTH_PROVIDERS],
     declarations: [
         AppComponent,
         AboutComponent,
