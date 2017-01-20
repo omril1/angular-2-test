@@ -1,0 +1,28 @@
+﻿<div class="container-fluid" style="height:100%;border:dotted 3px;min-height:400px;" ng2FileDrop
+     [style.border-color]="fileOver?'red':'transparent'"
+     (fileOver)="fileOver=$event"
+     [uploader]="uploader">
+
+    <div style="text-align:center;direction:rtl;padding:15px;">
+        <label>סנן: </label> <input type="text" [(ngModel)]="filter"/>
+    </div>
+    <div class="row" *ngIf="categoryList">
+        <a class="col-xs-6 col-sm-3 col-md-2 col-lg-2 animated" *ngFor='let category of uploader.queue' style="cursor:pointer;text-decoration:none">
+            <div class="thumbnail">
+                <div class="lazy">
+                    <img [src]="category.previewUrl">
+                </div>
+                <p>{{category.file?.name}}</p>
+            </div>
+        </a>
+        <a class="col-xs-6 col-sm-3 col-md-2 col-lg-2 animated" [@taskState]="category.deleted" *ngFor='let category of categoryList | filterCategory:filter;let i=index' style="cursor:pointer;text-decoration:none">
+            <span class="glyphicon glyphicon-remove close-btn" (click)="removeCategory(category,i)"></span>
+            <div class="thumbnail">
+                <div class="lazy">
+                    <img [src]="'imageapi/category/' + category._id">
+                </div>
+                <p>{{category.metadata?.name}}</p>
+            </div>
+        </a>
+    </div>
+</div>

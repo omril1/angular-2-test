@@ -4,6 +4,7 @@
   */
 export let noGhostImage = function (event: DragEvent) {
     (<any>event.dataTransfer).setDragImage(<HTMLLIElement>event.currentTarget, -99999, -99999);
+    //(<any>event.dataTransfer).setDragImage(new Image(), 0, 0);
 }
 /**
   * Rounds the angle to the nearest whole right angle if possible.

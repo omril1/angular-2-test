@@ -1,33 +1,5 @@
-﻿.images-resources {
-    padding: .5vw;
-    font-size: 0;
-    display: -ms-flexbox;
-    -ms-flex-wrap: wrap;
-    -ms-flex-direction: column;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-    display: -webkit-box;
-    display: flex;
-}
-
-    .images-resources div {
-        -webkit-box-flex: auto;
-        -ms-flex: auto;
-        flex: auto;
-        width: 80px;
-        max-width: 160px;
-        margin: .5vw;
-    }
-
-        .images-resources div img {
-            width: 100%;
-            height: auto;
-        }
-
-.print-area {
+﻿.print-area {
     position: relative;
-    /*-ms-zoom: reset;
-    zoom: reset;*/
     user-select: none;
 }
 
@@ -39,10 +11,6 @@
     white-space: pre;
 }
 
-    .fields-container .moveableField.image {
-        background-repeat: round;
-    }
-
     .fields-container .moveableField:hover:after {
         position: absolute;
         top: 0;
@@ -50,7 +18,23 @@
         width: 100%;
         height: 100%;
         content: '';
-        border: 1px dashed rgba(0,0,0,.2);
+        border: 1px dashed rgba(0,0,0,.3);
+    }
+
+    .fields-container .moveableField .imageField {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .fields-container .moveableField .textField {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
     }
 
 .inTemplate-tools {

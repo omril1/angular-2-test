@@ -8,16 +8,17 @@ import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
 import { DropdownModule, ModalModule, CollapseModule, PopoverModule, ProgressbarModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
-import { ContextMenuModule, GrowlModule, SliderModule, GMapModule, OverlayPanelModule } from 'primeng/primeng';
+import { ContextMenuModule, GrowlModule, SliderModule, GMapModule, OverlayPanelModule, AccordionModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
-import { AboutComponent, DetailsComponent, ListComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
+import { AboutComponent, DetailsComponent, CategoriesComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
 import { LoginComponent } from './components/login';
+import { uploadPanelComponent } from './components/uploadPanel';
+import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { AuthGuard } from './services/auth.guard';
 import { Auth } from './services/auth.service';
-import { ZoomToolbarComponent } from './components/zoomToolbar';
-import { safeStyle } from "./pipes/safeStyle";
+import { filterCategory } from "./pipes/filterCategory";
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { safeStyle } from "./pipes/safeStyle";
         SliderModule,
         GMapModule,
         OverlayPanelModule,
+        AccordionModule,
         AppRoutesModule,
     ],
     providers: [AuthGuard, Auth, AUTH_PROVIDERS],
@@ -43,14 +45,15 @@ import { safeStyle } from "./pipes/safeStyle";
         AppComponent,
         AboutComponent,
         TemplatesComponent,
-        ListComponent,
+        CategoriesComponent,
         DetailsComponent,
         UploadImageComponent,
         ZoomToolbarComponent,
+        uploadPanelComponent,
         LoginComponent,
         FileSelectDirective,
         FileDropDirective,
-        safeStyle,
+        filterCategory,
     ],
     bootstrap: [AppComponent]
 })

@@ -24,7 +24,7 @@ export class Auth {
                 localStorage.setItem('id_token', authResult.idToken);
                 localStorage.setItem('profile', JSON.stringify(profile));
                 this.profile = profile;
-                this.profile = authResult.idToken;
+                this.id_token = authResult.idToken;
             });
         });
     }

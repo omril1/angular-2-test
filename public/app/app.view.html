@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" [collapse]="!isCollapsed">
             <ul class="nav navbar-nav">
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/about']">about</a></li>
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/list']">תמונות באתר</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['/categories']">קטגוריות</a></li>
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/upload-image']">העלאת תמונות</a></li>
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>
             </ul>
@@ -24,7 +24,7 @@
                         <login (loginResult)="loginPanel.hide()"></login>
                     </p-overlayPanel>
                 </li>-->
-                <li *ngIf="auth.profile">
+                <li *ngIf="auth.authenticated()">
                     <img [src]="auth.profile.picture" class="img-thumbnail" style="height:50px;" (click)="profilePanel.toggle($event)" />
                     <p-overlayPanel #profilePanel appendTo="body">
                         <textarea rows="8" style="width:470px;resize:vertical;" readonly>{{auth.profile|json}}</textarea>

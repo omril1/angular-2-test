@@ -62,6 +62,10 @@ th {
     overflow-y: auto;
 }
 
+upload-panel div.ui-accordion-content-wrapper > div.ui-accordion-content.ui-widget-content {
+    overflow: visible;
+}
+
 .spinning {
     animation-direction: normal;
     animation-duration: 10s;

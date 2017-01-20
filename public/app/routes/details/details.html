@@ -95,40 +95,22 @@
     <div class="clearfix"></div>
 </div>
 <br />
-<div class="panel panel-default row" *ngIf="template" style="display:flex;">
-    <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;border:dotted 3px;" ng2FileDrop
-         [style.border-color]="fileOver?'red':'transparent'"
-         (fileOver)="fileOver=$event"
-         [uploader]="uploader">
-
-        <label>debug values:</label>
-        <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{selectedField|json}}</textarea>
-        <br />
-
-        <div class="images-resources" *ngIf="uploader.queue.length>0">
-            <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
-                <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
-                <progressbar [value]="item.progress">
-                    <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
-                </progressbar>
-            </div>
-        </div>
-        <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
+<div class="panel panel-default row" *ngIf="template" style="display:flex;-webkit-user-drag:none;">
+    <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;">
+        <upload-panel (dropFromPanel)="addImageFromPanel($event)"></upload-panel>
     </div>
-
     <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;height:76vh">
-        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)' | safeStyle">
+        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)'">
             <div class="fields-container">
-                <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" [class.image]="field.isImage" style="position: absolute;"
+                <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" style="position: absolute;"
                      [ngStyle]="getStyle(field, i)" [draggable]
-                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)"
-                     [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false">
+                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)">
+                    <div *ngIf="!field.isImage" class="textField" [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false"></div>
+                    <img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token"/>
                 </div>
             </div>
             <div class="inTemplate-tools" *ngIf="template && selectedField"
-                 [style.top.px]="selectedField.top*zoomLevel" [style.left.px]="selectedField.left*zoomLevel"
-                 [style.width.px]="selectedField.width*zoomLevel" [style.height.px]="selectedField.height*zoomLevel"
-                 [style.transform]="'rotateZ(' + selectedField.rotation + 'deg)' | safeStyle" [style.z-index]="199 + selectedIndex">
+                 [ngStyle]="getStyle(field, selectedIndex)" [style.z-index]="199 + selectedIndex">
                 <div class="resizer" style="position: absolute;"
                      [style.left.px]="selectedField.width*zoomLevel" [style.top.px]="selectedField.height*zoomLevel"
                      [draggable] (dragstart)="resizeStart($event)" (drag)="onResize($event)" (dragend)="resizeEnd($event)">
@@ -144,5 +126,5 @@
     </div>
 </div>
 
-<zoom-toolbar (zoomChanged)="zoomChange($event)"></zoom-toolbar>
+<zoom-toolbar (zoomChanged)="zoomLevel=$event"></zoom-toolbar>
 <p-growl [value]="msgs"></p-growl>

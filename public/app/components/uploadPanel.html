@@ -1,19 +1,27 @@
-﻿<div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;border:dotted 3px;" ng2FileDrop
+﻿<div style="height:100%;border:dotted 3px;" ng2FileDrop
      [style.border-color]="fileOver?'red':'transparent'"
      (fileOver)="fileOver=$event"
-     [uploader]="uploader">
+     [uploader]="uploader"
+     #panel>
+    <p-accordion [style]="{direction:'rtl'}">
+        <p-accordionTab header="מוכנים מראש">
 
-    <label>debug values:</label>
-    <textarea *ngIf="template" rows="22" style="resize:none;width:100%;font-size:0.9em;" disabled>{{selectedField|json}}</textarea>
-    <br />
-
-    <div class="images-resources" *ngIf="uploader.queue.length>0">
-        <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}">
-            <img [src]="item.previewUrl" *ngIf="item.previewUrl" />
-            <progressbar [value]="item.progress">
-                <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
-            </progressbar>
-        </div>
-    </div>
-    <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
+        </p-accordionTab>
+        <p-accordionTab header="העלאות">
+            <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
+            <div class="images-resources">
+                <div *ngFor="let item of userUploads" title="{{ item?.filename }}" class="resource">
+                    <img [src]="item.previewUrl" [draggable] style="position:relative;"
+                         (dragstart)="dragStart($event)" (drag)="drag($event)" (dragend)="dragEnd($event,item)">
+                </div>
+                <div *ngFor="let item of uploader.queue" title="{{ item?.file?.name }}" class="resource">
+                    <img [src]="item.previewUrl" [draggable] style="position:relative;"
+                         (dragstart)="dragStart($event)" (drag)="drag($event)" (dragend)="dragEnd($event,item)">
+                    <!--<progressbar [value]="item.progress">
+                        <span style="color:white; white-space:nowrap;">{{dynamic}}</span>
+                    </progressbar>-->
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
 </div>

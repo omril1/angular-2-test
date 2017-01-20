@@ -48,18 +48,23 @@
   <ItemGroup>
     <Content Include="public\app\app.view.html" />
     <Content Include="public\app\components\login.html" />
+    <Content Include="public\app\components\uploadPanel.css" />
     <Content Include="public\app\components\uploadPanel.html" />
     <Content Include="public\app\components\zoomToolbar.html" />
+    <Content Include="public\app\routes\categories\categories.css" />
     <Content Include="public\app\routes\details\details.css" />
     <Content Include="public\app\routes\templates\templates.css" />
     <Content Include="public\app\routes\templates\templates.html" />
     <Content Include="public\app\routes\about\about.html" />
     <Content Include="public\app\routes\details\details.html" />
-    <Content Include="public\app\routes\list\list.html" />
+    <Content Include="public\app\routes\categories\categories.html" />
     <Content Include="public\app\routes\upload-image\upload-image.html" />
-    <Content Include="public\app\routes\list\list.component.ts" />
+    <Content Include="public\app\routes\categories\index.ts" />
     <Content Include="public\favicon.ico" />
-    <Content Include="public\fonts.css" />
+    <Content Include="public\APIfonts.css" />
+    <Content Include="public\fonts\ADAMABMF.TTF" />
+    <Content Include="public\fonts\ADAMAMF.TTF" />
+    <Content Include="public\localFonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />
     <TypeScriptCompile Include="app.ts" />
@@ -74,8 +79,8 @@
     <TypeScriptCompile Include="public\app\components\uploadPanel.ts" />
     <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
     <TypeScriptCompile Include="public\app\configuration\auth0lock.config.ts" />
-    <TypeScriptCompile Include="public\app\pipes\safeStyle.ts" />
-    <TypeScriptCompile Include="public\app\routes\templates\templates.component.ts" />
+    <TypeScriptCompile Include="public\app\pipes\filterCategory.ts" />
+    <TypeScriptCompile Include="public\app\routes\templates\index.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
     <TypeScriptCompile Include="public\app\services\auth.guard.ts" />
     <TypeScriptCompile Include="public\app\services\auth.service.ts" />
@@ -84,11 +89,11 @@
     <TypeScriptCompile Include="public\app\app.components.ts" />
     <TypeScriptCompile Include="public\app\app.module.ts" />
     <TypeScriptCompile Include="public\app\main.ts" />
-    <TypeScriptCompile Include="public\app\routes\about\about.component.ts" />
-    <TypeScriptCompile Include="public\app\routes\details\details.component.ts" />
-    <TypeScriptCompile Include="public\app\routes\upload-image\upload-image.component.ts" />
+    <TypeScriptCompile Include="public\app\routes\about\index.ts" />
+    <TypeScriptCompile Include="public\app\routes\details\index.ts" />
+    <TypeScriptCompile Include="public\app\routes\upload-image\index.ts" />
     <TypeScriptCompile Include="public\app\services\image.service.ts" />
-    <TypeScriptCompile Include="routers\api.ts" />
+    <TypeScriptCompile Include="routers\adminAPI.ts" />
     <TypeScriptCompile Include="public\app\utils.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -98,10 +103,11 @@
     <Folder Include="public\app\pipes\" />
     <Folder Include="public\app\routes\about\" />
     <Folder Include="public\app\routes\details\" />
-    <Folder Include="public\app\routes\list\" />
+    <Folder Include="public\app\routes\categories\" />
     <Folder Include="public\app\routes\upload-image\" />
     <Folder Include="public\app\routes\templates\" />
     <Folder Include="public\app\services\" />
+    <Folder Include="public\fonts\" />
     <Folder Include="routers\" />
     <Folder Include="public\" />
     <Folder Include="public\app\" />
@@ -112,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="authentication.ts" />
-    <Compile Include="models\templateModel.js" />
+    <Compile Include="models\templateModel.ts" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

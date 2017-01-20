@@ -2,7 +2,7 @@
 var shortid = require('shortid');
 var Schema = mongoose.Schema;
 
-module.exports = new mongoose.model('users', {
+export default new mongoose.model('users', {
     username: {
         type: String, required: true
     },

@@ -4,8 +4,9 @@ import * as https from 'https';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as connectionManager from './connectionManager';
-import * as api from './routers/api';
-import { default as imageAPI } from './routers/imageAPI';
+import imageAPI from './routers/imageAPI';
+import { api as userAPI } from './routers/userAPI';
+import { api as adminAPI } from './routers/adminAPI';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as morgan from 'morgan';
@@ -40,7 +41,8 @@ connectionManager.connect().then((mongooseConnection) => {
         cookie: { secure: true, maxAge: Date.now() + 3600000 },
         store: new MongoStore({ mongooseConnection: mongooseConnection })
     }));
-    app.use("/api", api);
+    app.use("/user", userAPI);
+    app.use("/adminapi", adminAPI);
     app.use("/imageapi", imageAPI());
     app.get("/*", (req: express.Request, res: express.Response) => {
         if (req.path.endsWith('.js') == false)

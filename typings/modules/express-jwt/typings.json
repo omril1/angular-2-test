@@ -1,0 +1,53 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-express-jwt/536c86ea1a97480feb75f4451843246c1a9825f8/typings.json",
+    "raw": "registry:npm/express-jwt#3.4.0+20160813170757",
+    "main": "lib/index.d.ts",
+    "version": "3.4.0",
+    "dependencies": {
+      "express": {
+        "src": "https://raw.githubusercontent.com/felixfbecker/typed-express/cc01d3f2276d916f5abc5aedc22bcc45d731c38f/typings.json",
+        "raw": "registry:npm/express#4.14.0+20160810205701",
+        "main": "index.d.ts",
+        "version": "4.14.0",
+        "dependencies": {
+          "serve-static": {
+            "src": "https://raw.githubusercontent.com/felixfbecker/typed-serve-static/fe2b0ca8e5f2bd696242c57fef96e85715b4c516/typings.json",
+            "raw": "registry:npm/serve-static#1.11.1+20160810053450",
+            "main": "index.d.ts",
+            "version": "1.11.1",
+            "name": "serve-static"
+          }
+        },
+        "name": "express"
+      },
+      "express-unless": {
+        "src": "https://raw.githubusercontent.com/types/npm-express-unless/857507abd5c2dafcab68df262472fc90698d3b14/typings.json",
+        "raw": "registry:npm/express-unless#0.3.0+20160813161628",
+        "main": "index.d.ts",
+        "version": "0.3.0",
+        "dependencies": {
+          "express": {
+            "src": "https://raw.githubusercontent.com/felixfbecker/typed-express/cc01d3f2276d916f5abc5aedc22bcc45d731c38f/typings.json",
+            "raw": "registry:npm/express#4.14.0+20160810205701",
+            "main": "index.d.ts",
+            "version": "4.14.0",
+            "dependencies": {
+              "serve-static": {
+                "src": "https://raw.githubusercontent.com/felixfbecker/typed-serve-static/fe2b0ca8e5f2bd696242c57fef96e85715b4c516/typings.json",
+                "raw": "registry:npm/serve-static#1.11.1+20160810053450",
+                "main": "index.d.ts",
+                "version": "1.11.1",
+                "name": "serve-static"
+              }
+            },
+            "name": "express"
+          }
+        },
+        "name": "express-unless"
+      }
+    },
+    "name": "express-jwt"
+  }
+}

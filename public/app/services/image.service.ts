@@ -52,14 +52,29 @@ export class ImageService {
     public get pageSizes() {
         return this._pageSizes;
     }
-
-
-    constructor(private http: Http, private auth:Auth) {
+    
+    constructor(private http: Http, private auth: Auth) {
     }
 
     public getUserUploadedImages() {
-        return this.http.get('/user/userUploads')
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.auth.id_token });
+        return this.http.get('/user/userUploads', { headers: headers})
             .map(response => response.json())
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
+    }
+    public getCategories() {
+        return this.http.get(`/imageapi/categories`)
+            .map(response => <any[]>response.json())
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
+    }
+    public removeCategory(_id) {
+        return this.http.delete(`/adminapi/removecategory/` + _id)
             .toPromise()
             .catch((error: any) => {
                 throw (error || 'Server error')
@@ -78,22 +93,6 @@ export class ImageService {
             .map(response => <Template>response.json())
             .toPromise().catch(reason => { console.error(reason); return <Template>null; });
     }
-
-    public getTest() {
-        return this.http.get(`/imageapi/test`, { headers: new Headers({ 'Authorization': 'Bearer ' + this.auth.profile.clientID }) })
-            .map(response => <Template>response.json())
-            .toPromise().catch(reason => { console.error(reason); return <Template>null; });
-    }
-
-    public sendToProcessing(template: Template) {
-        let body = JSON.stringify(template);
-        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(`/imageapi/proccessimage`, body, options).toPromise()
-            .catch((error: any) =>
-                Promise.reject(error || 'Server error'));
-    }
-
     public saveInServer(template: Template) {
         let body = JSON.stringify(template);
         let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
