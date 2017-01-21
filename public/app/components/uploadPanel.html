@@ -7,7 +7,7 @@
         <p-accordionTab header="מוכנים מראש">
 
         </p-accordionTab>
-        <p-accordionTab header="העלאות">
+        <p-accordionTab header="העלאות" [selected]="true">
             <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />
             <div class="images-resources">
                 <div *ngFor="let item of userUploads" title="{{ item?.filename }}" class="resource">

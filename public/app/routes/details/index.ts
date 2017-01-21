@@ -99,6 +99,12 @@ export class DetailsComponent implements OnInit {
             isImage: true
         });
     }
+    private getFieldRotationSanitized(field: moveableField) {
+        return this.sanitizer.bypassSecurityTrustStyle('rotateZ(' + field.rotation + 'deg)');
+    }
+    private getPrintAreaWidthSanitized() {
+        return this.sanitizer.bypassSecurityTrustStyle('calc(50% - ' + (this.imageWidth * this.zoomLevel / 2) + 'px)');
+    }
     private getStyle(field: moveableField, index: number) {
         if (field.isImage) {
             return {

@@ -100,7 +100,7 @@
         <upload-panel (dropFromPanel)="addImageFromPanel($event)"></upload-panel>
     </div>
     <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;height:76vh">
-        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="'calc(50% - ' +(imageWidth*zoomLevel/2) +'px)'">
+        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="getPrintAreaWidthSanitized()">
             <div class="fields-container">
                 <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" style="position: absolute;"
                      [ngStyle]="getStyle(field, i)" [draggable]
@@ -109,8 +109,10 @@
                     <img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token"/>
                 </div>
             </div>
-            <div class="inTemplate-tools" *ngIf="template && selectedField"
-                 [ngStyle]="getStyle(field, selectedIndex)" [style.z-index]="199 + selectedIndex">
+            <div class="inTemplate-tools" *ngIf="selectedField"
+                 [style.left.px]="selectedField.left" [style.top.px]="selectedField.top" [style.z-index]="199 + selectedIndex"
+                 [style.width.px]="selectedField.width" [style.height.px]="selectedField.height"
+                 [style.transform]="getFieldRotationSanitized(selectedField)">
                 <div class="resizer" style="position: absolute;"
                      [style.left.px]="selectedField.width*zoomLevel" [style.top.px]="selectedField.height*zoomLevel"
                      [draggable] (dragstart)="resizeStart($event)" (drag)="onResize($event)" (dragend)="resizeEnd($event)">

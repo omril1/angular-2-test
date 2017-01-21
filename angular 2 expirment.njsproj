@@ -64,6 +64,7 @@
     <Content Include="public\APIfonts.css" />
     <Content Include="public\fonts\ADAMABMF.TTF" />
     <Content Include="public\fonts\ADAMAMF.TTF" />
+    <Content Include="public\fonts\KOBY.TTF" />
     <Content Include="public\localFonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />

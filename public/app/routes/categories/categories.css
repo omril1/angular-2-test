@@ -1,10 +1,18 @@
-﻿a.animated {
-    transition-property: width,height;
-    transition-duration: .6s;
-    transition-timing-function: ease-out;
-    will-change: width,height;
-    float: right;
+﻿div.categories-container {
+    filter:blur(0);
+    transition: filter 1s ease-in-out;
 }
+div.categories-container.blurred{
+    filter: blur(6px);
+}
+
+    .categories-container a.animated {
+        transition-property: width,height;
+        transition-duration: .6s;
+        transition-timing-function: ease-out;
+        will-change: width,height;
+        float: right;
+    }
 
 span.close-btn {
     position: absolute;

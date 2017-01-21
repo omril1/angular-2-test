@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+﻿import { Component, OnInit, trigger, state, style, transition, animate, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ImageService } from '../../services/image.service';
@@ -27,6 +27,7 @@ import { filterCategory } from '../../pipes/filterCategory';
 export class CategoriesComponent implements OnInit {
     private categoryList: any[];
     private filter = "";
+    @ViewChild('container') container: ElementRef;
     public uploader: FileUploader = new FileUploader({
         url: "/adminapi/uploadCategory",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
@@ -37,7 +38,10 @@ export class CategoriesComponent implements OnInit {
     });
     constructor(private imageService: ImageService, private auth: Auth, private sanitizer: DomSanitizer) { }
     public ngOnInit() {
-        this.imageService.getCategories().then(value => { this.categoryList = value });
+        this.imageService.getCategories().then(value => {
+            this.categoryList = value;
+            this.container.nativeElement.classList.remove('blurred');
+        });
         this.uploader.onAfterAddingFile = (fileItem) => {
             (<any>fileItem).previewUrl = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         }

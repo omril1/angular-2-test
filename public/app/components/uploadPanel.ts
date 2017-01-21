@@ -15,7 +15,7 @@ export class uploadPanelComponent implements OnInit {
     private userUploads = [];
     @ViewChild('panel') private panel: ElementRef;
     public uploader: FileUploader = new FileUploader({
-        url: "/imageapi/uploadImage",
+        url: "/user/uploadImage",
         allowedMimeType: ['image/png', 'image/bmp', 'image/jpeg'],
         removeAfterUpload: false, //TODO: change this and the success event.
         maxFileSize: 3 * 1024 * 1024,

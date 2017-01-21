@@ -8,3 +8,7 @@
     src: url('fonts/ADAMABMF.TTF') format('truetype');
     font-weight:bold;
 }
+@font-face {
+    font-family: 'KOBY';
+    src: url('fonts/KOBY.TTF') format('truetype');
+}
