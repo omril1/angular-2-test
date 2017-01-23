@@ -1,18 +1,21 @@
 ﻿div.categories-container {
-    filter:blur(0);
+    height: 100%;
+    border: dotted 3px;
+    min-height: 400px;
+    filter: blur(0);
     transition: filter 1s ease-in-out;
 }
-div.categories-container.blurred{
-    filter: blur(6px);
-}
 
-    .categories-container a.animated {
-        transition-property: width,height;
-        transition-duration: .6s;
-        transition-timing-function: ease-out;
-        will-change: width,height;
-        float: right;
+    div.categories-container.blurred {
+        filter: blur(6px);
     }
+
+.categories-container .categoryList .category.animated {
+    transition-property: width,height;
+    transition-duration: .6s;
+    transition-timing-function: ease-out;
+    will-change: width,height;
+}
 
 span.close-btn {
     position: absolute;
@@ -31,28 +34,35 @@ span.close-btn {
         transform: rotate(90deg);
     }
 
-.thumbnail {
-    padding: 4px;
+.categoryList .category {
+    float: right;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-    .thumbnail div.lazy {
-        text-align: center;
-        margin: auto;
+    .categoryList .category .thumbnail {
+        padding: 4px;
     }
 
-        .thumbnail div.lazy img {
-            max-height: 100%;
-            width: 100%;
-            object-fit: contain;
+        .categoryList .category .thumbnail div.lazy {
+            text-align: center;
+            margin: auto;
         }
 
-    .thumbnail p {
-        overflow: hidden;
-        direction: rtl;
-        font-size: 2.4em;
-        text-align: center;
-        font-family: AdamaMF;
-        white-space: nowrap;
-        color: white;
-        background-color: black;
-    }
+            .categoryList .category .thumbnail div.lazy img {
+                width: 100%;
+                object-fit: contain;
+            }
+
+        .categoryList .category .thumbnail p {
+            overflow: hidden;
+            direction: rtl;
+            font-size: 2.4em;
+            text-align: center;
+            font-family: koby;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            color: white;
+            /* -webkit-text-stroke: rgb(119, 0, 0) 2px; */
+            background-color: black;
+        }

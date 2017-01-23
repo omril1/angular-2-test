@@ -18,6 +18,7 @@ import { uploadPanelComponent } from './components/uploadPanel';
 import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { AuthGuard } from './services/auth.guard';
 import { Auth } from './services/auth.service';
+import { Messages } from './services/messages.service';
 import { filterCategory } from "./pipes/filterCategory";
 
 @NgModule({
@@ -40,7 +41,7 @@ import { filterCategory } from "./pipes/filterCategory";
         AccordionModule,
         AppRoutesModule,
     ],
-    providers: [AuthGuard, Auth, AUTH_PROVIDERS],
+    providers: [AuthGuard, Auth, AUTH_PROVIDERS, Messages],
     declarations: [
         AppComponent,
         AboutComponent,

@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
-import he from '../configuration/auth0lock.config';
+import he from '../configuration/auth0lock.he.config';
 //var Auth0Lock = require('auth0-lock'); //fucks up my Systemjs.config, using direct cdn link instead :(
 
 declare var Auth0Lock: any;

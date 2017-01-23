@@ -17,6 +17,7 @@
         'angular2-color-picker': 'npm:angular2-color-picker',
         'primeng': 'npm:primeng',
         'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
+        'webfontloader': 'npm:webfontloader/webfontloader.js',
         //'auth0-lock': 'npm:auth0-lock/lib',
     };
     // packages tells the System loader how to load when no filename and/or no extension

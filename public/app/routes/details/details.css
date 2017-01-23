@@ -6,9 +6,6 @@
 .fields-container .moveableField {
     will-change: left, top, transition;
     cursor: pointer;
-    line-height: normal;
-    overflow: hidden;
-    white-space: pre;
 }
 
     .fields-container .moveableField:hover:after {
@@ -35,6 +32,10 @@
         top: 0;
         width: 100%;
         height: 100%;
+        direction: rtl;
+        line-height: normal;
+        white-space: pre;
+        overflow: hidden;
     }
 
 .inTemplate-tools {

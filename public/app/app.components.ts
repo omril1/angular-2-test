@@ -1,5 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { Auth } from './services/auth.service';
+import { Messages } from './services/messages.service';
 
 @Component({
     moduleId: module.id,
@@ -9,6 +10,8 @@ import { Auth } from './services/auth.service';
 })
 
 export class AppComponent {
-    constructor(private auth: Auth) {
+    private msgs;
+    constructor(private auth: Auth, private messages: Messages) {
+        this.msgs = this.messages.msgs;
     }
 }

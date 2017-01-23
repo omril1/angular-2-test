@@ -1,14 +1,14 @@
 ﻿@font-face {
-    font-family: 'ADAMAMF';
+    font-family: 'AdamaMF';
     src: url('fonts/ADAMAMF.TTF') format('truetype');
     font-weight:normal;
 }
 @font-face {
-    font-family: 'ADAMABMF';
+    font-family: 'AdamaBMF';
     src: url('fonts/ADAMABMF.TTF') format('truetype');
     font-weight:bold;
 }
 @font-face {
-    font-family: 'KOBY';
-    src: url('fonts/KOBY.TTF') format('truetype');
+    font-family: 'BN Slayer';
+    src: url('fonts/BN SLAYER.TTF') format('truetype');
 }

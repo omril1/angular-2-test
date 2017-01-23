@@ -10,14 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var angular2_jwt_1 = require("angular2-jwt");
-var auth0lock_config_1 = require("../configuration/auth0lock.config");
+var auth0lock_he_config_1 = require("../configuration/auth0lock.he.config");
 var Auth = (function () {
     function Auth() {
         var _this = this;
         // Configure Auth0
         this.lock = new Auth0Lock('ZKwCrnzZEOiwx7aFuEwXFgRadzBy04Xe', 'omril.eu.auth0.com', {
             allowedConnections: ['Username-Password-Authentication', 'facebook', 'google-oauth2'],
-            languageDictionary: auth0lock_config_1.default
+            languageDictionary: auth0lock_he_config_1.default
         });
         this.profile = JSON.parse(localStorage.getItem('profile'));
         this.id_token = localStorage.getItem('id_token');

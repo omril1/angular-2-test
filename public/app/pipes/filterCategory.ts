@@ -8,6 +8,6 @@ export class filterCategory {
     constructor() { }
 
     transform(array: Array<any>, filter?) {
-        return array.filter((elem) => { return elem.filename.indexOf(filter) > -1 });
+        return array.filter((elem) => { return elem.metadata && elem.metadata.categoryName.indexOf(filter) > -1 });
     }
 }

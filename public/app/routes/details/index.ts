@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
-import { MenuItem, Message } from 'primeng/primeng';
+import { Message } from 'primeng/primeng';
 import { ImageService, moveableField, Template } from '../../services/image.service';
 import { Auth } from '../../services/auth.service';
 import * as utils from '../../utils';

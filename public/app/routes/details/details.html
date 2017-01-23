@@ -104,14 +104,11 @@
             <div class="fields-container">
                 <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" style="position: absolute;"
                      [ngStyle]="getStyle(field, i)" [draggable]
-                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)">
-                    <div *ngIf="!field.isImage" class="textField" [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false"></div>
-                    <img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token"/>
-                </div>
+                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)"><div *ngIf="!field.isImage" class="textField" [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false"></div><img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token"/></div>
             </div>
             <div class="inTemplate-tools" *ngIf="selectedField"
-                 [style.left.px]="selectedField.left" [style.top.px]="selectedField.top" [style.z-index]="199 + selectedIndex"
-                 [style.width.px]="selectedField.width" [style.height.px]="selectedField.height"
+                 [style.left.px]="selectedField.left*zoomLevel" [style.top.px]="selectedField.top*zoomLevel" [style.z-index]="199 + selectedIndex"
+                 [style.width.px]="selectedField.width*zoomLevel" [style.height.px]="selectedField.height*zoomLevel"
                  [style.transform]="getFieldRotationSanitized(selectedField)">
                 <div class="resizer" style="position: absolute;"
                      [style.left.px]="selectedField.width*zoomLevel" [style.top.px]="selectedField.height*zoomLevel"
@@ -129,4 +126,3 @@
 </div>
 
 <zoom-toolbar (zoomChanged)="zoomLevel=$event"></zoom-toolbar>
-<p-growl [value]="msgs"></p-growl>

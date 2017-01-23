@@ -97,8 +97,9 @@ export default function api() {
                 }
         });
     });
-    api.get("/templates", (req: express.Request, res: express.Response) => {
-        templateModel.find({}).sort({ dateAdded: 1 }).exec(function (err: Error, templates: Template[]) {
+    api.get("/templates/:categoryId", (req: express.Request, res: express.Response) => {
+        var categoryId = req.params['categoryId'];
+        templateModel.find({ categoryId: categoryId }).sort({ dateAdded: 1 }).exec(function (err: Error, templates: Template[]) {
             if (err) {
                 res.json(err);
                 console.log(err);
@@ -108,7 +109,7 @@ export default function api() {
         });
     });
     api.get("/categories", (req: express.Request, res: express.Response) => {
-        gfs.collection('categories').find().sort({'metadata.name':1}).toArray(function (err: Error, categories) {
+        gfs.collection('categories').find().sort({ 'metadata.categoryName': 1 }).toArray(function (err: Error, categories) {
             if (err) {
                 res.json(err);
                 console.log(err);
@@ -118,7 +119,7 @@ export default function api() {
         });
     });
     api.get('/category/:id', (req: express.Request, res: express.Response) => {
-        let options = { _id: req.params['id'], root: 'categories' };
+        let options = { filename: req.params['id'], root: 'categories' };
         gfs.findOne(options, function (err: Error, file: any) {
             if (err)
                 return res.sendStatus(400);
@@ -158,35 +159,35 @@ export default function api() {
                         console.timeEnd("phantom-html-to-pdf");
                         console.time("phantom-html-to-pdf build");
                         conversion({
-                            html: buildHtml(<Template>template._doc),
-                            paperSize: {
+                            html: buildHtml(<Template>template.toObject()),
+                                paperSize: {
                                 /*format: 'A5',*/ width: '561.26px', height: '793.700px', margin: {
-                                    "top": "-6px",            // default is 0, units: mm, cm, in, px 
-                                    "right": "0cm",
-                                    "bottom": "0cm",
-                                    "left": "0cm"
+                                        "top": "-6px",            // default is 0, units: mm, cm, in, px 
+                                        "right": "0cm",
+                                        "bottom": "0cm",
+                                        "left": "0cm"
+                                    },
                                 },
-                            },
-                            fitToPage: true,
-                            viewportSize: {
-                                width: 1920,
-                                height: 800
-                            },
+                                fitToPage: true,
+                                viewportSize: {
+                                    width: 1920,
+                                    height: 800
+                                },
                         }, function (err, pdf) {
-                            if (err)
-                                console.log(err);
-                            else {
-                                if (pdf == undefined) {
-                                    console.log("pdf is undefined");
-                                    res.sendStatus(404);
-                                }
+                                if (err)
+                                    console.log(err);
                                 else {
-                                    console.log(pdf.logs);
-                                    console.log(pdf.numberOfPages);
-                                    pdf.stream.pipe(res);
+                                    if (pdf == undefined) {
+                                        console.log("pdf is undefined");
+                                        res.sendStatus(404);
+                                    }
+                                    else {
+                                        console.log(pdf.logs);
+                                        console.log(pdf.numberOfPages);
+                                        pdf.stream.pipe(res);
+                                    }
                                 }
-                            }
-                        });
+                            });
                         console.time("phantom-html-to-pdf build");
                     }
                     else
@@ -211,7 +212,7 @@ export default function api() {
                         var options = {
                             format: 'A5', orientation: "portrait", margin: "0 0 0 0", border: "0", "base": "http://localhost"
                         };
-                        pdf.create(buildHtml(<Template>template._doc), options).toStream(function (err, stream) {
+                        pdf.create(buildHtml(<Template>template.toObject()), options).toStream(function (err, stream) {
                             stream.pipe(res);
                         });
                         console.timeEnd('html-pdf build');
@@ -230,7 +231,7 @@ export default function api() {
         templateModel.findByIdAndUpdate(req.body._id, { $set: { moveableFields: req.body.moveableFields, name: req.body.name } }, { new: true }, function (err, template) {
             if (err)
                 console.log(err);
-            res.send(template);
+            res.json(template);
         });
     });
     return api;

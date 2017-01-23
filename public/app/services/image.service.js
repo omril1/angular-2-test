@@ -51,8 +51,8 @@ var ImageService = (function () {
             throw (error || 'Server error');
         });
     };
-    ImageService.prototype.getTemplates = function () {
-        return this.http.get("/imageapi/templates")
+    ImageService.prototype.getTemplates = function (categoryId) {
+        return this.http.get("/imageapi/templates/" + categoryId)
             .map(function (response) { return response.json(); })
             .toPromise()
             .catch(function (error) {

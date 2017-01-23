@@ -12,13 +12,19 @@ import { filterCategory } from '../../pipes/filterCategory';
     providers: [ImageService],
     styleUrls: ["categories.css"],
     animations: [
-        trigger('taskState', [
+        trigger('categoryState', [
             state('inactive', style({ opacity: 1, })),
             state('active', style({ opacity: 1, })),
             state('void', style({ opacity: 0, display: 'none', })),
             transition('* => void', [
                 animate('0.3s 8 ease', style({
-                    opacity: '0'
+                    opacity: '0',
+                    transform: 'rotateY(90deg)'
+                }))
+            ]),
+            transition('void => *', [
+                animate('0.6s 8 ease', style({
+                    opacity: '1'
                 }))
             ])
         ])
@@ -46,12 +52,14 @@ export class CategoriesComponent implements OnInit {
             (<any>fileItem).previewUrl = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         }
         this.uploader.onCompleteItem = (item, response, status) => {
-            if (status == 200)
-                this.imageService.getCategories().then(value => { this.categoryList = value });
+            if (status == 200) {
+                var newCategory = { metadata: { categoryName: item.file.name }, filename: response };
+                this.categoryList.unshift(newCategory);
+            }
         }
     }
     private removeCategory(category, index) {
-        this.imageService.removeCategory(category._id).then(() => {
+        this.imageService.removeCategory(category.filename).then(() => {
             category.deleted = (category.deleted === 'active' ? 'inactive' : 'active');
             this.categoryList.splice(index, 1);
         });

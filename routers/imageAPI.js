@@ -49,8 +49,9 @@ function api() {
             }
         });
     });
-    api.get("/templates", function (req, res) {
-        templateModel_1.default.find({}).sort({ dateAdded: 1 }).exec(function (err, templates) {
+    api.get("/templates/:categoryId", function (req, res) {
+        var categoryId = req.params['categoryId'];
+        templateModel_1.default.find({ categoryId: categoryId }).sort({ dateAdded: 1 }).exec(function (err, templates) {
             if (err) {
                 res.json(err);
                 console.log(err);
@@ -60,7 +61,7 @@ function api() {
         });
     });
     api.get("/categories", function (req, res) {
-        gfs.collection('categories').find().sort({ 'metadata.name': 1 }).toArray(function (err, categories) {
+        gfs.collection('categories').find().sort({ 'metadata.categoryName': 1 }).toArray(function (err, categories) {
             if (err) {
                 res.json(err);
                 console.log(err);
@@ -70,7 +71,7 @@ function api() {
         });
     });
     api.get('/category/:id', function (req, res) {
-        var options = { _id: req.params['id'], root: 'categories' };
+        var options = { filename: req.params['id'], root: 'categories' };
         gfs.findOne(options, function (err, file) {
             if (err)
                 return res.sendStatus(400);
@@ -109,7 +110,7 @@ function api() {
                         console.timeEnd("phantom-html-to-pdf");
                         console.time("phantom-html-to-pdf build");
                         conversion({
-                            html: buildHtml(template._doc),
+                            html: buildHtml(template.toObject()),
                             paperSize: {
                                 /*format: 'A5',*/ width: '561.26px', height: '793.700px', margin: {
                                     "top": "-6px",
@@ -161,7 +162,7 @@ function api() {
                         var options = {
                             format: 'A5', orientation: "portrait", margin: "0 0 0 0", border: "0", "base": "http://localhost"
                         };
-                        pdf.create(buildHtml(template._doc), options).toStream(function (err, stream) {
+                        pdf.create(buildHtml(template.toObject()), options).toStream(function (err, stream) {
                             stream.pipe(res);
                         });
                         console.timeEnd('html-pdf build');
@@ -179,7 +180,7 @@ function api() {
         templateModel_1.default.findByIdAndUpdate(req.body._id, { $set: { moveableFields: req.body.moveableFields, name: req.body.name } }, { new: true }, function (err, template) {
             if (err)
                 console.log(err);
-            res.send(template);
+            res.json(template);
         });
     });
     return api;
@@ -211,4 +212,4 @@ function api() {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = api;
 ;
-//# sourceMappingURL=imageApi.js.map
+//# sourceMappingURL=imageAPI.js.map

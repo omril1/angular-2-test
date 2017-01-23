@@ -38,13 +38,15 @@ var CategoriesComponent = (function () {
             fileItem.previewUrl = _this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(fileItem._file)));
         };
         this.uploader.onCompleteItem = function (item, response, status) {
-            if (status == 200)
-                _this.imageService.getCategories().then(function (value) { _this.categoryList = value; });
+            if (status == 200) {
+                var newCategory = { metadata: { categoryName: item.file.name }, filename: response };
+                _this.categoryList.unshift(newCategory);
+            }
         };
     };
     CategoriesComponent.prototype.removeCategory = function (category, index) {
         var _this = this;
-        this.imageService.removeCategory(category._id).then(function () {
+        this.imageService.removeCategory(category.filename).then(function () {
             category.deleted = (category.deleted === 'active' ? 'inactive' : 'active');
             _this.categoryList.splice(index, 1);
         });
@@ -62,13 +64,19 @@ CategoriesComponent = __decorate([
         providers: [image_service_1.ImageService],
         styleUrls: ["categories.css"],
         animations: [
-            core_1.trigger('taskState', [
+            core_1.trigger('categoryState', [
                 core_1.state('inactive', core_1.style({ opacity: 1, })),
                 core_1.state('active', core_1.style({ opacity: 1, })),
                 core_1.state('void', core_1.style({ opacity: 0, display: 'none', })),
                 core_1.transition('* => void', [
                     core_1.animate('0.3s 8 ease', core_1.style({
-                        opacity: '0'
+                        opacity: '0',
+                        transform: 'rotateY(90deg)'
+                    }))
+                ]),
+                core_1.transition('void => *', [
+                    core_1.animate('0.6s 8 ease', core_1.style({
+                        opacity: '1'
                     }))
                 ])
             ])

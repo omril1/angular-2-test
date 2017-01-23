@@ -14,8 +14,8 @@
             <ul class="nav navbar-nav">
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/about']">about</a></li>
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/categories']">קטגוריות</a></li>
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/upload-image']">העלאת תמונות</a></li>
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>
+                <!--<li [routerLinkActive]="['active']"><a [routerLink]="['/upload-image']">העלאת תמונות</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!--<li>
@@ -45,3 +45,4 @@
 <div class="container-fluid">
     <router-outlet></router-outlet>
 </div>
+<p-growl [value]="msgs"></p-growl>

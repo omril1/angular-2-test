@@ -5,9 +5,9 @@ import { AuthGuard } from './services/auth.guard';
 const appRoutes: Routes = [
     { path: '', redirectTo: 'templates', pathMatch: 'full' },
     { path: 'about', component: AboutComponent },
-    { path: 'upload-image', component: UploadImageComponent, canActivate: [AuthGuard] },
+    //{ path: 'upload-image', component: UploadImageComponent, canActivate: [AuthGuard] },
     { path: 'categories', component: CategoriesComponent },
-    { path: 'templates', component: TemplatesComponent },
-    { path: 'details/:id/:pageSize', component: DetailsComponent }
+    { path: 'categories/:categoryId', component: TemplatesComponent },
+    { path: 'details/:id/:pageSize', component: DetailsComponent, canActivate: [AuthGuard] }
 ];
 export const AppRoutesModule = RouterModule.forRoot(appRoutes);

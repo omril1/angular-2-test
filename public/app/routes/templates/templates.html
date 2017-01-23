@@ -1,14 +1,15 @@
-﻿<div class="container">
-    <div class="row">
-        <a class="col-sm-2 col-md-2 col-lg-2" *ngFor='let template of templateList' style="cursor:pointer;text-decoration:none">
+﻿<div class="container-fluid" style="min-height: 400px;border: dotted 3px;"
+     ng2FileDrop
+     [style.border-color]="fileOver?'red':'transparent'"
+     (fileOver)="fileOver=$event"
+     [uploader]="uploader">
+    <div class="row templateList">
+        <a class="col-sm-2 col-md-2 col-lg-2 template" *ngFor='let template of templateList'>
             <div class="thumbnail" (click)="openModal(template)">
-
-                <!--<div>
-                    <p class="snipp-title ellipis" [title]="template.name">{{template.name}}&nbsp;</p>
-                </div>-->
                 <div class="lazy">
                     <img [src]="'imageapi/thumbnail/' + template.thumbnailId">
                 </div>
+                <p>{{template.name}} </p>
             </div>
         </a>
     </div>

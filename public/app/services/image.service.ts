@@ -80,8 +80,8 @@ export class ImageService {
                 throw (error || 'Server error')
             });
     }
-    public getTemplates() {
-        return this.http.get(`/imageapi/templates`)
+    public getTemplates(categoryId: string) {
+        return this.http.get(`/imageapi/templates/` + categoryId)
             .map(response => <Template[]>response.json())
             .toPromise()
             .catch((error: any) => {

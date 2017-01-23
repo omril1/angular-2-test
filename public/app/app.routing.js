@@ -5,10 +5,10 @@ var auth_guard_1 = require("./services/auth.guard");
 var appRoutes = [
     { path: '', redirectTo: 'templates', pathMatch: 'full' },
     { path: 'about', component: index_1.AboutComponent },
-    { path: 'upload-image', component: index_1.UploadImageComponent, canActivate: [auth_guard_1.AuthGuard] },
+    //{ path: 'upload-image', component: UploadImageComponent, canActivate: [AuthGuard] },
     { path: 'categories', component: index_1.CategoriesComponent },
-    { path: 'templates', component: index_1.TemplatesComponent },
-    { path: 'details/:id/:pageSize', component: index_1.DetailsComponent }
+    { path: 'categories/:categoryId', component: index_1.TemplatesComponent },
+    { path: 'details/:id/:pageSize', component: index_1.DetailsComponent, canActivate: [auth_guard_1.AuthGuard] }
 ];
 exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
 //# sourceMappingURL=app.routing.js.map

@@ -1,11 +1,38 @@
-﻿.thumbnail div.lazy {
-    height: 125px;
-    width: 155px;
-    text-align: center;
+﻿.templateList .template {
+    float: right;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-    .thumbnail div.lazy img {
-        max-height: 100%;
-        max-width: 100%;
-        object-fit: contain;
+    .templateList .template .thumbnail {
+        padding: 4px;
+    }
+
+        .templateList .template .thumbnail div.lazy {
+            text-align: center;
+            margin: auto;
+            height: 125px;
+            max-height: 100%;
+            /*width: 155px;*/
+            max-width: 100%;
+            text-align: center;
+        }
+
+            .templateList .template .thumbnail div.lazy img {
+                max-height: 100%;
+                max-width: 100%;
+                object-fit: contain;
+            }
+
+    .templateList .template p {
+        overflow: hidden;
+        direction: rtl;
+        font-size: 2.4em;
+        text-align: center;
+        font-family: koby;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        color: white;
+        /* -webkit-text-stroke: rgb(119, 0, 0) 2px; */
+        background-color: black;
     }

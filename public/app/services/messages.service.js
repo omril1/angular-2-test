@@ -9,20 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var filterCategory = (function () {
-    function filterCategory() {
+var Messages = (function () {
+    function Messages() {
+        this.msgs = [];
     }
-    filterCategory.prototype.transform = function (array, filter) {
-        return array.filter(function (elem) { return elem.metadata && elem.metadata.categoryName.indexOf(filter) > -1; });
+    Messages.prototype.success = function (msg, summary) {
+        this.msgs.push({ severity: 'success', detail: msg, summary: summary });
     };
-    return filterCategory;
+    Messages.prototype.info = function (msg, summary) {
+        this.msgs.push({ severity: 'info', detail: msg, summary: summary });
+    };
+    Messages.prototype.warn = function (msg, summary) {
+        this.msgs.push({ severity: 'warn', detail: msg, summary: summary });
+    };
+    Messages.prototype.error = function (msg, summary) {
+        this.msgs.push({ severity: 'error', detail: msg, summary: summary });
+    };
+    return Messages;
 }());
-filterCategory = __decorate([
-    core_1.Pipe({
-        name: 'filterCategory',
-        pure: false
-    }),
+Messages = __decorate([
+    core_1.Injectable(),
     __metadata("design:paramtypes", [])
-], filterCategory);
-exports.filterCategory = filterCategory;
-//# sourceMappingURL=filterCategory.js.map
+], Messages);
+exports.Messages = Messages;
+//# sourceMappingURL=messages.service.js.map

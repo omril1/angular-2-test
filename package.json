@@ -52,6 +52,7 @@
     "stream-browserify": "2.0.1",
     "systemjs": "^0.19.42",
     "traceur": "0.0.111",
+    "webfontloader": "^1.6.27",
     "zone.js": "^0.7.6"
   },
   "devDependencies": {

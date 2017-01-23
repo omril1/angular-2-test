@@ -7,6 +7,10 @@ export default mongoose.model('template', {
         type: String,
         default: shortid.generate
     },
+    categoryId: {
+        type: String,
+        required: true
+    },
     name: String,
     imageId: {
         type: Schema.Types.ObjectId,

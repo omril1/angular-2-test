@@ -64,7 +64,7 @@
     <Content Include="public\APIfonts.css" />
     <Content Include="public\fonts\ADAMABMF.TTF" />
     <Content Include="public\fonts\ADAMAMF.TTF" />
-    <Content Include="public\fonts\KOBY.TTF" />
+    <Content Include="public\fonts\BN SLAYER.TTF" />
     <Content Include="public\localFonts.css" />
     <Content Include="public\siteTheme.css" />
     <Content Include="tsconfig.json" />
@@ -79,12 +79,13 @@
     <TypeScriptCompile Include="public\app\components\login.ts" />
     <TypeScriptCompile Include="public\app\components\uploadPanel.ts" />
     <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
-    <TypeScriptCompile Include="public\app\configuration\auth0lock.config.ts" />
+    <TypeScriptCompile Include="public\app\configuration\auth0lock.he.config.ts" />
     <TypeScriptCompile Include="public\app\pipes\filterCategory.ts" />
     <TypeScriptCompile Include="public\app\routes\templates\index.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
     <TypeScriptCompile Include="public\app\services\auth.guard.ts" />
     <TypeScriptCompile Include="public\app\services\auth.service.ts" />
+    <TypeScriptCompile Include="public\app\services\messages.service.ts" />
     <TypeScriptCompile Include="routers\userAPI.ts" />
     <TypeScriptCompile Include="routers\imageAPI.ts" />
     <TypeScriptCompile Include="public\app\app.components.ts" />

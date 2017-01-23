@@ -26,6 +26,7 @@ var uploadPanel_1 = require("./components/uploadPanel");
 var zoomToolbar_1 = require("./components/zoomToolbar");
 var auth_guard_1 = require("./services/auth.guard");
 var auth_service_1 = require("./services/auth.service");
+var messages_service_1 = require("./services/messages.service");
 var filterCategory_1 = require("./pipes/filterCategory");
 var AppModule = (function () {
     function AppModule() {
@@ -53,7 +54,7 @@ AppModule = __decorate([
             primeng_1.AccordionModule,
             app_routing_1.AppRoutesModule,
         ],
-        providers: [auth_guard_1.AuthGuard, auth_service_1.Auth, angular2_jwt_1.AUTH_PROVIDERS],
+        providers: [auth_guard_1.AuthGuard, auth_service_1.Auth, angular2_jwt_1.AUTH_PROVIDERS, messages_service_1.Messages],
         declarations: [
             app_components_1.AppComponent,
             index_1.AboutComponent,

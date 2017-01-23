@@ -10,9 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var auth_service_1 = require("./services/auth.service");
+var messages_service_1 = require("./services/messages.service");
 var AppComponent = (function () {
-    function AppComponent(auth) {
+    function AppComponent(auth, messages) {
         this.auth = auth;
+        this.messages = messages;
+        this.msgs = this.messages.msgs;
     }
     return AppComponent;
 }());
@@ -23,7 +26,7 @@ AppComponent = __decorate([
         templateUrl: "./app.view.html",
         providers: [auth_service_1.Auth]
     }),
-    __metadata("design:paramtypes", [auth_service_1.Auth])
+    __metadata("design:paramtypes", [auth_service_1.Auth, messages_service_1.Messages])
 ], AppComponent);
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.components.js.map

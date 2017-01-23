@@ -6,21 +6,24 @@ const im = require('imagemagick-stream');
 var Patient = require('patient-stream');
 const uploadLimit = 2 * 1024 * 1024;
 import TemplateModel from '../models/templateModel';
+import { headerJWTCheck, AuthRequest } from '../authentication';
+var shortid = require('shortid');
 
 //This is a REST API module for logged in users with role 'admin'.
 export let api = express();
-api.post("/uploadCategory", function (req: any, res: express.Response) {
+api.post("/uploadCategory", headerJWTCheck, function (req: AuthRequest, res: express.Response) {
     var busboy = new Busboy({ headers: req.headers, limits: { fileSize: uploadLimit, files: 1 } });
     var logError = (err) => { console.log(err); res.sendStatus(415); };
     busboy.on('error', logError);
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
         if (mimetype.startsWith('image/')) {
             filename = filename.replace(/\.[^/.]+$/, "");
-            var categoriesStream = gfs.createWriteStream({ filename: filename, content_type: mimetype, root: "categories", metadata: { name: filename } });
+            var id = shortid();
+            var categoriesStream = gfs.createWriteStream({ filename: id, content_type: mimetype, metadata: { categoryName: filename }, root: "categories" });
             categoriesStream.on('error', logError);
 
             categoriesStream.on('finish', () => {
-                res.sendStatus(200);
+                res.send(id);
             });
             file.pipe(categoriesStream);
         }
@@ -31,18 +34,26 @@ api.post("/uploadCategory", function (req: any, res: express.Response) {
     });
     req.pipe(busboy);
 });
-api.delete('/removeCategory/:_id', function (req, res) {
-    let _id = req.params._id;
-    gfs.remove({ root: "categories", _id: _id }, function (err) {
+api.delete('/removeCategory/:_id', headerJWTCheck, function (req: AuthRequest, res: express.Response) {
+    let _id = req.params['_id'];
+    gfs.remove({ root: "categories", filename: _id }, function (err) {
         if (err) {
             res.sendStatus(500);
             console.log(err);
             return;
         }
-        res.sendStatus(200);
+        templateModel.remove({ categoryId: _id }, err => {
+            if (err) {
+                res.sendStatus(500);
+                console.log(err);
+                return;
+            }
+            res.sendStatus(200);
+        });
     });
 });
-api.post("/uploadTemplate", function (req: any, res: express.Response) {
+api.post("/uploadTemplate/:categoryId", headerJWTCheck, function (req: AuthRequest, res: express.Response) {
+    var categoryId = req.params['categoryId'];
     var busboy = new Busboy({ headers: req.headers, limits: { fileSize: uploadLimit, files: 1 } });
     var logError = (err) => { console.log(err); res.sendStatus(415); };
     busboy.on('error', logError);
@@ -69,12 +80,14 @@ api.post("/uploadTemplate", function (req: any, res: express.Response) {
             tempStream.on('finish', () => { console.log('tempStream finished', new Date()); });
             thumbStream.on('finish', () => {
                 console.log('thumbStream finished', new Date());
-                let template = new TemplateModel({ imageId: tempStream.id, thumbnailId: thumbStream.id, name: filename });
+                let template = new TemplateModel({ imageId: tempStream.id, thumbnailId: thumbStream.id, name: filename, categoryId: categoryId });
                 template.save((err, result) => {
-                    if (err)
+                    if (err) {
                         console.log(err);
-                    else
-                        res.sendStatus(200);
+                        res.send(err);
+                        return;
+                    }
+                    res.json(result);
                 });
             });
 
