@@ -53,7 +53,7 @@ export class CategoriesComponent implements OnInit {
         }
         this.uploader.onCompleteItem = (item, response, status) => {
             if (status == 200) {
-                var newCategory = { metadata: { categoryName: item.file.name }, filename: response };
+                var newCategory = { metadata: { categoryName: item.file.name.replace(/\.[^/.]+$/, "") }, filename: response };
                 this.categoryList.unshift(newCategory);
             }
         }

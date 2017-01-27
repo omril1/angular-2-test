@@ -1,9 +1,9 @@
-﻿.ui-overlaypanel-content,
-body {
-    background-color: #ececec;
-    width: 100%;
+﻿html, body, #app,.ui-overlaypanel-content {
     height: 100%;
-    /*overflow: hidden;*/
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
 }
 
 th {

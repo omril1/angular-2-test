@@ -3,9 +3,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Draggable } from 'ng2-draggable';
-import { Message } from 'primeng/primeng';
+//import { Message } from 'primeng/primeng';
 import { ImageService, moveableField, Template } from '../../services/image.service';
 import { Auth } from '../../services/auth.service';
+import { Messages } from '../../services/messages.service';
 import * as utils from '../../utils';
 let domtoimage = require('dom-to-image');
 
@@ -19,14 +20,12 @@ export class DetailsComponent implements OnInit {
     @ViewChild('printArea') printArea: ElementRef;
 
     private template: Template;
-    private imageWidth: number;
-    private imageHeight: number;
     private zoomLevel: number = 1;
     private pdfURL: SafeResourceUrl;
     private fieldsCounter = 0;
     private selectedIndex = -1;
     private rotationCenter: { x: number, y: number };
-    private msgs: Message[] = [];
+    //private msgs: Message[] = [];
     //english only fonts that start with A from google font api:
     //private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
     //hebrew fonts:
@@ -37,19 +36,18 @@ export class DetailsComponent implements OnInit {
         return this.template.moveableFields[this.selectedIndex];
     }
 
-    constructor(private route: ActivatedRoute, private imageService: ImageService, private sanitizer: DomSanitizer, private auth: Auth) {
+    constructor(private route: ActivatedRoute, private imageService: ImageService, private sanitizer: DomSanitizer, private auth: Auth, private messages: Messages) {
     }
     public ngOnInit() {
         this.route.params.subscribe(params => {
             this.pdfURL = this.sanitizer.bypassSecurityTrustResourceUrl('/imageapi/dummypdf/' + params['id'] + '.pdf');
-            this.imageService.getTemplate(params['id']).then(template => this.template = template, err => {
+            this.imageService.getTemplate(params['id']).then(template => { this.template = template }, err => {
                 console.error(err);
                 this.template = null;
-                this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
+                //this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
+                this.messages.error('תקלת תקשורת');
             });
-            let pageSizes = this.imageService.pageSizes[params['pageSize']]
-            this.imageHeight = pageSizes.height;
-            this.imageWidth = pageSizes.width;
+            //let pageSizes = this.imageService.pageSizes['A4']
         });
     }
 
@@ -63,13 +61,13 @@ export class DetailsComponent implements OnInit {
     };
     private addField() {
         this.template.moveableFields.push(<moveableField>{
-            left: this.imageWidth / 4,
-            top: this.imageHeight / 22,
-            width: this.imageWidth / 2,
-            height: this.imageHeight / 20,
+            left: this.template.width / 4,
+            top: this.template.height / 22,
+            width: this.template.height / 2,
+            height: this.template.width / 18,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: this.imageWidth / 19,
+            fontSize: this.template.width / 19,
             bold: true,
             align: 'center',
             italic: false,
@@ -103,7 +101,7 @@ export class DetailsComponent implements OnInit {
         return this.sanitizer.bypassSecurityTrustStyle('rotateZ(' + field.rotation + 'deg)');
     }
     private getPrintAreaWidthSanitized() {
-        return this.sanitizer.bypassSecurityTrustStyle('calc(50% - ' + (this.imageWidth * this.zoomLevel / 2) + 'px)');
+        return this.sanitizer.bypassSecurityTrustStyle('calc(50% - ' + (this.template.width * this.zoomLevel / 2) + 'px)');
     }
     private getStyle(field: moveableField, index: number) {
         if (field.isImage) {
@@ -217,7 +215,8 @@ export class DetailsComponent implements OnInit {
         this.imageService.saveInServer(this.template).then(result => {
             window.open('/imageapi/dummypdf/' + this.template._id + '.pdf');
         }, err => {
-            this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            //this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            this.messages.error('תקלת תקשורת');
         });
     }
     private domtoimage() {
@@ -238,9 +237,11 @@ export class DetailsComponent implements OnInit {
     }
     private saveInServer() {
         this.imageService.saveInServer(this.template).then(result => {
-            this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
+            this.messages.success('נשמר');
+            //this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
         }, err => {
-            this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            this.messages.error('תקלת תקשורת');
+            //this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     }
 }

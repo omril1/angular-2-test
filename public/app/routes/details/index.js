@@ -11,20 +11,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
+//import { Message } from 'primeng/primeng';
 var image_service_1 = require("../../services/image.service");
 var auth_service_1 = require("../../services/auth.service");
+var messages_service_1 = require("../../services/messages.service");
 var utils = require("../../utils");
 var domtoimage = require('dom-to-image');
 var DetailsComponent = (function () {
-    function DetailsComponent(route, imageService, sanitizer, auth) {
+    function DetailsComponent(route, imageService, sanitizer, auth, messages) {
         this.route = route;
         this.imageService = imageService;
         this.sanitizer = sanitizer;
         this.auth = auth;
+        this.messages = messages;
         this.zoomLevel = 1;
         this.fieldsCounter = 0;
         this.selectedIndex = -1;
-        this.msgs = [];
+        //private msgs: Message[] = [];
         //english only fonts that start with A from google font api:
         //private fonts = ["ABeeZee", "Abel", "Abhaya Libre", "Abril Fatface", "Aclonica", "Acme", "Actor", "Adamina", "Advent Pro", "Aguafina Script", "Akronim", "Aladin", "Aldrich", "Alef", "Alegreya", "Alegreya SC", "Alegreya Sans", "Alegreya Sans SC", "Alex Brush", "Alfa Slab One", "Alice", "Alike", "Alike Angular", "Allan", "Allerta", "Allerta Stencil", "Allura", "Almendra", "Almendra Display", "Almendra SC", "Amarante", "Amaranth", "Amatic SC", "Amatica SC", "Amethysta", "Amiko", "Amiri", "Amita", "Anaheim", "Andada", "Andika", "Angkor", "Annie Use Your Telescope", "Anonymous Pro", "Antic", "Antic Didone", "Antic Slab", "Anton", "Arapey", "Arbutus", "Arbutus Slab", "Architects Daughter", "Archivo Black", "Archivo Narrow", "Aref Ruqaa", "Arima Madurai", "Arimo", "Arizonia", "Armata", "Artifika", "Arvo", "Arya", "Asap", "Asar", "Asset", "Assistant", "Astloch", "Asul", "Athiti", "Atma", "Atomic Age", "Aubrey", "Audiowide", "Autour One", "Average", "Average Sans", "Averia Gruesa Libre", "Averia Libre"];
         //hebrew fonts:
@@ -42,14 +45,13 @@ var DetailsComponent = (function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             _this.pdfURL = _this.sanitizer.bypassSecurityTrustResourceUrl('/imageapi/dummypdf/' + params['id'] + '.pdf');
-            _this.imageService.getTemplate(params['id']).then(function (template) { return _this.template = template; }, function (err) {
+            _this.imageService.getTemplate(params['id']).then(function (template) { _this.template = template; }, function (err) {
                 console.error(err);
                 _this.template = null;
-                _this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
+                //this.msgs.push({ severity: 'warning', summary: 'תקלת תקשורת', detail: '' });
+                _this.messages.error('תקלת תקשורת');
             });
-            var pageSizes = _this.imageService.pageSizes[params['pageSize']];
-            _this.imageHeight = pageSizes.height;
-            _this.imageWidth = pageSizes.width;
+            //let pageSizes = this.imageService.pageSizes['A4']
         });
     };
     DetailsComponent.prototype.removeField = function (index) {
@@ -63,13 +65,13 @@ var DetailsComponent = (function () {
     ;
     DetailsComponent.prototype.addField = function () {
         this.template.moveableFields.push({
-            left: this.imageWidth / 4,
-            top: this.imageHeight / 22,
-            width: this.imageWidth / 2,
-            height: this.imageHeight / 20,
+            left: this.template.width / 4,
+            top: this.template.height / 22,
+            width: this.template.height / 2,
+            height: this.template.width / 18,
             text: "טקסט לבדיקת תצוגה",
             font: "Arial",
-            fontSize: this.imageWidth / 19,
+            fontSize: this.template.width / 19,
             bold: true,
             align: 'center',
             italic: false,
@@ -103,7 +105,7 @@ var DetailsComponent = (function () {
         return this.sanitizer.bypassSecurityTrustStyle('rotateZ(' + field.rotation + 'deg)');
     };
     DetailsComponent.prototype.getPrintAreaWidthSanitized = function () {
-        return this.sanitizer.bypassSecurityTrustStyle('calc(50% - ' + (this.imageWidth * this.zoomLevel / 2) + 'px)');
+        return this.sanitizer.bypassSecurityTrustStyle('calc(50% - ' + (this.template.width * this.zoomLevel / 2) + 'px)');
     };
     DetailsComponent.prototype.getStyle = function (field, index) {
         if (field.isImage) {
@@ -217,7 +219,8 @@ var DetailsComponent = (function () {
         this.imageService.saveInServer(this.template).then(function (result) {
             window.open('/imageapi/dummypdf/' + _this.template._id + '.pdf');
         }, function (err) {
-            _this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            //this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            _this.messages.error('תקלת תקשורת');
         });
     };
     DetailsComponent.prototype.domtoimage = function () {
@@ -239,9 +242,11 @@ var DetailsComponent = (function () {
     DetailsComponent.prototype.saveInServer = function () {
         var _this = this;
         this.imageService.saveInServer(this.template).then(function (result) {
-            _this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
+            _this.messages.success('נשמר');
+            //this.msgs.push({ severity: 'info', summary: 'נשמר', detail: '' });
         }, function (err) {
-            _this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
+            _this.messages.error('תקלת תקשורת');
+            //this.msgs.push({ severity: 'error', summary: 'תקלת תקשורת', detail: '' });
         });
     };
     return DetailsComponent;
@@ -257,7 +262,7 @@ DetailsComponent = __decorate([
         styleUrls: ["details.css"],
         providers: [image_service_1.ImageService],
     }),
-    __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService, platform_browser_1.DomSanitizer, auth_service_1.Auth])
+    __metadata("design:paramtypes", [router_1.ActivatedRoute, image_service_1.ImageService, platform_browser_1.DomSanitizer, auth_service_1.Auth, messages_service_1.Messages])
 ], DetailsComponent);
 exports.DetailsComponent = DetailsComponent;
 //# sourceMappingURL=index.js.map

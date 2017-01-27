@@ -1,11 +1,11 @@
-﻿<div class="row" style="direction:rtl;">
-    <label>שם התבנית</label>
-    <input *ngIf="template" [(ngModel)]="template.name" style="width: 390px;padding: 0 5px;">
-</div>
-<div>
+﻿<div style="height:65px;margin: 5px;">
+    <div style="direction:rtl;padding:5px;">
+        <label>שם התבנית</label>
+        <input *ngIf="template" [(ngModel)]="template.name" style="width: 390px;padding: 0 5px;">
+    </div>
     <div class="btn-group pull-right">
         <button type="button" class="btn btn-default" (click)="addField()"><i class="fa fa-plus"></i></button>
-        <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-remove"></i></button>
+        <button type="button" class="btn btn-default" (click)="removeField()"><i class="fa fa-trash-o"></i></button>
     </div>
     <div class="btn-toolbar pull-right" role="group" *ngIf="template && selectedField && !selectedField.isImage">
         <div class="btn-group" dropdown dropdown-append-to-body>
@@ -94,17 +94,16 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<br />
-<div class="panel panel-default row" *ngIf="template" style="display:flex;-webkit-user-drag:none;">
+<div class="panel panel-default row" *ngIf="template" style="display:flex;-webkit-user-drag:none;height: calc(100% - 75px);margin: 0;overflow-y: hidden;width: 100%;">
     <div class="col-md-3 col-sm-3" style="padding:10px;background-color:antiquewhite;">
         <upload-panel (dropFromPanel)="addImageFromPanel($event)"></upload-panel>
     </div>
-    <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;height:76vh">
-        <div class="print-area" #printArea [style.width.px]="imageWidth*zoomLevel" [style.height.px]="imageHeight*zoomLevel" [style.left]="getPrintAreaWidthSanitized()">
+    <div class="panel-body col-md-9 col-sm-9" style="overflow:auto;">
+        <div class="print-area" #printArea [style.width.px]="template.width*zoomLevel" [style.height.px]="template.height*zoomLevel" [style.left]="getPrintAreaWidthSanitized()">
             <div class="fields-container">
                 <div *ngFor="let field of template.moveableFields; let i=index" class="moveableField" style="position: absolute;"
                      [ngStyle]="getStyle(field, i)" [draggable]
-                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)"><div *ngIf="!field.isImage" class="textField" [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false"></div><img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token"/></div>
+                     (click)="selectedIndex=i" (dragstart)="dragStart(i, $event)" (drag)="onDrag(field,$event)" (dragend)="dragEnd($event)"><div *ngIf="!field.isImage" class="textField" [textContent]="field.text" (input)="field.text=$event.target.textContent" spellcheck="false"></div><img *ngIf="field.isImage" class="imageField" [src]="'/user/userUploads/' + field.imageId + '?id_token=' + this.auth.id_token" /></div>
             </div>
             <div class="inTemplate-tools" *ngIf="selectedField"
                  [style.left.px]="selectedField.left*zoomLevel" [style.top.px]="selectedField.top*zoomLevel" [style.z-index]="199 + selectedIndex"

@@ -53,6 +53,8 @@
     <Content Include="public\app\components\zoomToolbar.html" />
     <Content Include="public\app\routes\categories\categories.css" />
     <Content Include="public\app\routes\details\details.css" />
+    <Content Include="public\app\routes\managment\managment.css" />
+    <Content Include="public\app\routes\managment\managment.html" />
     <Content Include="public\app\routes\templates\templates.css" />
     <Content Include="public\app\routes\templates\templates.html" />
     <Content Include="public\app\routes\about\about.html" />
@@ -81,6 +83,7 @@
     <TypeScriptCompile Include="public\app\components\zoomToolbar.ts" />
     <TypeScriptCompile Include="public\app\configuration\auth0lock.he.config.ts" />
     <TypeScriptCompile Include="public\app\pipes\filterCategory.ts" />
+    <TypeScriptCompile Include="public\app\routes\managment\index.ts" />
     <TypeScriptCompile Include="public\app\routes\templates\index.ts" />
     <TypeScriptCompile Include="public\app\routes\index.ts" />
     <TypeScriptCompile Include="public\app\services\auth.guard.ts" />
@@ -106,6 +109,7 @@
     <Folder Include="public\app\routes\about\" />
     <Folder Include="public\app\routes\details\" />
     <Folder Include="public\app\routes\categories\" />
+    <Folder Include="public\app\routes\managment\" />
     <Folder Include="public\app\routes\upload-image\" />
     <Folder Include="public\app\routes\templates\" />
     <Folder Include="public\app\services\" />

@@ -4,6 +4,7 @@
     min-height: 400px;
     filter: blur(0);
     transition: filter 1s ease-in-out;
+    overflow: auto;
 }
 
     div.categories-container.blurred {
@@ -42,6 +43,7 @@ span.close-btn {
 
     .categoryList .category .thumbnail {
         padding: 4px;
+        box-shadow: 0 1px 27px rgba(0, 0, 0, 0.62);
     }
 
         .categoryList .category .thumbnail div.lazy {
@@ -59,7 +61,7 @@ span.close-btn {
             direction: rtl;
             font-size: 2.4em;
             text-align: center;
-            font-family: koby;
+            font-family: cursive;
             letter-spacing: 0.05em;
             white-space: nowrap;
             color: white;

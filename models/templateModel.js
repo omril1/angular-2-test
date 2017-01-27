@@ -12,7 +12,18 @@ exports.default = mongoose.model('template', {
         type: String,
         required: true
     },
-    name: String,
+    name: {
+        type: String,
+        default: ""
+    },
+    width: {
+        type: Number,
+        required: true
+    },
+    height: {
+        type: Number,
+        required: true
+    },
     imageId: {
         type: Schema.Types.ObjectId,
         required: true

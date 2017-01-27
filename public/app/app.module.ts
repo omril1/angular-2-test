@@ -12,9 +12,9 @@ import { ContextMenuModule, GrowlModule, SliderModule, GMapModule, OverlayPanelM
 
 import { AppComponent } from './app.components';
 import { AppRoutesModule } from './app.routing';
-import { AboutComponent, DetailsComponent, CategoriesComponent, UploadImageComponent, TemplatesComponent } from './routes/index';
+import { AboutComponent, DetailsComponent, CategoriesComponent, UploadImageComponent, TemplatesComponent, ManagmentComponent } from './routes/index';
 import { LoginComponent } from './components/login';
-import { uploadPanelComponent } from './components/uploadPanel';
+import { UploadPanelComponent } from './components/uploadPanel';
 import { ZoomToolbarComponent } from './components/zoomToolbar';
 import { AuthGuard } from './services/auth.guard';
 import { Auth } from './services/auth.service';
@@ -45,12 +45,13 @@ import { filterCategory } from "./pipes/filterCategory";
     declarations: [
         AppComponent,
         AboutComponent,
-        TemplatesComponent,
         CategoriesComponent,
         DetailsComponent,
+        TemplatesComponent,
+        ManagmentComponent,
         UploadImageComponent,
         ZoomToolbarComponent,
-        uploadPanelComponent,
+        UploadPanelComponent,
         LoginComponent,
         FileSelectDirective,
         FileDropDirective,

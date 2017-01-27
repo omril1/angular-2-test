@@ -12,5 +12,6 @@
 /// <reference path="modules/mongodb/index.d.ts" />
 /// <reference path="modules/mongoose/index.d.ts" />
 /// <reference path="modules/morgan/index.d.ts" />
+/// <reference path="modules/passport/index.d.ts" />
 /// <reference path="modules/serve-favicon/index.d.ts" />
 /// <reference path="modules/serve-static/index.d.ts" />

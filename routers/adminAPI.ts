@@ -54,53 +54,72 @@ api.delete('/removeCategory/:_id', headerJWTCheck, function (req: AuthRequest, r
 });
 api.post("/uploadTemplate/:categoryId", headerJWTCheck, function (req: AuthRequest, res: express.Response) {
     var categoryId = req.params['categoryId'];
-    var busboy = new Busboy({ headers: req.headers, limits: { fileSize: uploadLimit, files: 1 } });
-    var logError = (err) => { console.log(err); res.sendStatus(415); };
-    busboy.on('error', logError);
-    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-        if (mimetype.startsWith('image/')) {
-            //creating 4 streams, tempStream for base image, thumbStream for the thumbnail,
-            // resize to transform the big image into a smaller one, and tee to split the stream into the 2 of them.
-            //resize is connected to thumbStream and the teeStream.
-            //file is the stream we get from busboy.
-            var tempStream = gfs.createWriteStream({ filename: filename, content_type: mimetype, root: "tempBases" });
-            var thumbStream = gfs.createWriteStream({ filename: filename, content_type: mimetype, root: "thumbnails" });
-            var resize = im().resize('250x180').quality(90);
-            var tee = new Patient(2);
+    if (categoryId) {
+        var busboy = new Busboy({ headers: req.headers, limits: { fileSize: uploadLimit, files: 1 } });
+        var logError = (err) => { console.log(err); res.sendStatus(415); };
+        busboy.on('error', logError);
+        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+            if (mimetype.startsWith('image/')) {
+                var imageAttributes: { width: number, height: number, name: string } = JSON.parse(decodeURI(filename));
+                filename = imageAttributes.name.replace(/\.[^/.]+$/, "");
+                //creating 4 streams, tempStream for base image, thumbStream for the thumbnail,
+                // resize to transform the big image into a smaller one, and tee to split the stream into the 2 of them.
+                //resize is connected to thumbStream and the teeStream.
+                //file is the stream we get from busboy.
+                var tempStream = gfs.createWriteStream({ filename: filename, content_type: mimetype, root: "tempBases" });
+                var thumbStream = gfs.createWriteStream({ filename: filename, content_type: mimetype, root: "thumbnails" });
+                var resize = im().resize('250x180').quality(90);
+                var tee = new Patient(2);
 
-            //log errors the of the streams, and send status as needed.
-            resize.on('error', logError);
-            tempStream.on('error', logError);
-            thumbStream.on('error', logError);
-            file.on('error', logError);
+                //log errors the of the streams, and send status as needed.
+                resize.on('error', logError);
+                tempStream.on('error', logError);
+                thumbStream.on('error', logError);
+                file.on('error', logError);
 
-            //listen when the streams finish, and log.
-            file.on('end', () => { console.log('fileStream end', new Date()); })
-            tee.on('end', () => { console.log('tee end', new Date()); });
-            tempStream.on('finish', () => { console.log('tempStream finished', new Date()); });
-            thumbStream.on('finish', () => {
-                console.log('thumbStream finished', new Date());
-                let template = new TemplateModel({ imageId: tempStream.id, thumbnailId: thumbStream.id, name: filename, categoryId: categoryId });
-                template.save((err, result) => {
-                    if (err) {
-                        console.log(err);
-                        res.send(err);
-                        return;
-                    }
-                    res.json(result);
+                //listen when the streams finish, and log.
+                file.on('end', () => { console.log('fileStream end', new Date()); })
+                tee.on('end', () => { console.log('tee end', new Date()); });
+                tempStream.on('finish', () => { console.log('tempStream finished', new Date()); });
+                thumbStream.on('finish', () => {
+                    console.log('thumbStream finished', new Date());
+                    let template = new TemplateModel({ imageId: tempStream.id, thumbnailId: thumbStream.id, name: filename, categoryId: categoryId, width: imageAttributes.width, height: imageAttributes.height });
+                    template.save((err, result) => {
+                        if (err) {
+                            console.log(err);
+                            res.send(err);
+                            return;
+                        }
+                        res.json(result);
+                    });
                 });
-            });
 
-            //just pipe them, notice tee pipes twice.
-            file.pipe(tee);
-            tee.pipe(tempStream);
-            tee.pipe(resize);
-            resize.pipe(thumbStream);
+                //just pipe them, notice tee pipes twice.
+                file.pipe(tee);
+                tee.pipe(tempStream);
+                tee.pipe(resize);
+                resize.pipe(thumbStream);
+            }
+            else {
+                file.resume();
+                res.sendStatus(415);
+            }
+        });
+        req.pipe(busboy);
+    }
+    else {
+        console.log("missing categoryId");
+        res.sendStatus(406);
+    }
+});
+api.delete('/removeTemplate/:_id', headerJWTCheck, function (req: AuthRequest, res: express.Response) {
+    let _id = req.params['_id'];
+    templateModel.remove({ _id: _id }, (err: Error, count: number) => {
+        if (err) {
+            res.sendStatus(500);
+            console.log(err);
+            return;
         }
-        else {
-            file.resume();
-            res.sendStatus(415);
-        }
+        res.sendStatus(200);
     });
-    req.pipe(busboy);
 });

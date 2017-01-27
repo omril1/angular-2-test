@@ -6,7 +6,7 @@ var authentication_1 = require("../authentication");
 var uploadLimit = 2 * 1024 * 1024;
 //This is a REST API module for logged in users.
 exports.api = express();
-exports.api.get('/userUploads', authentication_1.headerJWTCheck, function (req, res) {
+exports.api.get('/userUploads', authentication_1.headerJWTCheck, authentication_1.requireRole('admin'), function (req, res) {
     connectionManager_1.gfs.collection('userImages').find({ 'metadata.user': req.user.sub }).sort({ dateAdded: 1 }).toArray(function (err, images) {
         if (err)
             res.json(err);

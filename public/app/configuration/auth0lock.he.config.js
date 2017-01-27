@@ -112,4 +112,4 @@ exports.default = {
     mfaSubmitLabel: "התחבר",
     mfaCodeErrorHint: "Use %d numbers"
 };
-//# sourceMappingURL=auth0lock.config.js.map
+//# sourceMappingURL=auth0lock.he.config.js.map

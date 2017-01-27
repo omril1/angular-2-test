@@ -9,44 +9,8 @@ import { ParsedAsJson } from 'body-parser';
 const im = require('imagemagick-stream');
 const uploadLimit = 2 * 1024 * 1024;
 import templateModel from '../models/templateModel';
-
-export interface Template {
-    name?: string;
-    _id: string;
-    imageId: string;
-    moveableFields: moveableField[];
-}
-export interface moveableField {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-    rotation: number;
-    isImage: boolean;
-
-    text?: string;
-    font?: string;
-    fontSize?: number;
-    color?: string;
-    bold?: boolean;
-    italic?: boolean;
-    align?: string;
-    underline?: boolean;
-    stroke?: {
-        color: string;
-        width: number;
-    };
-    shadow?: {
-        color: string;
-        x: number;
-        y: number;
-        blur: number;
-    };
-    letterSpace?: number;
-    wordSpace?: number;
-
-    imageId?: string;
-}
+import { Template, moveableField } from '../public/app/services/image.service';
+export { Template, moveableField } from '../public/app/services/image.service';
 
 //This is a REST API module for free for all resources.
 export default function api() {

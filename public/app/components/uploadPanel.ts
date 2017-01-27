@@ -11,7 +11,7 @@ import { noGhostImage } from '../utils';
     templateUrl: './uploadPanel.html',
     styleUrls: ['uploadPanel.css']
 })
-export class uploadPanelComponent implements OnInit {
+export class UploadPanelComponent implements OnInit {
     private userUploads = [];
     @ViewChild('panel') private panel: ElementRef;
     public uploader: FileUploader = new FileUploader({

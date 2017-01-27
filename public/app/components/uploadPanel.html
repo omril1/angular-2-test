@@ -1,11 +1,11 @@
-﻿<div style="height:100%;border:dotted 3px;" ng2FileDrop
+﻿<div style="height:100%;border:dotted 3px;height: 100%;" ng2FileDrop
      [style.border-color]="fileOver?'red':'transparent'"
      (fileOver)="fileOver=$event"
      [uploader]="uploader"
      #panel>
     <p-accordion [style]="{direction:'rtl'}">
         <p-accordionTab header="מוכנים מראש">
-
+            <input type="text" />
         </p-accordionTab>
         <p-accordionTab header="העלאות" [selected]="true">
             <input type="file" ng2FileSelect [uploader]="uploader" multiple style="direction:rtl;width:100%;" accept="image/*" />

@@ -39,7 +39,7 @@ var CategoriesComponent = (function () {
         };
         this.uploader.onCompleteItem = function (item, response, status) {
             if (status == 200) {
-                var newCategory = { metadata: { categoryName: item.file.name }, filename: response };
+                var newCategory = { metadata: { categoryName: item.file.name.replace(/\.[^/.]+$/, "") }, filename: response };
                 _this.categoryList.unshift(newCategory);
             }
         };

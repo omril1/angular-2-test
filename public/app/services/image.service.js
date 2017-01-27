@@ -18,6 +18,7 @@ var ImageService = (function () {
     function ImageService(http, auth) {
         this.http = http;
         this.auth = auth;
+        this.authorizedOptions = { headers: new http_1.Headers({ 'Authorization': 'Bearer ' + this.auth.id_token }) };
         this._pageSizes = { 'A4': { width: 793.7, height: 1122.52 }, 'A5': { width: 561.26, height: 793.700 } };
     }
     Object.defineProperty(ImageService.prototype, "pageSizes", {
@@ -28,8 +29,7 @@ var ImageService = (function () {
         configurable: true
     });
     ImageService.prototype.getUserUploadedImages = function () {
-        var headers = new http_1.Headers({ 'Authorization': 'Bearer ' + this.auth.id_token });
-        return this.http.get('/user/userUploads', { headers: headers })
+        return this.http.get('/user/userUploads', this.authorizedOptions)
             .map(function (response) { return response.json(); })
             .toPromise()
             .catch(function (error) {
@@ -45,7 +45,7 @@ var ImageService = (function () {
         });
     };
     ImageService.prototype.removeCategory = function (_id) {
-        return this.http.delete("/adminapi/removecategory/" + _id)
+        return this.http.delete("/adminapi/removecategory/" + _id, this.authorizedOptions)
             .toPromise()
             .catch(function (error) {
             throw (error || 'Server error');
@@ -64,9 +64,16 @@ var ImageService = (function () {
             .map(function (response) { return response.json(); })
             .toPromise().catch(function (reason) { console.error(reason); return null; });
     };
+    ImageService.prototype.removeTemplate = function (_id) {
+        return this.http.delete("/adminapi/removeTemplate/" + _id, this.authorizedOptions)
+            .toPromise()
+            .catch(function (error) {
+            throw (error || 'Server error');
+        });
+    };
     ImageService.prototype.saveInServer = function (template) {
         var body = JSON.stringify(template);
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' /*, 'withCredentials': false */ });
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post("/imageapi/save", body, options).toPromise()
             .catch(function (error) {

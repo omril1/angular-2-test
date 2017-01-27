@@ -11,7 +11,10 @@ export interface Template {
     name?: string;
     _id: string;
     imageId: string;
+    categoryId: string;
     thumbnailId: string;
+    width: number;
+    height: number;
     moveableFields: moveableField[];
 }
 export interface moveableField {
@@ -48,17 +51,16 @@ export interface moveableField {
 
 @Injectable()
 export class ImageService {
+    private authorizedOptions = { headers: new Headers({ 'Authorization': 'Bearer ' + this.auth.id_token }) }
     private _pageSizes: { [id: string]: { width: number; height: number; }; } = { 'A4': { width: 793.7, height: 1122.52 }, 'A5': { width: 561.26, height: 793.700 } };
     public get pageSizes() {
         return this._pageSizes;
     }
-    
-    constructor(private http: Http, private auth: Auth) {
-    }
+
+    constructor(private http: Http, private auth: Auth) { }
 
     public getUserUploadedImages() {
-        let headers = new Headers({ 'Authorization': 'Bearer ' + this.auth.id_token });
-        return this.http.get('/user/userUploads', { headers: headers})
+        return this.http.get('/user/userUploads', this.authorizedOptions)
             .map(response => response.json())
             .toPromise()
             .catch((error: any) => {
@@ -73,8 +75,8 @@ export class ImageService {
                 throw (error || 'Server error')
             });
     }
-    public removeCategory(_id) {
-        return this.http.delete(`/adminapi/removecategory/` + _id)
+    public removeCategory(_id: string) {
+        return this.http.delete(`/adminapi/removecategory/` + _id, this.authorizedOptions)
             .toPromise()
             .catch((error: any) => {
                 throw (error || 'Server error')
@@ -93,9 +95,16 @@ export class ImageService {
             .map(response => <Template>response.json())
             .toPromise().catch(reason => { console.error(reason); return <Template>null; });
     }
+    public removeTemplate(_id: string) {
+        return this.http.delete(`/adminapi/removeTemplate/` + _id, this.authorizedOptions)
+            .toPromise()
+            .catch((error: any) => {
+                throw (error || 'Server error')
+            });
+    }
     public saveInServer(template: Template) {
         let body = JSON.stringify(template);
-        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8'/*, 'withCredentials': false */ });
+        let headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
         let options = new RequestOptions({ headers: headers });
         return this.http.post(`/imageapi/save`, body, options).toPromise()
             .catch((error: any) =>

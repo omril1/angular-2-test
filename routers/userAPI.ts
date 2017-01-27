@@ -1,12 +1,13 @@
 ﻿import * as express from 'express';
 import { gfs } from '../connectionManager';
 import * as Busboy from 'busboy';
-import { queryJWTCheck, headerJWTCheck } from '../authentication';
+import { queryJWTCheck, headerJWTCheck, requireRole } from '../authentication';
 const uploadLimit = 2 * 1024 * 1024;
+import passport = require('passport');
 
 //This is a REST API module for logged in users.
 export let api = express();
-api.get('/userUploads', headerJWTCheck, (req: any, res: express.Response) => {
+api.get('/userUploads', headerJWTCheck, requireRole('admin'), (req: any, res: express.Response) => {
     gfs.collection('userImages').find({ 'metadata.user': req.user.sub }).sort({ dateAdded: 1 }).toArray(function (err: Error, images) {
         if (err)
             res.json(err);

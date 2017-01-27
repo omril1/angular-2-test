@@ -11,6 +11,7 @@
     "mongodb": "registry:npm/mongodb#2.1.0+20170107184700",
     "mongoose": "registry:npm/mongoose#4.3.5+20160628072220",
     "morgan": "registry:dt/morgan#1.7.0+20160726064905",
+    "passport": "registry:npm/passport#0.3.0+20161028163825",
     "serve-favicon": "registry:dt/serve-favicon#2.2.0+20161128184045",
     "serve-static": "registry:dt/serve-static#1.7.1+20161128184045"
   },

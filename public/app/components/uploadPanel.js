@@ -14,8 +14,8 @@ var platform_browser_1 = require("@angular/platform-browser");
 var image_service_1 = require("../services/image.service");
 var auth_service_1 = require("../services/auth.service");
 var utils_1 = require("../utils");
-var uploadPanelComponent = (function () {
-    function uploadPanelComponent(imageService, sanitizer, auth) {
+var UploadPanelComponent = (function () {
+    function UploadPanelComponent(imageService, sanitizer, auth) {
         var _this = this;
         this.imageService = imageService;
         this.sanitizer = sanitizer;
@@ -39,7 +39,7 @@ var uploadPanelComponent = (function () {
             _this.userUploads.push(item);
         };
     }
-    uploadPanelComponent.prototype.ngOnInit = function () {
+    UploadPanelComponent.prototype.ngOnInit = function () {
         var _this = this;
         if (this.auth.id_token)
             this.imageService.getUserUploadedImages().then(function (uploads) {
@@ -49,17 +49,17 @@ var uploadPanelComponent = (function () {
                 });
             });
     };
-    uploadPanelComponent.prototype.dragStart = function (event) {
+    UploadPanelComponent.prototype.dragStart = function (event) {
         event.srcElement.classList.add('dragged');
         utils_1.noGhostImage(event);
     };
-    uploadPanelComponent.prototype.drag = function (event) {
+    UploadPanelComponent.prototype.drag = function (event) {
         if (event.x > this.panel.nativeElement.getBoundingClientRect().width + 15)
             event.srcElement.classList.add('out-of-panel');
         else
             event.srcElement.classList.remove('out-of-panel');
     };
-    uploadPanelComponent.prototype.dragEnd = function (event, item) {
+    UploadPanelComponent.prototype.dragEnd = function (event, item) {
         if (event.x > this.panel.nativeElement.getBoundingClientRect().width + 15)
             this.dropFromPanel.emit({ _id: item._id, x: event.x - event.offsetX, y: event.y - event.offsetY, width: event.srcElement.clientWidth, height: event.srcElement.clientHeight });
         else
@@ -67,17 +67,17 @@ var uploadPanelComponent = (function () {
         event.srcElement.style.left = "0";
         event.srcElement.style.top = "0";
     };
-    return uploadPanelComponent;
+    return UploadPanelComponent;
 }());
 __decorate([
     core_1.ViewChild('panel'),
     __metadata("design:type", core_1.ElementRef)
-], uploadPanelComponent.prototype, "panel", void 0);
+], UploadPanelComponent.prototype, "panel", void 0);
 __decorate([
     core_1.Output(),
     __metadata("design:type", Object)
-], uploadPanelComponent.prototype, "dropFromPanel", void 0);
-uploadPanelComponent = __decorate([
+], UploadPanelComponent.prototype, "dropFromPanel", void 0);
+UploadPanelComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
         selector: 'upload-panel',
@@ -85,6 +85,6 @@ uploadPanelComponent = __decorate([
         styleUrls: ['uploadPanel.css']
     }),
     __metadata("design:paramtypes", [image_service_1.ImageService, platform_browser_1.DomSanitizer, auth_service_1.Auth])
-], uploadPanelComponent);
-exports.uploadPanelComponent = uploadPanelComponent;
+], UploadPanelComponent);
+exports.UploadPanelComponent = UploadPanelComponent;
 //# sourceMappingURL=uploadPanel.js.map

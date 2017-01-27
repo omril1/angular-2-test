@@ -12,8 +12,16 @@
         </div>
         <div class="collapse navbar-collapse" [collapse]="!isCollapsed">
             <ul class="nav navbar-nav">
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/about']">about</a></li>
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/categories']">קטגוריות</a></li>
+                <li [routerLinkActive]="['active']">
+                    <a [routerLink]="['/about']">about</a>
+                </li>
+                <li [routerLinkActive]="['active']">
+                    <a [routerLink]="['/categories']">קטגוריות</a>
+                </li>
+                <li [routerLinkActive]="['active']"
+                    *ngIf="auth.authenticated() && auth.profile.roles.indexOf('admin')>-1">
+                    <a [routerLink]="['/managment']">ניהול</a>
+                </li>
                 <!--<li [routerLinkActive]="['active']"><a [routerLink]="['/upload-image']">העלאת תמונות</a></li>
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>-->
             </ul>
@@ -39,10 +47,11 @@
                     <a (click)="auth.logout()" *ngIf="auth.authenticated()" style="cursor:pointer">התנתק</a>
                 </li>
             </ul>
+            <div *ngIf="auth.authenticated() && auth.profile.roles.indexOf('admin')>-1" style="float: right;color: white;padding: 15px;">ברוך הבא אדמין</div>
         </div>
     </div>
 </nav>
-<div class="container-fluid">
+<div style="height:calc(100% - 68px);overflow-y:hidden;">
     <router-outlet></router-outlet>
 </div>
 <p-growl [value]="msgs"></p-growl>

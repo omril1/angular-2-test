@@ -15,9 +15,9 @@
                 <p>{{category.file?.name}}</p>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 category animated" [@categoryState]="category.deleted" *ngFor='let category of categoryList | filterCategory:filter;let i=index' [routerLink]="[category.filename]">
+        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 category animated" [@categoryState]="category.deleted" *ngFor='let category of categoryList | filterCategory:filter;let i=index'>
             <span class="glyphicon glyphicon-remove close-btn" (click)="removeCategory(category,i)"></span>
-            <div class="thumbnail">
+            <div class="thumbnail" [routerLink]="[category.filename]">
                 <div class="lazy">
                     <img [src]="'imageapi/category/' + category.filename">
                 </div>
