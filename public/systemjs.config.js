@@ -18,6 +18,8 @@
         'primeng': 'npm:primeng',
         'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
         'webfontloader': 'npm:webfontloader/webfontloader.js',
+        "angular2-masonry": "node_modules/angular2-masonry",
+        "masonry-layout": "node_modules/masonry-layout/dist/masonry.pkgd.js"
         //'auth0-lock': 'npm:auth0-lock/lib',
     };
     // packages tells the System loader how to load when no filename and/or no extension
@@ -29,7 +31,7 @@
         'angular2-in-memory-web-api': { defaultExtension: 'js' },
         'angular2-color-picker': { main: 'index.js', defaultExtension: 'js' },
         'primeng': { main: 'index.js', defaultExtension: 'js' },
-        //'ng2-bootstrap': { main: 'index.js', defaultExtension: 'js' },
+        "angular2-masonry": { "defaultExtension": "js", "main": "index" }
     };
     var ngPackageNames = [
         'common',
@@ -53,7 +55,9 @@
             'npm:': 'node_modules/'
         },
         map: map,
-        packages: packages
+        packages: packages,
+        defaultJSExtensions: true,
+        transpiler: "typescript",
     }
     System.config(config);
 })(this);

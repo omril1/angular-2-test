@@ -1,4 +1,12 @@
-﻿<div>
-    BAGHAHAHHH
-    BANANAAAAA
+﻿<div style="min-height: 400px;border: dotted 3px;"
+     ng2FileDrop
+     [style.border-color]="fileOver?'red':'transparent'"
+     (fileOver)="fileOver=$event"
+     [uploader]="uploader">
+    <masonry [useImagesLoaded]="true">
+        <masonry-brick class="brick" *ngFor="let file of uploader.queue">
+            <!--<label>{{file.file.name}}</label>-->
+            <div><img [src]="file.previewUrl" style="max-height: 100%;max-width: 100%;object-fit: contain;" /></div>
+        </masonry-brick>
+    </masonry>
 </div>

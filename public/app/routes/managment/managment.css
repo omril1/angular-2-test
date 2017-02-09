@@ -1,1 +1,4 @@
-﻿
+﻿masonry masonry-brick {
+    padding: 5px;
+    max-width: 190px;
+}

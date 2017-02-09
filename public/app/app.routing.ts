@@ -9,6 +9,6 @@ const appRoutes: Routes = [
     { path: 'categories', component: CategoriesComponent },
     { path: 'categories/:categoryId', component: TemplatesComponent },
     { path: 'details/:id', component: DetailsComponent, canActivate: [AuthGuard] },
-    { path: 'managment', component: ManagmentComponent, canActivate: [AuthGuard] },
+    { path: 'managment', component: ManagmentComponent },
 ];
 export const AppRoutesModule = RouterModule.forRoot(appRoutes);

@@ -8,6 +8,7 @@ import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { DraggableModule } from 'ng2-draggable';
 import { DropdownModule, ModalModule, CollapseModule, PopoverModule, ProgressbarModule } from 'ng2-bootstrap';
 import { ColorPickerModule } from 'angular2-color-picker';
+import { MasonryModule } from 'angular2-masonry';
 import { ContextMenuModule, GrowlModule, SliderModule, GMapModule, OverlayPanelModule, AccordionModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.components';
@@ -28,6 +29,7 @@ import { filterCategory } from "./pipes/filterCategory";
         HttpModule,
         DraggableModule,
         ColorPickerModule,
+        MasonryModule,
         DropdownModule.forRoot(),
         ModalModule.forRoot(),
         CollapseModule.forRoot(),

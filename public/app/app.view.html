@@ -22,8 +22,6 @@
                     *ngIf="auth.authenticated() && auth.profile.roles.indexOf('admin')>-1">
                     <a [routerLink]="['/managment']">ניהול</a>
                 </li>
-                <!--<li [routerLinkActive]="['active']"><a [routerLink]="['/upload-image']">העלאת תמונות</a></li>
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/templates']">תבניות</a></li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!--<li>

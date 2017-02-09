@@ -9,7 +9,7 @@ var appRoutes = [
     { path: 'categories', component: index_1.CategoriesComponent },
     { path: 'categories/:categoryId', component: index_1.TemplatesComponent },
     { path: 'details/:id', component: index_1.DetailsComponent, canActivate: [auth_guard_1.AuthGuard] },
-    { path: 'managment', component: index_1.ManagmentComponent, canActivate: [auth_guard_1.AuthGuard] },
+    { path: 'managment', component: index_1.ManagmentComponent },
 ];
 exports.AppRoutesModule = router_1.RouterModule.forRoot(appRoutes);
 //# sourceMappingURL=app.routing.js.map

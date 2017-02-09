@@ -17,6 +17,7 @@ var ng2_file_upload_1 = require("ng2-file-upload");
 var ng2_draggable_1 = require("ng2-draggable");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
 var angular2_color_picker_1 = require("angular2-color-picker");
+var angular2_masonry_1 = require("angular2-masonry");
 var primeng_1 = require("primeng/primeng");
 var app_components_1 = require("./app.components");
 var app_routing_1 = require("./app.routing");
@@ -41,6 +42,7 @@ AppModule = __decorate([
             http_1.HttpModule,
             ng2_draggable_1.DraggableModule,
             angular2_color_picker_1.ColorPickerModule,
+            angular2_masonry_1.MasonryModule,
             ng2_bootstrap_1.DropdownModule.forRoot(),
             ng2_bootstrap_1.ModalModule.forRoot(),
             ng2_bootstrap_1.CollapseModule.forRoot(),
