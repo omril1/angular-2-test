@@ -36,7 +36,7 @@
     "gridfs-stream": "^1.1.1",
     "html-pdf": "^2.1.0",
     "imagemagick-stream": "^4.1.1",
-    "mongodb": "^2.2.21",
+    "mongodb": "^3.6.2",
     "mongoose": "^4.7.7",
     "morgan": "^1.7.0",
     "ng2-bootstrap": "^1.2.5",
