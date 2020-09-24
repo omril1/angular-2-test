@@ -37,7 +37,7 @@
     "html-pdf": "^2.1.0",
     "imagemagick-stream": "^4.1.1",
     "mongodb": "^2.2.21",
-    "mongoose": "^4.7.7",
+    "mongoose": "^5.10.6",
     "morgan": "^1.7.0",
     "ng2-bootstrap": "^1.2.5",
     "ng2-draggable": "0.0.8",
